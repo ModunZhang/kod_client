@@ -88,8 +88,10 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local alliance = self.alliance
     if isAdd then
         alliance:AddListenOnType(self, "basicInfo")
+        alliance:AddListenOnType(self, "allianceFight")
     else
         alliance:RemoveListenerOnType(self, "basicInfo")
+        alliance:RemoveListenerOnType(self, "allianceFight")
     end
 end
 function GameUIAllianceHome:ShowLoading()
@@ -148,6 +150,10 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
         -- self.top:SetEnemyPowerOrKill(0)
         self:RefreshTop()
     end
+end
+function GameUIAllianceHome:OnAllianceDataChanged_allianceFight(alliance,deltaData)
+    print("GameUIAllianceHome:OnAllianceDataChanged_allianceFight")
+    self:RefreshTop(true)
 end
 function GameUIAllianceHome:Schedule()
     -- local alliance = self.alliance
@@ -447,9 +453,9 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
         --             :addTo(capture_bg)
         --     end
         -- else
-        local our_kill = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.attacker.allianceCountData.kill or alliance.allianceFight.defencer.alliance
-        local enemy_kill = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.defencer.allianceCountData.kill or alliance.allianceFight.attacker.alliance
-
+        local our_kill = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.attacker.allianceCountData.kill or alliance.allianceFight.defencer.allianceCountData.kill
+        local enemy_kill = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.defencer.allianceCountData.kill or alliance.allianceFight.attacker.allianceCountData.kill
+        print("our_kill=",our_kill,"enemy_kill=",enemy_kill)
         -- 己方击杀
         local self_power_bg = display.newSprite("power_background_146x26.png")
             :align(display.LEFT_CENTER, 40, -65):addTo(top_self_bg)
