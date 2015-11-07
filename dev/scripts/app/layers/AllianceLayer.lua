@@ -74,6 +74,46 @@ function AllianceLayer:onEnter()
     --     count = count + 1
     -- end
 end
+function AllianceLayer:onCleanup()
+    local count = 0
+    for k,v in pairs(self.alliance_bg) do
+        count = count + 1
+    end
+    print_("===============")
+    print_("alliance_nomanland.1:", #self.alliance_nomanland[1])
+    print_("alliance_nomanland.2:", #self.alliance_nomanland[2])
+    print_("alliance_nomanland.3:", #self.alliance_nomanland[3])
+    print_("alliance_nomanland.4:", #self.alliance_nomanland[4])
+    print_("alliance_objects:", count)
+    print_("alliance_objects_free.1:", #self.alliance_objects_free[1])
+    print_("alliance_objects_free.2:", #self.alliance_objects_free[2])
+    print_("alliance_objects_free.3:", #self.alliance_objects_free[3])
+    print_("alliance_objects_free.4:", #self.alliance_objects_free[4])
+    print_("alliance_objects_free.5:", #self.alliance_objects_free[5])
+    print_("alliance_objects_free.6:", #self.alliance_objects_free[6])
+    print_("alliance_bg:", count)
+    print_("alliance_bg_free.desert:", #self.alliance_bg_free.desert)
+    print_("alliance_bg_free.grassLand:", #self.alliance_bg_free.grassLand)
+    print_("alliance_bg_free.iceField:", #self.alliance_bg_free.iceField)
+    print_("===============")
+    for _,v1 in pairs(self.alliance_nomanland) do
+        for _,v2 in pairs(v1) do
+            v2:release()
+        end
+    end
+
+    for _,v1 in pairs(self.alliance_bg_free) do
+        for _,v2 in pairs(v1) do
+            v2:release()
+        end
+    end
+
+    for _,v1 in pairs(self.alliance_objects_free) do
+        for _,v2 in pairs(v1) do
+            v2:release()
+        end
+    end
+end
 function AllianceLayer:InitAllianceMap()
     self.alliance_nomanland = {
         {},
@@ -816,7 +856,7 @@ function AllianceLayer:LoadObjects(index, alliance, func)
                 self:GetAllianceLogicMap()
                     :ConvertToLeftBottomMapPosition(self:IndexToLogic(index))
             )
-        new_obj:release()
+        -- new_obj:release()
         if type(func) == "function" then
             func(new_obj)
         end
@@ -893,7 +933,7 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance, isnomanla
             obj.terrain = terrain
             obj.nomanland = true
             obj.nomanland_style = nomanland_style
-            obj:retain()
+            -- obj:retain()
             return obj
         end
     end
@@ -912,7 +952,7 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance, isnomanla
         obj.mapObjects = {}
         obj.terrain = terrain
         obj.style = style
-        obj:retain()
+        -- obj:retain()
         return obj
     end
 end
@@ -1088,7 +1128,7 @@ function AllianceLayer:LoadBackground(index, alliance)
         local x,y = self:GetAllianceLogicMap()
                     :ConvertToLeftBottomMapPosition(self:IndexToLogic(index))
         self.alliance_bg[index] = new_bg:addTo(self.background_node, -index):pos(x,y)
-        new_bg:release()
+        -- new_bg:release()
     elseif self.alliance_bg[index].terrain ~= terrain then
         self:FreeBackground(self.alliance_bg[index])
         self.alliance_bg[index] = nil
@@ -1198,7 +1238,7 @@ function AllianceLayer:GetFreeBackground(terrain)
             -- end
         end
         self:LoadMiddleTerrain(map, terrain)
-        map:retain()
+        -- map:retain()
         map.terrain = terrain
         return map
     end
