@@ -476,6 +476,7 @@ function GameUILoginBeta:login()
         ext.market_sdk.onPlayerLevelUp(User:GetPlayerLevelByExp(userData.basicInfo.levelExp))
 
         self:performWithDelay(function()
+            self.enter_next_scene = true
             if DataManager:getUserData().basicInfo.terrain == "__NONE__" then
                 app:EnterFteScene()
             else
