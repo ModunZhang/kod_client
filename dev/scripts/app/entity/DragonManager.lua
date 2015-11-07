@@ -16,7 +16,7 @@ local config_intInit = GameDatas.PlayerInitData.intInit
 
 DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched",
     -- "OnDragonEventChanged","OnDragonEventTimer",
-    "OnDefencedDragonChanged",
+    -- "OnDefencedDragonChanged",
     "OnDragonDeathEventChanged","OnDragonDeathEventTimer","OnDragonDeathEventRefresh")
 
 
@@ -312,9 +312,9 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
             end
         end
         if need_notify_defence then
-            self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDefencedDragonChanged,function(listener)
-                listener.OnDefencedDragonChanged(listener,self:GetDefenceDragon())
-            end)
+            -- self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDefencedDragonChanged,function(listener)
+            --     listener.OnDefencedDragonChanged(listener,self:GetDefenceDragon())
+            -- end)
             if DragonManager.defence_callback then
                 DragonManager.defence_callback()
                 DragonManager.defence_callback = nil

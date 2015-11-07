@@ -86,7 +86,7 @@ function GameUIStrikePlayer:BuildUI()
             x = 307
             y = 200
     end
-    self.dragon_sprite = DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetDragon():GetTerrain()):addTo(clipNode):align(display.CENTER, x,y):scale(0.7)
+    self.dragon_sprite = DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetDragon():Type()):addTo(clipNode):align(display.CENTER, x,y):scale(0.7)
 	self.list_view = UIListView.new ({
         viewRect = cc.rect(window.left+40,window.bottom + 85,window.width-80,475),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,

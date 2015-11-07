@@ -15,6 +15,15 @@ function OtherCityScene:onEnter()
     if not self.location.canShowBuildingLevel then
         self:GetSceneLayer():HideLevelUpNode()
     end
+
+    for k,v in pairs(self:GetSceneLayer().soldiers) do
+        v:hide()
+    end
+    for k,v in pairs(self:GetSceneLayer().buildings) do
+        if v:GetEntity():GetType() == "dragonEyrie" then
+            v:ReloadSpriteCaseDragonDefencedChanged(nil)
+        end
+    end
 end
 function OtherCityScene:GetHomePage()
     return self.home

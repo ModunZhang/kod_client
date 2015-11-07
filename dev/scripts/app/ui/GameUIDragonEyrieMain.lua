@@ -590,7 +590,7 @@ function GameUIDragonEyrieMain:CreateDragonScrollNode()
             :addTo(v)
         v.dragon_image = dragon_image
         dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
-        local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:GetTerrain())
+        local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:Type())
             :addTo(v)
             :pos(240,440)
             :hide():scale(0.9)

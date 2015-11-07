@@ -151,7 +151,7 @@ function GameUIDragonEyrieDetail:BuildDragonContent()
             x = 307
             y = 250
         end
-        local dragon = DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetDragon():GetTerrain())
+        local dragon = DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetDragon():Type())
             :addTo(self.dragon_base)
             :align(display.CENTER, x,y)
         dragon:setTag(101)

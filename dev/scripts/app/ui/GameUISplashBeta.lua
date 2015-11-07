@@ -51,12 +51,12 @@ function GameUISplashBeta:RunNormal()
 end
 function GameUISplashBeta:RunFte(func)
     self.label = UIKit:ttfLabel({
-        size = 20,
+        size = 22,
         color = 0x265158,
         align = cc.ui.TEXT_ALIGN_CENTER,
         dimensions = cc.size(display.width, 0),
     }):addTo(self.bottom_layer,1):opacity(0)
-        :align(display.CENTER, display.cx, display.height - 100)
+        :align(display.CENTER, display.cx, display.height - 103)
 
 	local is_skip = false
  --    local skip = cc.ui.UIPushButton.new({normal = "skip.png",pressed = "skip.png"})

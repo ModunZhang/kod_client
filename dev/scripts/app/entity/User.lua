@@ -37,6 +37,7 @@ User.LISTEN_TYPE = Enum(
     "iapGifts",
     "allianceDonate",
 
+    "dragons",
     "dragonEquipments",
     "dragonEquipmentEvents",
 
@@ -1490,6 +1491,16 @@ end
 --[[end]]
 
 
+--[[dragons begin]]
+function User:GetDefenceDragonType()
+    for k,v in pairs(self.dragons or {}) do
+        if v.status == "defence" then
+            return k
+        end
+    end
+end
+--[[end]]
+
 
 
 local before_map = {
@@ -1693,6 +1704,7 @@ local before_map = {
         end
     end,
 
+    dragons = function()end,
     dragonEquipments = function()end,
     dragonEquipmentEvents = function(userData, deltaData)
         local ok, value = deltaData("dragonEquipmentEvents.remove")
