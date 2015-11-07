@@ -28,7 +28,9 @@ function WorldLayer:onEnter()
     self.map = self:CreateMap()
     self.leveLayer = display.newNode():addTo(self.map,1)
     self.allianceLayer = display.newNode():addTo(self.map,2)
-    self.moveLayer = display.newNode():addTo(self.map,3)
+    self.lineLayer = display.newNode():addTo(self.map,3)
+    self.moveLayer = display.newNode():addTo(self.map,4)
+    self.lineSprites = {}
     self.levelSprites = {}
     self.allainceSprites = {}
     self.flagSprites = {}
@@ -339,6 +341,7 @@ function WorldLayer:CreateOrUpdateAllianceBy(mapIndex, alliance)
     return self.allainceSprites[mapIndex]
 end
 local ANI_TAG = 123
+local PROTECT_TAG = 110
 function WorldLayer:CreateAllianceSprite(index, alliance)
     local index = tostring(index)
     local p = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(index))
@@ -362,47 +365,129 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     }):addTo(sprite):align(display.CENTER, size.width/2, 5):scale(0.5)
     sprite.flagstr = alliance.flag
     sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
-        :addTo(sprite):align(display.CENTER, 100, 90):scale(0.4)
+        :addTo(sprite, 10):align(display.CENTER, 100, 90):scale(0.4)
     if Alliance_Manager:GetMyAlliance().mapIndex == tonumber(index) then
         display.newSprite("icon_current_position.png")
         :addTo(node, 0, 2):scale(0.8)
         :pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2)
     end
-
-    if self:GetAllianceStatus(alliance) == "fight" then
+    local isFight, from, to = self:IsFightWithOtherAlliance(alliance, index)
+    if isFight then
         ccs.Armature:create("duizhan")
         :addTo(sprite, 1, ANI_TAG)
         :pos(size.width/2, size.height/2 + 80)
         :getAnimation():playWithIndex(0)
+
+        self:CraeteLineWith(from, to)
+    else
+        self:DeletaLineWith(index)
+    end
+
+    if self:IsProtect(alliance) then
+        self:CreateProtect():addTo(sprite, 1, PROTECT_TAG)
+        :pos(size.width/2, size.height/2 + 40)
     end
 
     self.allainceSprites[index] = node
 end
+function WorldLayer:IsProtect(aln)
+    return self:GetAllianceStatus(aln) == "protect"
+end
+function WorldLayer:GetAllianceStatus(aln)
+    local status, mapIndex = unpack(string.split(aln.status, "__"))
+    if mapIndex then
+        return status, tonumber(mapIndex)
+    end
+    return status
+end
+function WorldLayer:CreateProtect()
+    local protect = display.newSprite("protect_1.png"):scale(0.8)
+    protect:runAction(cc.RepeatForever:create(
+        transition.sequence{
+        cc.FadeTo:create(1, 255 * 0.7),
+        cc.FadeTo:create(1, 255 * 1.0),
+    }))
+    local size = protect:getContentSize()
+    display.newSprite("protect_2.png")
+    :addTo(protect):pos(size.width/2, size.height/2)
+    :opacity(255 * 0.7):runAction(cc.RepeatForever:create(
+        transition.sequence{
+        cc.FadeTo:create(1, 255 * 1.0),
+        cc.FadeTo:create(1, 255 * 0.7),
+    }))
+    return protect
+end
+function WorldLayer:CraeteLineWith(from, to)
+    local line_key = string.format("%d_%d", from, to)
+    if self.lineSprites[line_key] then return end
+    local p1 = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(from))
+    local p2 = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(to))
+    self.lineSprites[line_key] = display.newLine({{p1.x, p1.y}, {p2.x, p2.y}},
+    {
+        borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        borderWidth = 1,
+    }):addTo(self.lineLayer)
+end
+function WorldLayer:DeletaLineWith(mapIndex)
+    for k,v in pairs(self.lineSprites) do
+        local fromstr, tostr = unpack(string.split(k, "_"))
+        if tonumber(fromstr) == mapIndex or 
+            tonumber(tostr) == mapIndex
+            then
+            self.lineSprites[k]:removeFromParent()
+            self.lineSprites[k] = nil
+            return
+        end
+    end
+end
 function WorldLayer:UpdateAllianceSprite(index, alliance)
     local index = tostring(index)
     local sprite = self.allainceSprites[index]:getChildByTag(1)
+    local size = sprite:getContentSize()
     sprite:setTexture(string.format("world_alliance_%s.png", alliance.terrain))
     sprite.name:setString(string.format("[%s]%s", alliance.tag, alliance.name))
     if sprite.flagstr ~= alliance.flag then
         sprite.flag:SetFlag(alliance.flag)
     end
-    if self:GetAllianceStatus(alliance) ~= "fight" then
+    local isFight, from, to = self:IsFightWithOtherAlliance(alliance, index)
+    if not isFight then
         if sprite:getChildByTag(ANI_TAG) then
             sprite:removeChildByTag(ANI_TAG)
         end
-    elseif not sprite:getChildByTag(ANI_TAG) then
-        local size = sprite:getContentSize()
-        ccs.Armature:create("duizhan")
-        :addTo(sprite, 1, ANI_TAG)
-        :pos(size.width/2, size.height/2 + 80)
-        :getAnimation():playWithIndex(0)
+        self:DeletaLineWith(index)
+    else
+        if not sprite:getChildByTag(ANI_TAG) then
+            ccs.Armature:create("duizhan")
+            :addTo(sprite, 1, ANI_TAG)
+            :pos(size.width/2, size.height/2 + 80)
+            :getAnimation():playWithIndex(0)
+        end
+        self:CraeteLineWith(from, to)
+    end
+    if self:IsProtect(alliance) then
+        if not sprite:getChildByTag(PROTECT_TAG) then
+            self:CreateProtect():addTo(sprite, 1, PROTECT_TAG)
+            :pos(size.width/2, size.height/2 + 40)
+        end
+    elseif sprite:getChildByTag(PROTECT_TAG) then
+        sprite:removeChildByTag(PROTECT_TAG)
     end
 end
-function WorldLayer:GetAllianceStatus(aln)
+function WorldLayer:IsFightWithOtherAlliance(aln, index)
     local my_aln = Alliance_Manager:GetMyAlliance()
-    if aln.id == my_aln._id
-    or aln.id == my_aln:GetEnemyAllianceId() then
-        return my_aln.basicInfo.status
+    if my_aln:GetEnemyAllianceId() 
+   and (aln.id == my_aln._id
+    or aln.id == my_aln:GetEnemyAllianceId()) then
+        local mindx = my_aln.mapIndex
+        local eindx = my_aln:GetEnemyAllianceMapIndex()
+        return (my_aln.basicInfo.status == "fight" 
+            or my_aln.basicInfo.status == "prepare")
+        ,math.min(mindx, eindx), math.max(mindx, eindx)
+    end
+
+    local status, mapIndex = self:GetAllianceStatus(aln)
+    if status == "fight" or status == "prepare" then
+        return true, math.min(index, mapIndex), math.max(index, mapIndex)
     end
 end
 function WorldLayer:CreateFlag(index)
