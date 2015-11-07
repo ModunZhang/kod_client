@@ -104,6 +104,7 @@ function WidgetWorldAllianceInfo:EnterIn(mapIndex)
     elseif wp.x > display.width then
         wp.x = display.width
     end
+    wp.y = wp.y - (display.width > 640 and (152 * display.width/768) or 152)
     if wp.y < 0 then
         wp.y = 0
     elseif wp.y > display.height then
@@ -121,7 +122,7 @@ function WidgetWorldAllianceInfo:EnterIn(mapIndex)
         local yp = lp.y * s / size.height
         scene_node:pos(lp.x, lp.y):setAnchorPoint(cc.p(xp, yp))
         scene_node:runAction(transition.sequence{
-            cc.ScaleTo:create(0.3, 2),
+            cc.ScaleTo:create(0.3, 2.5),
             cc.CallFunc:create(function()
                 if UIKit:GetUIInstance("GameUIWorldMap") then
                     UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()

@@ -287,11 +287,18 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
         end
         if self.status and self.status ~= allianceData.basicInfo.status then
             self:RefreshAllianceSceneIf(self.status)
+            
             if self.status == "prepare"
-                and allianceData.basicInfo.status == "fight" then
+           and allianceData.basicInfo.status == "fight" then
                 app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
             end
-            if audio.isMusicPlaying() then
+
+            local enter_fight = self.status ~= "prepare"
+                            and allianceData.basicInfo.status == "prepare"
+            local enter_peace = self.status ~= "protect"
+                            and allianceData.basicInfo.status == "protect"
+            if audio.isMusicPlaying() and
+               (enter_fight or enter_peace) then
                 local last_music_loop = app:GetAudioManager().last_music_loop
                 app:GetAudioManager().last_music_loop = true
                 app:GetAudioManager():StopMusic()
