@@ -73,6 +73,14 @@ function WidgetMarchEvents:OnAllianceDataChanged_marchEvents(userData, deltaData
         self:PromiseOfSwitch()
     end
 end
+function WidgetMarchEvents:OnAllianceDataChanged_villageEvents(userData, deltaData)
+    if deltaData("villageEvents.add")
+    or deltaData("villageEvents.edit")
+    or deltaData("villageEvents.remove") then
+        self:PromiseOfSwitch()
+    end
+end
+    
 
 function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
     local User = User
@@ -80,9 +88,11 @@ function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
     if isAdd then
         User:AddListenOnType(self, "helpToTroops")
         alliance:AddListenOnType(self, "marchEvents")
+        alliance:AddListenOnType(self, "villageEvents")
     else
         User:RemoveListenerOnType(self, "helpToTroops")
         alliance:RemoveListenerOnType(self, "marchEvents")
+        alliance:RemoveListenerOnType(self, "villageEvents")
     end
 end
 
