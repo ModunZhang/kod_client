@@ -54,7 +54,7 @@ function GameUIAllianceVillageEnter:GetBuildingInfoOriginalY()
     return self.process_bar_bg:getPositionY() - self.process_bar_bg:getContentSize().height - 40
 end
 function GameUIAllianceVillageEnter:GetUIHeight()
-    return 218
+    return 290
 end
 
 function GameUIAllianceVillageEnter:GetProcessLabelText()

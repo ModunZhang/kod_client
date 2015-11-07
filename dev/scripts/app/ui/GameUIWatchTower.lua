@@ -183,7 +183,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
             :setButtonLabelOffset(0, 16)
             :align(display.RIGHT_BOTTOM,310,18)
             :onButtonClicked(function(event)
-                if unlockPlayerSecondMarchQueue_price > User:GetGemValue() then
+                if self:GetUnlockPlayerSecondMarchQueuePrice() > User:GetGemValue() then
                     UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                         :CreateOKButton(
                             {
@@ -207,7 +207,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
         -- gem icon
         local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
         local price = UIKit:ttfLabel({
-            text = unlockPlayerSecondMarchQueue_price,
+            text = self:GetUnlockPlayerSecondMarchQueuePrice(),
             size = 18,
             color = 0xffd200,
         }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
@@ -562,7 +562,9 @@ function GameUIWatchTower:onCleanup()
     self:AddOrRemoveListener(false)
     GameUIWatchTower.super.onCleanup(self)
 end
-
+function GameUIWatchTower:GetUnlockPlayerSecondMarchQueuePrice()
+    return unlockPlayerSecondMarchQueue_price - (250 * (User.countInfo.day14 - 1))
+end
 -- function GameUIWatchTower:GetAllianceBelvedere()
 --     return self.belvedere
 -- end
