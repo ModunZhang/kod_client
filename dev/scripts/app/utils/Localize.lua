@@ -792,7 +792,7 @@ local ALLIANCE_EVENTS = {
     moveAlliance = _("迁移了联盟"),
 }
 local ALLIANCE_NOTICE = {
-    attackVillage = {_("%s正在前往采集Lv%d %s"),_("%s正在前往摧毁Lv%d %s")},
+    attackVillage = {_("%s正在前往采集Lv%d %s"),_("%s正在前往占领Lv%d %s")},
     attackMonster = _("%s正在前往攻打Lv%d %s"),
     strikePlayer = _("%s向%s发起了侦察"),
     attackPlayer = _("%s向%s发起了进攻"),
