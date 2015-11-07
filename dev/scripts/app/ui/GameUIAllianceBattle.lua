@@ -126,11 +126,16 @@ function GameUIAllianceBattle:OnMoveInStage()
     -- self:InitBattleStatistics()
 
 
-    -- self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:AddListenOnType(self, "basicInfo")
 end
-
+function GameUIAllianceBattle:OnAllianceDataChanged_basicInfo(alliance,deltaData)
+    local ok_status, new_status = deltaData("basicInfo.status")
+    if ok_status then
+        self:LeftButtonClicked()
+    end
+end
 function GameUIAllianceBattle:onExit()
-    -- self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:RemoveListenerOnType(self, "basicInfo")
     GameUIAllianceBattle.super.onExit(self)
 end
 function GameUIAllianceBattle:onCleanup()
@@ -1028,7 +1033,7 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
                     end)
                     :align(display.CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60 - 29)
                     :addTo(fight_list_node):setContentSize(cc.size(612,58))
-                UIKit:addTipsToNode(button,_("当击的敌方溃城市数量大于对方联盟战争期开始时刻的联盟玩家数量，且最后联盟战胜利，敌方联盟会被强制迁移"),
+                UIKit:addTipsToNode(button,_("当击溃的敌方城市数量大于等于其联盟的玩家数量，且我方获得联盟战的最终胜利，敌方联盟则会被强制迁移"),
                     self,cc.size(300,0))
             end
         end
