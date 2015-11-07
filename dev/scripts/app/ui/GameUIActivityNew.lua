@@ -204,7 +204,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             sign_color = 0xff4e00
         end
         local sign_bg = display.newSprite("activity_day_bg_104x34.png")
-            :align(display.LEFT_BOTTOM,431,50)
+            :align(display.LEFT_BOTTOM,441,50)
             :addTo(bg)
         local today_label = UIKit:ttfLabel({
             text = _("今日"),
@@ -249,7 +249,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             shadow= true
         }):align(display.LEFT_BOTTOM,day_label2:getPositionX()+day_label2:getContentSize().width + 15,46):addTo(bg)
         local got_bg = display.newSprite("activity_day_bg_104x34.png")
-            :align(display.LEFT_BOTTOM,431,42)
+            :align(display.LEFT_BOTTOM,441,42)
             :addTo(bg)
         local str,color = _("已领取"),0xa2ff00
         if countInfo.day14 > countInfo.day14RewardsCount then
@@ -321,7 +321,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             sign_color = 0xff4e00
         end
         local sign_bg = display.newSprite("activity_day_bg_104x34.png")
-            :align(display.LEFT_BOTTOM,time_label:getPositionX() + time_label:getContentSize().width + 5,time_label:getPositionY())
+            :align(display.LEFT_BOTTOM,441,time_label:getPositionY())
             :addTo(bg)
         local content_label = UIKit:ttfLabel({
             text = sign_str,
