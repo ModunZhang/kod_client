@@ -47,7 +47,7 @@ function GameUIStrikePlayer:ReloadDragon()
 		x = 307
 	end
 	self.dragon_sprite:setPositionX(x)
-	self.dragon_sprite:ReloadSpriteCauseTerrainChanged(dragon:GetTerrain())
+	self.dragon_sprite:ReloadSpriteCauseTerrainChanged(dragon:Type())
 end
 
 function GameUIStrikePlayer:OnMoveInStage()
