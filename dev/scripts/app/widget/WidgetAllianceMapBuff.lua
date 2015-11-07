@@ -32,7 +32,7 @@ function WidgetAllianceMapBuff:ctor(mapIndex)
         titles =  titles, -- 标题 type -> table
         cb = function (page)
             info_buff:SetInfo(
-                DataUtils:GetAllianceMapBuffByRound(page)
+                DataUtils:GetAllianceMapBuffByRound(page-1)
             )
         end -- 回调
     }):align(display.CENTER, rb_size.width/2,rb_size.height-50)
