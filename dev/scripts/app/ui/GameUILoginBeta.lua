@@ -183,6 +183,7 @@ function GameUILoginBeta:startGame()
             self.user_agreement_label:fadeOut(0.5)
             self.user_agreement_button:hide()
             self:RunFte(function()
+                self.passed_splash = true
                 self:loginAction()
             end)
         end

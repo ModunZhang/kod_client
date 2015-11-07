@@ -373,6 +373,15 @@ function MyApp:onEnterForeground()
             scene:GetHomePage():PromiseOfFteAlliance()
         end
     end
+    if scene.__cname == "MainScene" then
+        if (self:GetGameDefautlt():IsPassedSplash() 
+        or scene.ui.passed_splash)
+        and not scene.ui.enter_next_scene then
+            return scene.ui:loginAction()
+        else
+            return
+        end
+    end
     self:retryConnectServer(false)
 end
 function MyApp:onEnterPause()
