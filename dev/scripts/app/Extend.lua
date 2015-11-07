@@ -8,6 +8,10 @@ local rgba4444 = import(".rgba4444")
 local jpg_rgb888 = import(".jpg_rgb888")
 local animation = import(".animation")
 
+math.round = function(n)
+    return math.ceil(n - 0.5)
+end
+
 local pairs = pairs
 local ipairs = ipairs
 -- -- 设置图片格式

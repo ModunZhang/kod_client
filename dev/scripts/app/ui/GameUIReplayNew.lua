@@ -1172,8 +1172,8 @@ function GameUIReplayNew:HurtSoldierLeft(corps)
             return promise.all(
                 self.ui_map.soldier_morale_attack:PromiseOfProgressTo(0.5, morale - moraleDecreased),
                 self:PormiseOfSchedule2(0.5, function(percent)
-                    local count = math.floor(morale - moraleDecreased * percent)
-                    count = count < 0 and 0 or count
+                    local count = math.round(morale - moraleDecreased * percent)
+                    count = count <= 0 and 0 or count
                     self.ui_map.soldier_morale_attack:SetText(count.."/"..100)
                 end)
             )
@@ -1204,8 +1204,8 @@ function GameUIReplayNew:HurtSoldierRight(corps)
             return promise.all(
                 self.ui_map.soldier_morale_defence:PromiseOfProgressTo(0.5, morale - moraleDecreased),
                 self:PormiseOfSchedule2(0.5, function(percent)
-                    local count = math.floor(morale - moraleDecreased * percent)
-                    count = count < 0 and 0 or count
+                    local count = math.round(morale - moraleDecreased * percent)
+                    count = count <= 0 and 0 or count
                     self.ui_map.soldier_morale_defence:SetText(count.."/"..100)
                 end)
             )
