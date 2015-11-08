@@ -141,7 +141,7 @@ function GameUIWarSummary:InitWarSummary(report)
 
     local info_message = {
         {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
-        {string.formatnumberthousands(ourAlliance.routCount).."/"..string.formatnumberthousands(ourAlliance.memberCount),_("击溃城市"),string.formatnumberthousands(enemyAlliance.routCount).."/"..string.formatnumberthousands(enemyAlliance.memberCount)},
+        {string.formatnumberthousands(ourAlliance.routCount).."/"..string.formatnumberthousands(enemyAlliance.memberCount),_("击溃城市"),string.formatnumberthousands(enemyAlliance.routCount).."/"..string.formatnumberthousands(ourAlliance.memberCount)},
         {string.formatnumberthousands(ourAlliance.strikeCount),_("突袭次数"),string.formatnumberthousands(enemyAlliance.strikeCount)},
         {string.formatnumberthousands(ourAlliance.strikeSuccessCount),_("突袭成功"),string.formatnumberthousands(enemyAlliance.strikeSuccessCount)},
         {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
