@@ -539,7 +539,9 @@ function AllianceLayer:AddMapObjectByIndex(index, mapObject, alliance)
     if alliance_object then
         if not alliance_object.mapObjects[mapObject.id] then
             local sprite = self:AddMapObject(alliance_object, mapObject, alliance)
-            self:RefreshSpriteInfo(sprite, mapObject, alliance)
+            if sprite then
+                self:RefreshSpriteInfo(sprite, mapObject, alliance)
+            end
         end
     end
 end
@@ -599,7 +601,9 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 if not sprite then
                     sprite = self:AddMapObject(objects_node, mapObj, allianceData)
                 end
-                self:RefreshSpriteInfo(sprite, mapObj, allianceData)
+                if sprite then
+                    self:RefreshSpriteInfo(sprite, mapObj, allianceData)
+                end
             end
             local mapObjects = objects_node.mapObjects
             for id,v in pairs(mapObjects) do
@@ -653,7 +657,6 @@ end
 function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     local x,y = mapObj.location.x, mapObj.location.y
     local mapObject = objects_node.mapObjects[mapObj.id]
-    local node = display.newNode()
     local sprite
     if mapObj.name == "member" then
         sprite = createBuildingSprite("my_keep_1.png")
@@ -670,9 +673,12 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
         local info = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
         sprite = UIKit:CreateMonster(info.name)
     else
+        return 
+        -- print_(mapObj.name)
         --todo
-        assert(false)
+        -- assert(false)
     end
+    local node = display.newNode()
     sprite:addTo(node, 0, SPRITE_TAG)
     node.info = self:CreateInfoBanner()
     node.name = mapObj.name

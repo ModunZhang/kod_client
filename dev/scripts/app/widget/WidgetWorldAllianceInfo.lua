@@ -52,7 +52,11 @@ function WidgetWorldAllianceInfo:onExit()
 
 end
 function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
-    self.mask_layer:show()
+    self.mask_layer:stopAllActions()
+    self.mask_layer:show():performWithDelay(function() 
+        self.mask_layer:hide()
+    end, 2)
+
     local scene = display.getRunningScene()
     if mapIndex and x and y then
         if scene.__cname ~= 'AllianceDetailScene' then
