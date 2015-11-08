@@ -637,7 +637,7 @@ local logic_event_map = {
         if success then
             local running_scene = display.getRunningScene().__cname
             if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
-                GameGlobalUI:showAllianceNotice(response.key,response.params)
+                GameGlobalUI:showAllianceNotice(response.data.key,response.data.params)
             end
         end
     end,
