@@ -103,6 +103,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
             listener = function ()
                 local upgrade_listener = function()
                     NetManager:getInstantUpgradeSoldierStarPromise(self.soldier_type)
+                    self:LeftButtonClicked()
                 end
 
                 local results = self:IsAbleToUpgradeNow()
