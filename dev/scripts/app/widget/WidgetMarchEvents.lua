@@ -640,7 +640,7 @@ function WidgetMarchEvents:MoveToTargetAction(event,eventType)
         end
     end
     local map_layer = display.getRunningScene():GetSceneLayer()
-    -- map_layer:TrackCorpsById(nil)
+    map_layer:TrackCorpsById(nil)
     local point = map_layer:RealPosition(mapIndex,location.x,location.y)
     map_layer:GotoMapPositionInMiddle(point.x,point.y)
 end
