@@ -473,11 +473,11 @@ function Alliance:GetOtherToMineMarchEvents()
     end
     return to_my_events
 end
-function Alliance:Reset()
+function Alliance:Reset(deltaData)
     print("===================>Reset")
     print(debug.traceback("", 2))
     property(self, "RESET")
-    self:OnOperation("quit")
+    self:OnOperation("quit", deltaData)
 end
 
 --[[itemLogs begin]]
@@ -783,9 +783,9 @@ function Alliance:GetAllianceArchonMember()
         end
     end
 end
-function Alliance:OnOperation(operation_type)
+function Alliance:OnOperation(operation_type, deltaData)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.operation, function(listener)
-        listener["OnAllianceDataChanged_operation"](listener, self, operation_type)
+        listener["OnAllianceDataChanged_operation"](listener, self, operation_type, deltaData)
     end)
 end
 

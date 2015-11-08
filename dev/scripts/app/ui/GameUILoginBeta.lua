@@ -280,7 +280,7 @@ function GameUILoginBeta:showVersion()
     if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
         local __debugVer = require("debug_version")
         self.verLabel:setString("测试"..string.format(_("版本%s(%s)"), ext.getAppVersion(), __debugVer))
-        app.client_tag = __debugVer
+        -- app.client_tag = __debugVer
     else
         local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
         local file = io.open(jsonPath)
@@ -309,12 +309,12 @@ function GameUILoginBeta:GetServerInfo(callback)
             self:setProgressText(_("获取服务器信息成功"))
             dump(content)
             local ip, port = unpack(string.split(content.data.gateServer, ":"))
-            NetManager.m_gateServer.host = "192.168.0.30"
-            NetManager.m_gateServer.port = tonumber(3011)
+            NetManager.m_gateServer.host = ip
+            NetManager.m_gateServer.port = tonumber(port)
 
             local ip, port = unpack(string.split(content.data.updateServer, ":"))
-            NetManager.m_updateServer.host = "192.168.0.30"
-            NetManager.m_updateServer.port = tonumber(3011)
+            NetManager.m_updateServer.host = ip
+            NetManager.m_updateServer.port = tonumber(port)
             callback()
         else
             self:performWithDelay(function()

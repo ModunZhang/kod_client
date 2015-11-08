@@ -255,7 +255,7 @@ function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
             },
             villageEvents = {}
         }
-        my_alliance:Reset()
+        my_alliance:Reset(deltaData)
         app:GetChatManager():emptyAllianceChannel()
         DataManager:setUserAllianceData(json.null)
     end
@@ -269,9 +269,12 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
             local scene = display.getRunningScene()
             scene.current_allinace_index = nil
             scene.fetchtimer:stopAllActions()
-            app:EnterMyAllianceScene()
+            if not self:GetMyAlliance():IsDefault() then
+                app:EnterMyAllianceScene()
+            end
         end
-        if allianceData.basicInfo.status == 'prepare' or allianceData.basicInfo.status == 'fight'then
+        if allianceData.basicInfo.status == 'prepare' 
+        or allianceData.basicInfo.status == 'fight' then
             self:RefreshAllianceSceneIf()
         end
     end

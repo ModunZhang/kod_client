@@ -5,6 +5,11 @@ local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local MapScene = import(".MapScene")
 local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
+function AllianceDetailScene:OnAllianceDataChanged_operation(allianceData, operationType, deltaData)
+    if operationType == "quit" and not deltaData then
+        app:EnterMyCityScene()
+    end
+end
 function AllianceDetailScene:OnAllianceDataChanged_mapIndex(allianceData, deltaData)
     Alliance_Manager:UpdateAllianceBy(allianceData.mapIndex, allianceData)
 end
@@ -325,6 +330,7 @@ function AllianceDetailScene:onEnter()
     alliance:AddListenOnType(self, "marchEvents")
     alliance:AddListenOnType(self, "villageEvents")
     alliance:AddListenOnType(self, "shrineEvents")
+    alliance:AddListenOnType(self, "operation")
     Alliance_Manager:AddHandle(self)
 
     self:CreateMarchEvents(alliance.marchEvents)
@@ -360,6 +366,7 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "shrineEvents")
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "operation")
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     if Alliance_Manager:GetMyAlliance().mapIndex == index then
