@@ -35,7 +35,7 @@ function GameUIAllianceBase:GetBuildImageSprite()
         iceField = 480,
     }
     local x = postion[self:GetTerrain()]
-    local sprite = cc.Sprite:create("tmxmaps/terrain.png",cc.rect(x,0,480,480))
+    local sprite = cc.Sprite:create("tmxmaps/terrain1.png",cc.rect(x,0,480,480))
     sprite:setCascadeOpacityEnabled(true)
     return sprite
 end
