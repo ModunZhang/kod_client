@@ -57,6 +57,12 @@ function PlatformAdapter:ios()
             end
         })
     end
+
+    local getOpenUDID = device.getOpenUDID
+    device.getOpenUDID = function()
+        -- return getOpenUDID().."_"..run_pids_map[pid]
+        return "a5f552f612c0ddf5a82955582dc1362aa8e4a375"
+    end
 end
 
 
