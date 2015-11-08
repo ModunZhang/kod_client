@@ -598,8 +598,8 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 local sprite = objects_node.mapObjects[mapObj.id]
                 if not sprite then
                     sprite = self:AddMapObject(objects_node, mapObj, allianceData)
-                    self:RefreshSpriteInfo(sprite, mapObj, allianceData)
                 end
+                self:RefreshSpriteInfo(sprite, mapObj, allianceData)
             end
             local mapObjects = objects_node.mapObjects
             for id,v in pairs(mapObjects) do
@@ -731,6 +731,7 @@ local flag_map = {
 }
 local FIRE_TAG = 11900
 local SMOKE_TAG = 12000
+local VILLAGE_TAG = 120990
 function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
     local info = sprite.info
     local isenemy = User.allianceId ~= alliance._id
@@ -793,17 +794,17 @@ function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
             else
                 banner = UILib.enemy_city_banner[0]
             end
-            local flag = sprite:getChildByTag(1)
-            if sprite:getChildByTag(1) then
+            local flag = sprite:getChildByTag(VILLAGE_TAG)
+            if sprite:getChildByTag(VILLAGE_TAG) then
                 local head,circle = unpack(flag_map[ally])
                 flag:setTexture(head)
                 flag:getChildByTag(1):setTexture(circle)
             else
                 self:CreateVillageFlag(ally)
-                    :addTo(sprite,2,1):pos(0, 150):scale(1.5)
+                    :addTo(sprite,2,VILLAGE_TAG):pos(0, 150):scale(1.5)
             end
-        elseif not event and sprite:getChildByTag(1) then
-            sprite:getChildByTag(1):removeFromParent()
+        elseif not event and sprite:getChildByTag(VILLAGE_TAG) then
+            sprite:getChildByTag(VILLAGE_TAG):removeFromParent()
         end
         info.banner:setTexture(banner)
         info.level:setString(village.level)
