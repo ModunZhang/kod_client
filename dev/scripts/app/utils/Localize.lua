@@ -1060,6 +1060,11 @@ local MAILS = {
     __archon = _("盟主"),
     __elite = _("精英"),
     __allianceMembers = _("联盟所有成员"),
+    __woodVillage = _("木材村落"),
+    __ironVillage = _("铁矿村落"),
+    __foodVillage = _("粮食村落"),
+    __coinVillage = _("硬币村落"),
+    __stoneVillage= _("矿石村落"),
 }
 
 local  getBuildingLocalizedKeyByBuildingType = function(name)
