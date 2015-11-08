@@ -12,7 +12,7 @@ local special = GameDatas.Soldiers.special
 local titles = {
     _("战斗胜利"),
     _("龙在战斗中胜利"),
-    _("一个兵种击败敌军"),
+    _("两个兵种击败敌军"),
 }
 
 
