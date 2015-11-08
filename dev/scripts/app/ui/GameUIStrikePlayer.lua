@@ -109,13 +109,20 @@ function GameUIStrikePlayer:BuildUI()
 
 			local alliance = Alliance_Manager:GetMyAlliance()
 			if alliance:IsReachEventLimit() then
-				UIKit:showMessageDialogWithParams({
-        			content = _("没有空闲的行军队列"),
-        			ok_callback = function()
-        				UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
-        			end,
-        			ok_string = _("前往解锁")
-    			})
+				if User.basicInfo.marchQueue < 2 then
+					UIKit:showMessageDialogWithParams({
+	        			content = _("没有空闲的行军队列"),
+	        			ok_callback = function()
+	        				UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
+	        			end,
+	        			ok_string = _("前往解锁")
+	    			})
+				else
+					UIKit:showMessageDialogWithParams({
+	        			content = _("没有空闲的行军队列"),
+	        			ok_string = _("确定"),
+	    			})
+				end
     			return
 			end
 
