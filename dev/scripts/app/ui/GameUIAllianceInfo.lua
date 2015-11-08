@@ -9,7 +9,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Alliance_Manager = Alliance_Manager
-local Flag = import("..entity.Flag")
 local GameUIAllianceInfo = class("GameUIAllianceInfo", WidgetPopDialog)
 local Localize = import("..utils.Localize")
 local UILib = import(".UILib")
@@ -19,7 +18,7 @@ local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton
 function GameUIAllianceInfo:ctor(alliance_id,default_tab,serverId)
     GameUIAllianceInfo.super.ctor(self,710,_("联盟信息"),window.top - 140)
     self.alliance_id = alliance_id
-    self.serverId = serverId or User:ServerId()
+    self.serverId = serverId or User.serverId
     self.default_tab = default_tab or "Info"
     self.alliance_ui_helper = WidgetAllianceHelper.new()
 end
@@ -101,12 +100,13 @@ function GameUIAllianceInfo:onExit()
 end
 function GameUIAllianceInfo:onEnter()
     GameUIAllianceInfo.super.onEnter(self)
-
     NetManager:getAllianceInfoPromise(self.alliance_id, self.serverId):done(function(response)
         if response.success and response.msg.allianceData then
             self:setAllianceData(response.msg.allianceData)
             self:BuildUI()
         end
+    end):fail(function ()
+        self:LeftButtonClicked()
     end)
 
 end
@@ -142,7 +142,7 @@ function GameUIAllianceInfo:LoadInfo()
         :size(100,100)
         :addTo(layer)
         :align(display.LEFT_TOP, 30, l_size.height - 20)
-    local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(alliance_data.terrain,Flag.new():DecodeFromJson(alliance_data.flag))
+    local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(alliance_data.terrain,alliance_data.flag)
     flag_sprite:addTo(flag_box)
     flag_sprite:pos(50,40)
 
@@ -240,7 +240,7 @@ function GameUIAllianceInfo:LoadInfo()
         )
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
-    button:setButtonEnabled(Alliance_Manager:GetMyAlliance():IsDefault() and User:ServerId() ~= self.serverId )
+    button:setButtonEnabled(Alliance_Manager:GetMyAlliance():IsDefault() and User.serverId ~= self.serverId )
     button:onButtonClicked(function(event)
         self:OnJoinActionClicked(alliance_data.joinType,button)
     end)
@@ -266,7 +266,7 @@ end
 
 function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
     if joinType == 'all' then --如果是直接加入
-        if User:ServerId() ~= self.serverId then
+        if User.serverId ~= self.serverId then
             UIKit:showMessageDialog(_("提示"),_("不能加入其他服务器的联盟"))
             return
         end
@@ -283,7 +283,7 @@ function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
             self:LeftButtonClicked()
             end)
     else
-        if User:ServerId() ~= self.serverId then
+        if User.serverId ~= self.serverId then
             UIKit:showMessageDialog(_("提示"),_("不能申请加入其他服务器的联盟"))
             return
         end
@@ -486,7 +486,7 @@ function GameUIAllianceInfo:LoadMembers()
 end
 
 function GameUIAllianceInfo:GetAllianceTitleAndLevelPng(title)
-    local titles = self:GetAllianceData().titles
+    local titles = Localize.alliance_title
     local final_title = titles[title]
     if string.sub(final_title, 1, 2) == "__" then
         final_title = Localize.alliance_title[title]

@@ -1,6 +1,5 @@
 local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
-local AllianceMap = import("..entity.AllianceMap")
 local window = import("..utils.window")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -19,6 +18,7 @@ local ERR_MESSAGE = {
 function WidgetAllianceBuildingUpgrade:ctor(building)
     self:setNodeEventEnabled(true)
     self.building = building
+    dump(building,"building")
     self.building_config = GameDatas.AllianceBuilding[building.name]
     self.alliance = Alliance_Manager:GetMyAlliance()
 end
@@ -83,9 +83,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     self:VisibleUpgradeButton()
 
     self:InitRequirement()
-
-    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
-
+    self.alliance:AddListenOnType(self, "buildings")
 end
 
 function WidgetAllianceBuildingUpgrade:InitBuildingIntroduces()
@@ -144,7 +142,7 @@ function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
     local now_c = self.building_config[building.level]
     local next_c = self:getNextLevelConfig__()
     local efficiency
-    if #self.building_config == self.building.level then
+    if #self.building_config == building.level then
         efficiency = _("已达到最大等级")
     else
         if building.name == "palace" then
@@ -155,6 +153,8 @@ function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
             efficiency = string.format(_("道具个数+%d"),#string.split(next_c.itemsUnlock,",") - #string.split(now_c.itemsUnlock,","))
         elseif building.name == "orderHall" then
             efficiency = string.format(_("各类型的村落个数+%d"),next_c.villageCount - now_c.villageCount)
+        elseif building.name == "watchTower" then
+            efficiency = Localize.building_description["watchTower_".. (building.level + 1)]
         else
             efficiency = string.format( "本地化缺失%s", building.name )
         end
@@ -175,9 +175,9 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
     local requirements = {
         {resource_type = _("荣耀点"),
             isVisible = true,
-            isSatisfy = alliance:Honour()>=now_c.needHonour,
+            isSatisfy = alliance.basicInfo.honour>=now_c.needHonour,
             icon="honour_128x128.png",
-            description=alliance:Honour().."/"..now_c.needHonour},
+            description=alliance.basicInfo.honour.."/"..now_c.needHonour},
 
         {resource_type = "title",
             isVisible = true,
@@ -196,7 +196,7 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
 end
 
 function WidgetAllianceBuildingUpgrade:onExit()
-    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
+    self.alliance:RemoveListenerOnType(self, "buildings")
 end
 
 function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
@@ -204,19 +204,23 @@ function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
     local now_c = self.building_config[self.building.level+1]
     if not alliance:GetSelf():CanUpgradeAllianceBuilding() then
         return UPGRADE_ERR_TYPE.POSITION
-    elseif alliance:Honour()<now_c.needHonour then
+    elseif alliance.basicInfo.honour <now_c.needHonour then
         return UPGRADE_ERR_TYPE.HONOUR
     end
 end
 
-function WidgetAllianceBuildingUpgrade:OnBuildingInfoChange(building)
-    self:RefreahBuilding(building)
+function WidgetAllianceBuildingUpgrade:OnAllianceDataChanged_buildings(alliance, deltaData)
+    for k,v in pairs(alliance.buildings) do
+        if v.id == self.building.id then
+            self.building = v
+        end
+    end
+    self:RefreahBuilding(self.building)
     self:InitRequirement()
     self:SetBuildingLevel()
     self:SetUpgradeEfficiency()
     self:VisibleUpgradeButton()
 end
-
 function WidgetAllianceBuildingUpgrade:VisibleUpgradeButton()
     if #self.building_config == self.building.level then
         self.upgrade_button:hide()

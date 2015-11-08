@@ -8,7 +8,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local StarBar = import(".StarBar")
 local UILib = import(".UILib")
-local Flag = import("..entity.Flag")
 local Localize = import("..utils.Localize")
 local GameUIShareReport = class("GameUIShareReport", WidgetPopDialog)
 
@@ -64,7 +63,7 @@ function GameUIShareReport:onEnter()
             }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-10, 35)
             :addTo(report_content_bg)
     elseif isFromMe == "attackShrine" then
-        display.newScale9Sprite("alliance_shrine.png"):addTo(report_content_bg)
+        display.newScale9Sprite("alliance_watchTower.png"):addTo(report_content_bg)
             :align(display.CENTER_TOP,160, 80):scale(0.6)
         -- 圣地关卡名字
         local attackTarget = report:GetAttackTarget()
@@ -88,8 +87,8 @@ function GameUIShareReport:onEnter()
         local enemy_flag_data = report:GetEnemyPlayerData().alliance.flag
 
         local a_helper = WidgetAllianceHelper.new()
-        local my_flag = a_helper:CreateFlagContentSprite(Flag:DecodeFromJson(my_flag_data))
-        local enemy_flag = a_helper:CreateFlagContentSprite(Flag:DecodeFromJson(enemy_flag_data))
+        local my_flag = a_helper:CreateFlagContentSprite(my_flag_data)
+        local enemy_flag = a_helper:CreateFlagContentSprite(enemy_flag_data)
         my_flag:scale(0.55)
         enemy_flag:scale(0.55)
         my_flag:align(display.CENTER, isFromMe and 48 or 288, 13)
@@ -171,7 +170,7 @@ function GameUIShareReport:onEnter()
     elseif report:Type() == "attackMonster" then
         local monster_data = report:GetEnemyPlayerData().soldiers[1]
         local monster_type = monster_data.name
-        reportName = User:Name().." VS "..Localize.soldier_name[monster_type]
+        reportName = User.basicInfo.name.." VS "..Localize.soldier_name[monster_type]
     elseif report:Type() == "attackShrine" then
         reportName = _("圣地战报")
     end
@@ -232,7 +231,7 @@ function GameUIShareReport:onEnter()
     ):setButtonLabel(label)
         :addTo(body):align(display.CENTER, 510, 50)
         :onButtonClicked(function(event)
-            if Alliance_Manager:GetMyAlliance():Status() == "fight" or Alliance_Manager:GetMyAlliance():Status() == "prepare"  then
+            if Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" or Alliance_Manager:GetMyAlliance().basicInfo.status == "prepare"  then
                 local message = string.format("<report>reportName:%s,userId:%s,reportId:%s<report> %s",reportName,User:Id(),report:Id(),textView:getText() or "")
                 app:GetChatManager():SendChat("allianceFight",message)
         		GameGlobalUI:showTips(_("提示"),_("分享成功"))

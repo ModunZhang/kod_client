@@ -758,7 +758,7 @@ errors["allianceFightRevengeTimeExpired"] = {
 errors["targetAllianceNotInPeaceStatus"] = {
 	["key"] = "targetAllianceNotInPeaceStatus",
 	["code"] = 651,
-	["message"] = "目标联盟未处于和平期,不能发起复仇"
+	["message"] = "目标联盟未处于和平期"
 }
 errors["playerAlreadySendHelpDefenceTroopToTargetPlayer"] = {
 	["key"] = "playerAlreadySendHelpDefenceTroopToTargetPlayer",
@@ -1029,4 +1029,44 @@ errors["playerIsForbiddenToSpeak"] = {
 	["key"] = "playerIsForbiddenToSpeak",
 	["code"] = 705,
 	["message"] = "玩家被禁言"
+}
+errors["canNotViewYourOwnAlliance"] = {
+	["key"] = "canNotViewYourOwnAlliance",
+	["code"] = 706,
+	["message"] = "不能观察自己的联盟"
+}
+errors["noFreeMapArea"] = {
+	["key"] = "noFreeMapArea",
+	["code"] = 707,
+	["message"] = "没有空闲的地图区域"
+}
+errors["playerNotViewThisMapIndex"] = {
+	["key"] = "playerNotViewThisMapIndex",
+	["code"] = 708,
+	["message"] = "玩家未观察此地块"
+}
+errors["canNotMoveAllianceRightNow"] = {
+	["key"] = "canNotMoveAllianceRightNow",
+	["code"] = 709,
+	["message"] = "当前还不能移动联盟"
+}
+errors["canNotMoveToTargetMapIndex"] = {
+	["key"] = "canNotMoveToTargetMapIndex",
+	["code"] = 710,
+	["message"] = "不能移动到目标地块"
+}
+errors["canNotQuitAllianceForPlayerWillBeAttacked"] = {
+	["key"] = "canNotQuitAllianceForPlayerWillBeAttacked",
+	["code"] = 711,
+	["message"] = "玩家将被攻打,不能退出联盟"
+}
+errors["youHaveProductInSellCanNotSwitchServer"] = {
+	["key"] = "youHaveProductInSellCanNotSwitchServer",
+	["code"] = 712,
+	["message"] = "您有商品正在出售,不能切换服务器"
+}
+errors["alliancePalaceLevelTooLowCanNotMoveAlliance"] = {
+	["key"] = "alliancePalaceLevelTooLowCanNotMoveAlliance",
+	["code"] = 713,
+	["message"] = "联盟宫殿等级过低,不能移动联盟"
 }

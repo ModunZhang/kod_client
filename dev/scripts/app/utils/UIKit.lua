@@ -253,8 +253,6 @@ function UIKit:getImageByBuildingType( building_type ,level)
         return "keep_1.png"
     elseif building_type=="dragonEyrie" then
         return "dragonEyrie.png"
-    elseif building_type=="watchTower" then
-        return "watchTower_445x638.png"
     elseif building_type=="warehouse" then
         return "warehouse_498x468.png"
     elseif building_type=="toolShop" then
@@ -325,8 +323,8 @@ function UIKit:getImageByBuildingType( building_type ,level)
         else
             return "miner_3_326x307.png"
         end
-    elseif building_type=="moonGate" then
-        return UILib.alliance_building.moonGate
+    elseif building_type=="watchTower" then
+        return UILib.alliance_building.watchTower
     elseif building_type=="orderHall" then
         return UILib.alliance_building.orderHall
     elseif building_type=="palace" then
@@ -394,6 +392,23 @@ function UIKit:GetPlayerIconOnly(key,isOnline)
         return isOnline and display.newSprite(UILib.player_icon[1]) or self:getDiscolorrationSprite(UILib.player_icon[1])
     end
     return isOnline and display.newSprite(self:GetPlayerIconImage(key)) or self:getDiscolorrationSprite(self:GetPlayerIconImage(key))
+end
+-- 带背景框的龙头像
+function UIKit:GetDragonHeadWithFrame(dragonType)
+    local dragon_bg = display.newSprite("dragon_bg_114x114.png")
+    local dragon_img = display.newSprite(UILib.dragon_head[dragonType])
+        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
+        :addTo(dragon_bg)
+    function dragon_bg:setDragonImg(dragonType)
+        if UILib.dragon_head[dragonType] then
+            dragon_img:setTexture(UILib.dragon_head[dragonType])
+            dragon_img:show()
+        else
+            dragon_bg:setTexture(dragonType)
+            dragon_img:hide()
+        end
+    end
+    return dragon_bg
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
@@ -509,23 +524,30 @@ function UIKit:createLineItem(params)
     -- 分割线
     local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(params.width,2),cc.rect(10,2,382,2))
     local line_size = line:getContentSize()
-    self:ttfLabel(
+    local text_1 = params.text_1
+    local text_2 = params.text_2
+    local is_one_table = tolua.type(text_1) == "table"
+    local is_two_table = tolua.type(text_2) == "table"
+    local title_lable = self:ttfLabel(
         {
-            text = params.text_1,
+            text = is_one_table and text_1[1] or text_1,
             size = 20,
-            color = 0x615b44
+            color = is_one_table and text_1[2] or 0x615b44
         }):align(display.LEFT_BOTTOM, 0, 4)
         :addTo(line)
     local value_label = self:ttfLabel(
         {
-            text = params.text_2,
+            text = is_two_table and text_2[1] or text_2,
             size = 22,
-            color = 0x403c2f
+            color = is_two_table and text_2[2] or 0x403c2f
         }):align(display.RIGHT_BOTTOM, line_size.width, 4)
         :addTo(line)
 
-    function line:SetValue(value)
+    function line:SetValue(value,title)
         value_label:setString(value)
+        if title then
+            title_lable:setString(title)
+        end
     end
     return line
 end
@@ -708,10 +730,11 @@ function UIKit:showMessageDialogWithParams(params)
     return dialog
 end
 -- 可能得到材料的派兵行为检查
-function UIKit:showSendTroopMessageDialog(attack_func,material_type,effect_str,isNotEffection)
+function UIKit:showSendTroopMessageDialog(attack_func,material_name,effect_str,isNotEffection)
     -- 特殊提示，医院爆满，特殊兵种材料爆满
     local is_hospital_overhead = City:GetFirstBuildingByType("hospital"):IsWoundedSoldierOverhead()
-    local is_material_overhead = City:GetMaterialManager():CheckOutOfRangeByType(material_type)
+    local is_material_overhead = User:IsMaterialOutOfRange(material_name)
+    -- 
     if is_material_overhead and not isNotEffection or is_hospital_overhead then
         local dialog = self:showMessageDialogWithParams({
             title = _("提示"),
@@ -895,10 +918,10 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     end)
 end
 -- 暂时只有宝箱
-function UIKit:PlayUseItemAni(items,awards,message)
-    if string.find(items:Name(),"dragonChest") or string.find(items:Name(),"chest") then
+function UIKit:PlayUseItemAni(item_name,awards,message)
+    if string.find(item_name,"dragonChest") 
+        or string.find(item_name,"chest") then
         local ani = ""
-        local item_name = items:Name()
         if item_name == "dragonChest_1" then
             ani = "lanse"
         elseif item_name == "dragonChest_2" then
@@ -915,7 +938,7 @@ function UIKit:PlayUseItemAni(items,awards,message)
             ani = "jin_box"
         end
         if ani then
-            self:newGameUI("GameUIChest", items,awards,message,ani):AddToCurrentScene():setLocalZOrder(10000)
+            self:newGameUI("GameUIChest",awards,message,ani):AddToCurrentScene():setLocalZOrder(10000)
         end
     end
 end
@@ -945,15 +968,16 @@ function UIKit:getIapPackageName(productId)
     return Localize.iap_package_name[productId]
 end
 
-function UIKit:addTipsToNode( node,tips , include_node)
+function UIKit:addTipsToNode( node,tips , include_node ,tip_dimensions)
     node:setTouchEnabled(true)
     node:setTouchSwallowEnabled(false)
     local tips_bg
     if not include_node:getChildByTag(9090) then
-        tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(10,10,220,53))
+        tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(20,20,200,33))
             :addTo(include_node):align(display.BOTTOM_CENTER)
         tips_bg:setTag(9090)
-        local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3})
+        dump(tip_dimensions,"tip_dimensions")
+        local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3,dimensions = tip_dimensions})
             :addTo(tips_bg)
         tips_bg:size(text_1:getContentSize().width+20,text_1:getContentSize().height+40)
         local t_size = tips_bg:getContentSize()
@@ -1001,7 +1025,7 @@ function UIKit:GetItemImage(reward_type,item_key)
         return UILib.item[item_key]
     elseif reward_type == 'dragonMaterials' then
         return UILib.dragon_material_pic_map[item_key]
-    elseif reward_type == 'allianceInfo' then
+    elseif reward_type == 'allianceData' then
         if item_key == 'loyalty' then
             return "loyalty_128x128.png"
         end
@@ -1048,6 +1072,97 @@ function UIKit:ButtonAddScaleAction(button)
     return button
 end
 
+
+local soldier_config = {
+    ["swordsman"] = {
+        {"heihua_bubing_2", 4},
+        {"heihua_bubing_2", 4},
+        {"heihua_bubing_3", 4},
+    },
+    ["ranger"] = {
+        {"heihua_gongjianshou_2", 4},
+        {"heihua_gongjianshou_2", 4},
+        {"heihua_gongjianshou_3", 4},
+    },
+    ["lancer"] = {
+        {"heihua_qibing_2", 2},
+        {"heihua_qibing_2", 2},
+        {"heihua_qibing_3", 2},
+    },
+    ["catapult"] = {
+        {"heihua_toushiche_2", 1},
+        {"heihua_toushiche_2", 1},
+        {"heihua_toushiche_3", 1},
+    },
+
+    -----
+    ["sentinel"] = {
+        {"heihua_shaobing_2", 4},
+        {"heihua_shaobing_2", 4},
+        {"heihua_shaobing_3", 4},
+    },
+    ["crossbowman"] = {
+        {"heihua_nugongshou_2", 4},
+        {"heihua_nugongshou_2", 4},
+        {"heihua_nugongshou_3", 4},
+    },
+    ["horseArcher"] = {
+        {"heihua_youqibing_2", 2},
+        {"heihua_youqibing_2", 2},
+        {"heihua_youqibing_3", 2},
+    },
+    ["ballista"] = {
+        {"heihua_nuche_2", 1},
+        {"heihua_nuche_2", 1},
+        {"heihua_nuche_3", 1},
+    },
+
+
+    ["skeletonWarrior"] = {
+        {"kulouyongshi", 4},
+        {"kulouyongshi", 4},
+        {"kulouyongshi", 4},
+    },
+    ["skeletonArcher"] = {
+        {"kulousheshou", 4},
+        {"kulousheshou", 4},
+        {"kulousheshou", 4},
+    },
+    ["deathKnight"] = {
+        {"siwangqishi", 2},
+        {"siwangqishi", 2},
+        {"siwangqishi", 2},
+    },
+    ["meatWagon"] = {
+        {"jiaorouche", 1},
+        {"jiaorouche", 1},
+        {"jiaorouche", 1},
+    },
+}
+local position_map = {
+    [1] = {
+        {x = 0, y = -10}
+    },
+    [2] = {
+        {x = -10, y = -10},
+        {x = 10, y = -30},
+    },
+    [4] = {
+        {x = 0, y = 0},
+        {x = -25, y = -15},
+        {x = 25, y = -15},
+        {x = 0, y = -30},
+    }
+}
+function UIKit:CreateMonster(name)
+    local soldier_name, star = unpack(string.split(name, '_'))
+    local ani,count = unpack(soldier_config[soldier_name][tonumber(star)])
+    local node = display.newNode()
+    for _,v in ipairs(position_map[count]) do
+        UIKit:CreateIdle45Ani(ani):pos(v.x, v.y):addTo(node)
+    end
+    return node
+end
 ---
 local soldier_animap = {
     -- 普通兵种
@@ -1230,9 +1345,11 @@ function UIKit:CreateDragonFlyNeg45Ani(ani)
     return createAniWithConfig(ani, dragon_fly_neg_45_ani[ani], "flying_-45")
 end
 function UIKit:CreateSoldierMove45Ani(ani)
+    print(ani, soldier_move_45_ani[ani])
     return createAniWithConfig(ani, soldier_move_45_ani[ani], "move_45")
 end
 function UIKit:CreateSoldierMoveNeg45Ani(ani)
+    print(ani, soldier_move_neg_45_ani[ani])
     return createAniWithConfig(ani, soldier_move_neg_45_ani[ani], "move_-45")
 end
 function UIKit:GetSoldierMoveAniConfig(ani, act)
@@ -1243,6 +1360,162 @@ function UIKit:GetSoldierMoveAniConfig(ani, act)
     else
         assert(false)
     end
+end
+local function GetDirIndexByDegree(degree)
+    local index = math.floor(degree / 45) + 4
+    if index < 0 or index > 8 then return 1 end
+    return index
+end
+local dragon_dir_map = {
+    [0] = {"flying_45", -1}, -- x-,y+
+    {"flying_45", -1}, -- x-,y+
+    {"flying_-45", -1}, -- x-
+
+    {"flying_-45", -1}, -- x-,y-
+    {"flying_-45", 1}, -- y+
+    {"flying_-45", 1}, -- x+,y+
+
+    {"flying_45", 1}, -- x+
+    {"flying_45", 1}, -- x+,y-
+    {"flying_45", 1}, -- y-
+}
+function UIKit:CreateDragonByDegree(degree, s, dragonType)
+    local node = display.newNode():scale(s or 1)
+    local ani_name, scalex = unpack(dragon_dir_map[GetDirIndexByDegree(degree)])
+    local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
+    if ani_name == "flying_45" then
+        UIKit:CreateDragonFly45Ani(dragon_ani):addTo(node):setScaleX(scalex)
+    elseif ani_name == "flying_-45" then
+        UIKit:CreateDragonFlyNeg45Ani(dragon_ani):addTo(node):setScaleX(scalex)
+    end
+    return node
+end
+local soldier_dir_map = {
+    [0] = {"move_45", - 1}, -- x-,y+
+    {"move_45", - 1}, -- x-,y+
+    {"move_-45", - 1}, -- x-
+
+    {"move_-45", - 1}, -- x-,y-
+    {"move_-45", 1}, -- y+
+    {"move_-45", 1}, -- x+,y+
+
+    {"move_45", 1}, -- x+
+    {"move_45", 1}, -- x+,y-
+    {"move_45", 1}, -- y-
+}
+local soldier_config = {
+    ----
+    ["swordsman"] = {
+        count = 4,
+        {"bubing_1"},
+        {"bubing_2"},
+        {"bubing_3"},
+    },
+    ["ranger"] = {
+        count = 4,
+        {"gongjianshou_1"},
+        {"gongjianshou_2"},
+        {"gongjianshou_3"},
+    },
+    ["lancer"] = {
+        count = 2,
+        {"qibing_1"},
+        {"qibing_2"},
+        {"qibing_3"},
+    },
+    ["catapult"] = {
+        count = 1,
+        {  "toushiche"},
+        {"toushiche_2"},
+        {"toushiche_3"},
+    },
+
+    -----
+    ["sentinel"] = {
+        count = 4,
+        {"shaobing_1"},
+        {"shaobing_2"},
+        {"shaobing_3"},
+    },
+    ["crossbowman"] = {
+        count = 4,
+        {"nugongshou_1"},
+        {"nugongshou_2"},
+        {"nugongshou_3"},
+    },
+    ["horseArcher"] = {
+        count = 2,
+        {"youqibing_1"},
+        {"youqibing_2"},
+        {"youqibing_3"},
+    },
+    ["ballista"] = {
+        count = 1,
+        {"nuche_1"},
+        {"nuche_2"},
+        {"nuche_3"},
+    },
+    ----
+    ["skeletonWarrior"] = {
+        count = 4,
+        {"kulouyongshi"},
+        {"kulouyongshi"},
+        {"kulouyongshi"},
+    },
+    ["skeletonArcher"] = {
+        count = 4,
+        {"kulousheshou"},
+        {"kulousheshou"},
+        {"kulousheshou"},
+    },
+    ["deathKnight"] = {
+        count = 2,
+        {"siwangqishi"},
+        {"siwangqishi"},
+        {"siwangqishi"},
+    },
+    ["meatWagon"] = {
+        count = 1,
+        {"jiaorouche"},
+        {"jiaorouche"},
+        {"jiaorouche"},
+    },
+}
+local len = 30
+local location_map = {
+    [1] = {
+        {0, 0},
+    },
+    [2] = {
+        {0, len * 0.5},
+        {0, - len * 0.5},
+    },
+    [4] = {
+        {len * 0.5, len * 0.5},
+        {- len * 0.5, len * 0.5},
+        {len * 0.5, - len * 0.5},
+        {- len * 0.5, - len * 0.5},
+    },
+}
+local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
+function UIKit:CreateMoveSoldiers(degree, soldier, s)
+    local star = special[soldier.name] and 1 or (soldier.star or 1)
+    local config = soldier_config[soldier.name]
+    local soldier_ani_name = unpack(config[star])
+    local action_name, scalex = unpack(soldier_dir_map[GetDirIndexByDegree(degree)])
+    local create_function
+    if action_name == "move_45" then
+        create_function = UIKit.CreateSoldierMove45Ani
+    elseif action_name == "move_-45" then
+        create_function = UIKit.CreateSoldierMoveNeg45Ani
+    end
+    local node = display.newNode():scale(s or 1)
+    for _,v in ipairs(location_map[config.count]) do
+        create_function(UIKit, soldier_ani_name):addTo(node)
+        :pos(unpack(v)):setScaleX(scalex)
+    end
+    return node
 end
 function UIKit:CreateNameBanner(name, dragon_type)
     local node = display.newNode()
@@ -1416,6 +1689,22 @@ function UIKit:CreateVipExpBar()
 end
 
 
+function UIKit:CreateArrow(param, func)
+    local arrow = display.newSprite(param.circle or "arrow_circle_mine.png")
+    arrow.btn = cc.ui.UIPushButton.new({
+        normal = param.up or "arrow_up_mine.png",
+        pressed = param.down or "arrow_down_mine.png",
+    }):addTo(arrow):pos(96/2, 102/2 - 4)
+    :onButtonClicked(function()
+        if type(func) == "function" then
+            func()
+        end
+    end)
+    arrow.icon = display.newSprite(param.icon or "arrow_icon_mine.png")
+    :addTo(arrow):pos(96/2, 102/2 - 4)
+    return arrow
+end
+
 
 
 
@@ -1497,6 +1786,8 @@ function UIKit:CreateSand()
     end, 2 + math.random(3))
     return emitter
 end
+
+
 
 
 

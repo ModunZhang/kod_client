@@ -42,10 +42,37 @@ function GameUIActivityRewardNew:ctor(reward_type)
     GameUIActivityRewardNew.super.ctor(self)
     self.reward_type = reward_type
     if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP or self:GetRewardType() == self.REWARD_TYPE.ONLINE then
-        local countInfo = User:GetCountInfo()
+        local countInfo = User.countInfo
         self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
         self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime()
-        app.timer:AddListener(self)
+        scheduleAt(self, function()
+            local current_time = app.timer:GetServerTime()
+            if self.online_time_label and self.online_time then
+                local time = self.online_time + current_time
+                self.online_time_label:setString(GameUtils:formatTimeStyle1(time))
+                --item update
+                for k,v in pairs(self.need_update_online_item) do
+                    local diff_time = config_online[k].onLineMinutes * 60 - time
+                    if diff_time > 0 then
+                        v.time_label:setString(GameUtils:formatTimeStyle1(diff_time))
+                        print("GameUtils:formatTimeStyle1(time)---->",GameUtils:formatTimeStyle1(time),GameUtils:formatTimeStyle1(diff_time))
+                    else
+                        self:RefreshOnLineList(false)
+                        break
+                    end
+                end
+            end
+            if self.level_up_time_label then
+                self.player_level_up_time_residue = self.player_level_up_time - current_time
+                if self.player_level_up_time_residue > 0 then
+                    self.level_up_time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
+                else
+                    self.level_up_time_label:hide()
+                    self.level_up_time_desc_label:hide()
+                    self.level_up_state_label:show()
+                end
+            end
+        end)
     end
 end
 
@@ -56,14 +83,11 @@ end
 function GameUIActivityRewardNew:onEnter()
     GameUIActivityRewardNew.super.onEnter(self)
     self:BuildUI()
-    User:AddListenOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+    User:AddListenOnType(self, "countInfo")
 end
 
 function GameUIActivityRewardNew:onExit()
-    if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP or self:GetRewardType() == self.REWARD_TYPE.ONLINE then
-        app.timer:RemoveListener(self)
-    end
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+    User:RemoveListenerOnType(self, "countInfo")
     GameUIActivityRewardNew.super.onExit(self)
 end
 
@@ -72,13 +96,13 @@ function GameUIActivityRewardNew:onCleanup()
     cc.Director:getInstance():getTextureCache():removeTextureForKey("activity_first_purgure_588x176.jpg")
 end
 
-function GameUIActivityRewardNew:OnCountInfoChanged()
+function GameUIActivityRewardNew:OnUserDataChanged_countInfo()
     self:RefreshUI()
 end
 
 function GameUIActivityRewardNew:RefreshUI()
     if self:GetRewardType() == self.REWARD_TYPE.EVERY_DAY_LOGIN then
-        local countInfo = User:GetCountInfo()
+        local countInfo = User.countInfo
         local flag = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
         local geted = countInfo.day60RewardsCount % 30 == 0 and 30 or countInfo.day60RewardsCount % 30 -- <= geted
         for i,button in ipairs(self.rewards_buttons) do
@@ -107,7 +131,7 @@ function GameUIActivityRewardNew:RefreshUI()
     elseif self:GetRewardType() == self.REWARD_TYPE.CONTINUITY then
         self:RefreshContinutyList(false)
     elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
-        local countInfo = User:GetCountInfo()
+        local countInfo = User.countInfo
         if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then
             self.purgure_get_button:show()
             self.go_store_button:hide()
@@ -178,7 +202,7 @@ function GameUIActivityRewardNew:BuildUI()
 end
 
 function GameUIActivityRewardNew:GetPageOfDay60()
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     if  countInfo.day60RewardsCount >= 30 then return 2 else return 1 end
 end
 
@@ -199,8 +223,8 @@ end
 function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
     self.rewards_buttons = {}
     local rewards = self:GetDay60Reward()
-    local flag = User:GetCountInfo().day60 % 30 == 0 and 30 or User:GetCountInfo().day60 % 30
-    local geted = User:GetCountInfo().day60RewardsCount % 30 == 0 and 30 or User:GetCountInfo().day60RewardsCount % 30  -- <= geted
+    local flag = User.countInfo.day60 % 30 == 0 and 30 or User.countInfo.day60 % 30
+    local geted = User.countInfo.day60RewardsCount % 30 == 0 and 30 or User.countInfo.day60RewardsCount % 30  -- <= geted
     local auto_get_reward = 0
     UIKit:ttfLabel({
         text = _("领取30日奖励后，刷新奖励列表"),
@@ -271,7 +295,7 @@ end
 
 
 function GameUIActivityRewardNew:On_EVERY_DAY_LOGIN_GetReward(index,reward)
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     local real_index = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
     if (countInfo.day60 > countInfo.day60RewardsCount and real_index == index) or (countInfo.day60RewardsCount > countInfo.day60 and real_index == index) then
         NetManager:getDay60RewardPromise():done(function()
@@ -451,7 +475,7 @@ end
 -- flag 1.已领取 2.可领取 3.明天领取 0 未来的
 function GameUIActivityRewardNew:GetContinutyListData()
     local r = {}
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     dump(countInfo,"countInfo")
     for i,v in ipairs(config_day14) do
         local config_rewards = string.split(v.rewards,",")
@@ -535,7 +559,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
     local bg = display.newSprite("selenaquestion_bg_580x536.png"):addTo(self.bg):align(display.TOP_CENTER, 304, self.height - 15 - 176):scale(587/580)
     display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 315, -10):addTo(self.bg):scale(552/423)
     local reward_bg = display.newScale9Sprite("activity_day_bg_104x34.png",0,0,cc.size(290,510),cc.rect(10,10,84,14)):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     local rewards = self:GetFirstPurgureRewards()
     local x,y = 20,500
     self.purgure_get_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png',scale9 = true})
@@ -713,7 +737,7 @@ function GameUIActivityRewardNew:RefreshLevelUpListView(needClean)
 end
 -- flag 1.已领取 2.可以领取 3.不能领取
 function GameUIActivityRewardNew:GetLevelUpData()
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
 
     local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
     local r = {}
@@ -746,7 +770,7 @@ end
 
 function GameUIActivityRewardNew:CheckCanGetLevelUpReward(level)
     local max_level = 0
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     for __,v in ipairs(countInfo.levelupRewards) do
         if v == level then
             return false
@@ -813,7 +837,7 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 end
 ----------------------
 function GameUIActivityRewardNew:ui_ONLINE()
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     local onlineTime = math.floor((countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000)
     self.online_time = onlineTime
     UIKit:ttfLabel({
@@ -1015,7 +1039,7 @@ end
 
 
 function GameUIActivityRewardNew:IsTimePointRewarded(timepoint)
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     for __,v in ipairs(countInfo.todayOnLineTimeRewards) do
         if v == timepoint then
             return true
@@ -1034,6 +1058,8 @@ function GameUIActivityRewardNew:GetNextOnlineTimePoint()
 end
 
 return GameUIActivityRewardNew
+
+
 
 
 

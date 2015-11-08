@@ -7,7 +7,6 @@ local window = import("..utils.window")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetSoldierPromoteDetails = import(".WidgetSoldierPromoteDetails")
 local WidgetPushButton = import(".WidgetPushButton")
-local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
 
@@ -25,8 +24,7 @@ end)
 
 function WidgetPromoteSoliderList:ctor(building)
     self.building = building
-
-    local soldiers_star = City:GetSoldierManager():FindSoldierStarByBuildingType(self.building:GetType())
+    local soldiers_star = User:GetBuildingSoldiersInfo(self.building:GetType())
     self.items_list = {}
     self.boxes = {}
     for k,v in ipairs(soldiers_star) do
@@ -106,7 +104,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
     elseif status == "lock" then
         label:setString(_("未解锁"))
     elseif status == "toUnlock" then
-        if City:GetSoldierManager():GetPromotingSoldierName(self.building:GetType()) == soldier_type then
+        if User:GetPromotionName(self.building:GetType()) == soldier_type then
             label:setString(_("正在晋级"))
             label:setColor(UIKit:hex2c4b(0x007c23))
         else
@@ -174,7 +172,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
         end
         if status == "toUnlock" then
 
-            if City:GetSoldierManager():GetPromotingSoldierName(parent.building:GetType()) == soldier_type then
+            if User:GetPromotionName(parent.building:GetType()) == soldier_type then
                 label:setString("正在晋级")
                 label:setColor(UIKit:hex2c4b(0x007c23))
                 if self.button then
@@ -212,34 +210,44 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
     return soldier_box
 end
 function WidgetPromoteSoliderList:onEnter()
-    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    User:AddListenOnType(self, "soldierStars")
+    User:AddListenOnType(self, "soldierStarEvents")
 end
 function WidgetPromoteSoliderList:onExit()
-    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    User:RemoveListenerOnType(self, "soldierStars")
+    User:RemoveListenerOnType(self, "soldierStarEvents")
 end
-function WidgetPromoteSoliderList:OnSoliderStarCountChanged(soldier_manager,changed_map)
-    for i,v in ipairs(changed_map) do
-        for _,box in ipairs(self.boxes) do
-            if v == box:GetSoldierType() then
-                box:Refresh(City:GetSoldierManager():GetStarBySoldierType(v))
+function WidgetPromoteSoliderList:OnUserDataChanged_soldierStars(userData, deltaData)
+    local ok, value = deltaData("soldierStars")
+    if ok then
+        for soldier_name,star in pairs(value) do
+            for _,box in ipairs(self.boxes) do
+                if soldier_name == box:GetSoldierType() then
+                    box:Refresh(star)
+                end
             end
         end
     end
 end
-function WidgetPromoteSoliderList:OnSoldierStarEventsChanged(soldier_manager,changed_map)
-    for i,v in ipairs(changed_map[1]) do
-        for _,box in ipairs(self.boxes) do
-            if v.name == box:GetSoldierType() then
-                box:Refresh(City:GetSoldierManager():GetStarBySoldierType(v.name))
+function WidgetPromoteSoliderList:OnUserDataChanged_soldierStarEvents(userData, deltaData)
+    local User = User
+    local ok, value = deltaData("soldierStarEvents.add")
+    if ok then
+        for _,v in ipairs(value) do
+            for _,box in ipairs(self.boxes) do
+                if v.name == box:GetSoldierType() then
+                    box:Refresh(User:SoldierStarByName(v.name))
+                end
             end
         end
     end
-    for i,v in ipairs(changed_map[3]) do
-        for _,box in ipairs(self.boxes) do
-            if v.name == box:GetSoldierType() then
-                box:Refresh(City:GetSoldierManager():GetStarBySoldierType(v.name))
+    local ok, value = deltaData("soldierStarEvents.remove")
+    if ok then
+        for _,v in ipairs(value) do
+            for _,box in ipairs(self.boxes) do
+                if v.name == box:GetSoldierType() then
+                    box:Refresh(User:SoldierStarByName(v.name))
+                end
             end
         end
     end

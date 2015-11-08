@@ -10,7 +10,6 @@ local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetRecruitSoldier = import("..widget.WidgetRecruitSoldier")
-local SoldierManager = import("..entity.SoldierManager")
 local GameUIBarracks = UIKit:createUIClass("GameUIBarracks", "GameUIUpgradeBuilding")
 local WidgetRecruitSoldier_tag = 1
 function GameUIBarracks:ctor(city, barracks,default_tab,need_recruit_soldier)
@@ -26,19 +25,32 @@ function GameUIBarracks:OnMoveInStage()
     self.recruit = self:CreateSoldierUI()
     self.specialRecruit = self:CreateSpecialSoldierUI()
     self:TabButtons()
-    self.barracks:AddUpgradeListener(self)
-    self.barracks:AddBarracksListener(self)
-    self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    -- app.timer:AddListener(self)
     GameUIBarracks.super.OnMoveInStage(self)
+    local User = self.barracks_city:GetUser()
+    User:AddListenOnType(self, "soldiers")
+    User:AddListenOnType(self, "soldierStars")
+    User:AddListenOnType(self, "soldierEvents")
+    User:AddListenOnType(self, "buildingEvents")
+    scheduleAt(self, function()
+        if self.timerAndTips:isVisible() then
+            local event = User:GetSoldierEventsBySeq()[1]
+            self.timer:setVisible(event ~= nil)
+            self.tips:setVisible(event == nil)
+            if event then
+                local time, percent = UtilsForEvent:GetEventInfo(event)
+                self.timer:SetDescribe(string.format(_("招募%s x%d"), 
+                Localize.soldier_name[event.name], event.count))
+                self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(time), percent)
+            end
+        end
+    end)
 end
 function GameUIBarracks:onExit()
-    self.barracks:RemoveUpgradeListener(self)
-    self.barracks:RemoveBarracksListener(self)
-    self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    -- app.timer:RemoveListener(self)
+    local User = self.barracks_city:GetUser()
+    User:RemoveListenerOnType(self, "soldiers")
+    User:RemoveListenerOnType(self, "soldierStars")
+    User:RemoveListenerOnType(self, "soldierEvents")
+    User:RemoveListenerOnType(self, "buildingEvents")
     GameUIBarracks.super.onExit(self)
 end
 function GameUIBarracks:RightButtonClicked()
@@ -47,35 +59,8 @@ function GameUIBarracks:RightButtonClicked()
     end
     GameUIBarracks.super.RightButtonClicked(self)
 end
-function GameUIBarracks:OnBuildingUpgradingBegin()
-end
-function GameUIBarracks:OnBuildingUpgradeFinished()
+function GameUIBarracks:OnUserDataChanged_buildingEvents()
     self:RefershUnlockInfo()
-end
-function GameUIBarracks:OnBuildingUpgrading()
-end
-function GameUIBarracks:OnBeginRecruit(barracks, event)
-    self.tips:setVisible(false)
-    self.timer:setVisible(true)
-    self:OnRecruiting(barracks, event, app.timer:GetServerTime())
-end
-function GameUIBarracks:OnRecruiting(barracks, event, current_time)
-    if self.timerAndTips:isVisible() then
-        if not self.timer:isVisible() then
-            self.timer:setVisible(true)
-        end
-        if self.tips:isVisible() then
-            self.tips:setVisible(false)
-        end
-        local soldier_type, count = event:GetRecruitInfo()
-        local soldier_name = Localize.soldier_name[soldier_type]
-        self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), soldier_name, count))
-        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
-    end
-end
-function GameUIBarracks:OnEndRecruit(barracks)
-    self.tips:setVisible(true)
-    self.timer:setVisible(false)
 end
 function GameUIBarracks:CreateTimerAndTips()
     local timerAndTips = display.newNode():addTo(self:GetView())
@@ -87,7 +72,7 @@ function GameUIBarracks:CreateTimerAndTips()
         :align(display.CENTER, window.cx, window.top - 160)
         :hide()
         :OnButtonClicked(function(event)
-            UIKit:newGameUI("GameUIBarracksSpeedUp",self.barracks):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIBarracksSpeedUp"):AddToCurrentScene(true)
         end)
     return timerAndTips
 end
@@ -124,7 +109,7 @@ function GameUIBarracks:CreateSoldierUI()
 
    
 
-    local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
+    local soldier_map = self.barracks_city:GetUser().soldiers
     for k, v in pairs(self.soldier_map) do
         v:SetNumber(soldier_map[k])
     end
@@ -164,7 +149,7 @@ function GameUIBarracks:CreateSpecialSoldierUI()
         self.special_list_view:addItem(item)
     end
 
-    local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
+    local soldier_map = self.barracks_city:GetUser().soldiers
     for k, v in pairs(self.soldier_map) do
         v:SetNumber(soldier_map[k])
     end
@@ -189,16 +174,6 @@ function GameUIBarracks:TabButtons()
             self.specialRecruit:setVisible(false)
             self.timerAndTips:setVisible(false)
         elseif tag == "recruit" then
-            local event = self.barracks:GetRecruitEvent()
-            self.timer:setVisible(event:IsRecruting() )
-            self.tips:setVisible(event:IsEmpty())
-            if event:IsRecruting() then
-                local soldier_type, count = event:GetRecruitInfo()
-                local soldier_name = Localize.soldier_name[soldier_type]
-                self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), soldier_name, count))
-                local current_time = app.timer:GetServerTime()
-                self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
-            end
             self.recruit:setVisible(true)
             self.timerAndTips:setVisible(true)
             self.specialRecruit:setVisible(false)
@@ -240,7 +215,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     :addTo(self,1000, WidgetRecruitSoldier_tag):pos(0,0)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
-                :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
+                :SetSoldier(soldier_name, self.barracks_city:GetUser():SoldierStarByName(soldier_name))
         if self.need_recruit_soldier == soldier_name then
             if arrow_left_dir_map[soldier_name] then
                 WidgetFteArrow.new(_("点击士兵"))
@@ -278,12 +253,12 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
                 if self.soldier_map[soldier_name]:IsLocked() then
                     return
                 end
-                WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name,self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
+                WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name,self.barracks_city:GetUser():SoldierStarByName(soldier_name))
                     :addTo(self,1000, WidgetRecruitSoldier_tag)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, row_height - 130)
-                :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
+                :SetSoldier(soldier_name, self.barracks_city:GetUser():SoldierStarByName(soldier_name))
     end
 
     -- title
@@ -316,19 +291,31 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     item:setItemSize(widget_width, row_height)
     return item
 end
-function GameUIBarracks:OnSoliderCountChanged()
-    local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
+function GameUIBarracks:OnUserDataChanged_soldiers()
+    local soldier_map = self.barracks_city:GetUser().soldiers
     for k, v in pairs(self.soldier_map) do
         if not v:IsLocked() then
             v:SetNumber(soldier_map[k])
         end
     end
 end
-function GameUIBarracks:OnSoliderStarCountChanged(soldier_manager,star_changed_map)
-    for i,v in pairs(star_changed_map) do
-        if self.soldier_map[v] then
-            self.soldier_map[v]:SetSoldier(v, soldier_manager:GetStarBySoldierType(v))
+function GameUIBarracks:OnUserDataChanged_soldierStars(userData, deltaData)
+    local ok, value = deltaData("soldierStars")
+    if ok then
+        for soldier_name,star in pairs(value) do
+            if self.soldier_map[soldier_name] then
+                self.soldier_map[soldier_name]:SetSoldier(soldier_name, star)
+            end
         end
+    end
+end
+function GameUIBarracks:OnUserDataChanged_soldierEvents(userData, deltaData)
+    if deltaData("soldierEvents.remove") then
+        self.tips:setVisible(true)
+        self.timer:setVisible(false)
+    elseif deltaData("soldierEvents.add") then
+       self.tips:setVisible(false) 
+       self.timer:setVisible(true)
     end
 end
 function GameUIBarracks:RefershUnlockInfo()
@@ -343,7 +330,7 @@ function GameUIBarracks:RefershUnlockInfo()
             end
         end
     end
-    self:OnSoliderCountChanged()
+    self:OnUserDataChanged_soldiers()
 end
 
 function GameUIBarracks:GetRecruitSpecialTime()

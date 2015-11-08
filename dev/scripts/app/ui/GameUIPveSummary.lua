@@ -223,9 +223,9 @@ function GameUIPveSummary:BuildVictoryUI(param)
     local reward = param.reward[1]
     if reward then
         local png, txt
-        if reward.type == "items" then
-            png = UILib.item[reward.name]
-            txt = Localize_item.item_name[reward.name]
+        if reward.type == "resources" then
+            png = UILib.resource[reward.name]
+            txt = Localize.fight_reward[reward.name]
         elseif reward.type == "soldierMaterials" then
             png = UILib.soldier_metarial[reward.name]
             txt = Localize.soldier_material[reward.name]
@@ -243,7 +243,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
         }):addTo(bg):align(display.LEFT_CENTER, 30, -40)
 
         UIKit:ttfLabel({
-            text = _("获得数量 : ")..reward.count,
+            text = _("获得数量 : ")..GameUtils:formatNumber(reward.count),
             size = 22,
             color = 0xffedae,
         }):addTo(bg):align(display.LEFT_CENTER, 30, -110)

@@ -72,9 +72,9 @@ function GameUIPveSweep:GetListItem(index,reward)
     local bg = display.newSprite("pve_reward_item.png")
     local size = bg:getContentSize()
     local png, txt
-    if reward.type == "items" then
-        png = UILib.item[reward.name]
-        txt = Localize_item.item_name[reward.name]
+    if reward.type == "resources" then
+        png = UILib.resource[reward.name]
+        txt = Localize.fight_reward[reward.name]
     elseif reward.type == "soldierMaterials" then
         png = UILib.soldier_metarial[reward.name]
         txt = Localize.soldier_material[reward.name]
@@ -94,7 +94,7 @@ function GameUIPveSweep:GetListItem(index,reward)
     }):addTo(bg):align(display.LEFT_CENTER, size.width - 120, size.height*3/4)
 
     UIKit:ttfLabel({
-        text = "X"..reward.count,
+        text = "X"..GameUtils:formatNumber(reward.count),
         size = 22,
         color = 0xffedae,
     }):addTo(bg):align(display.LEFT_CENTER, size.width - 120, size.height*2/5)

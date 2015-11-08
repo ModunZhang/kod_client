@@ -73,7 +73,7 @@ function GameUIStrikeReport:onEnter()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-20)
+        end):align(display.CENTER, title:getContentSize().width-26, title:getContentSize().height-26)
         :addTo(title)
     -- 突袭结果图片
     local report_result_img
@@ -125,7 +125,7 @@ function GameUIStrikeReport:onEnter()
     local terrain = report:GetStrikeTarget().terrain
     local war_result_label = UIKit:ttfLabel(
         {
-            text = string.format(_("战斗地形:%s(派出%s获得额外力量)"),Localize.terrain[terrain],terrain=="grassLand" and _("绿龙") or terrain=="desert" and _("红龙") or terrain=="iceField" and _("蓝龙")),
+            text = string.format(_("战斗地形:%s"),Localize.terrain[terrain]),
             size = 18,
             color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-195)

@@ -12,7 +12,7 @@ local special = GameDatas.Soldiers.special
 local titles = {
     _("战斗胜利"),
     _("龙在战斗中胜利"),
-    _("一个兵种击败敌军"),
+    _("两个兵种击败敌军"),
 }
 
 
@@ -94,13 +94,14 @@ function GameUIPveAttack:BuildNormalUI()
         local type,name = unpack(string.split(v, ":"))
         return k, {type = type, name = name}
     end)
+    dump(rewards,"rewards")
     local skipw = 1.5
     local count = 10
     local w = (count - skipw * 2) / (#rewards - 1)
     for i,v in ipairs(rewards) do
         local png
-        if v.type == "items" then
-            png = UILib.item[v.name]
+        if v.type == "resources" then
+            png = UILib.resource[v.name]
         elseif v.type == "soldierMaterials" then
             png = UILib.soldier_metarial[v.name]
         end
@@ -126,10 +127,11 @@ function GameUIPveAttack:BuildNormalUI()
         color = 0x615b44,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 510)
 
+    local User = self.user
     self.sweep_label = UIKit:ttfLabel({
-        text = ItemManager:GetItemByName("sweepScroll"):Count(),
+        text = User:GetItemCount("sweepScroll"),
         size = 22,
-        color = ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000,
+        color = User:GetItemCount("sweepScroll") > 0 and 0x615b44 or 0x7e00000,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + label:getContentSize().width,size.height - 510)
 
 
@@ -260,6 +262,7 @@ local show = function(obj)
     if obj then obj:show() end
 end
 function GameUIPveAttack:RefreshUI()
+    local User = self.user
     if self.user:IsPveBoss(self.pve_name) then
         if self.user:IsPveBossPassed(self.pve_name) then
             if self.user:HasNextStageByPveName(self.pve_name) then
@@ -283,16 +286,15 @@ function GameUIPveAttack:RefreshUI()
         for i,v in ipairs(self.items) do
             v:setVisible(i <= star)
         end
-        -- self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
-        self.sweep_label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000))
-        self.sweep_label:setString(ItemManager:GetItemByName("sweepScroll"):Count())
+        self.sweep_label:setColor(UIKit:hex2c4b(User:GetItemCount("sweepScroll") > 0 and 0x615b44 or 0x7e00000))
+        self.sweep_label:setString(User:GetItemCount("sweepScroll"))
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
         self.sweep_all:setButtonEnabled(star >= 3)
-        self.sweep_all.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) and 0xffedae or 0x7e00000))
+        self.sweep_all.label:setColor(UIKit:hex2c4b(User:GetItemCount("sweepScroll") >= self.user:GetPveLeftCountByName(self.pve_name) and 0xffedae or 0x7e00000))
         self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
-        self.sweep_once.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= 1 and 0xffedae or 0x7e00000))
+        self.sweep_once.label:setColor(UIKit:hex2c4b(User:GetItemCount("sweepScroll") >= 1 and 0xffedae or 0x7e00000))
         self.sweep_once:setButtonEnabled(star >= 3)
-        local strength = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local strength = self.user:GetResValueByType("stamina")
         self.attack.label:setColor(UIKit:hex2c4b(strength >= sections[self.pve_name].staminaUsed and 0xffedae or 0x7e00000))
     end
 end
@@ -338,9 +340,9 @@ function GameUIPveAttack:CreateAttackButton()
                 UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
                 return
             end
-            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+            if not self.user:HasAnyStamina(sections[self.pve_name].staminaUsed) then
                 WidgetUseItems.new():Create({
-                    item_type = WidgetUseItems.USE_TYPE.STAMINA
+                    item_name = "stamina_1"
                 }):AddToCurrentScene()
                 return
             end
@@ -356,15 +358,15 @@ function GameUIPveAttack:CreateAttackButton()
     button.label = UIKit:ttfLabel({
         text = "-"..sections[self.pve_name].staminaUsed,
         size = 20,
-        color = self.user:HasAnyStength(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
+        color = self.user:HasAnyStamina(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
     }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
     return button
 end
 function GameUIPveAttack:Attack()
-    local soldiers = string.split(sections[self.pve_name].troops, ",")
-    table.remove(soldiers, 1)
+    local enemies = string.split(sections[self.pve_name].troops, ",")
+    table.remove(enemies, 1)
     UIKit:newGameUI('GameUIPVESendTroop',
-        LuaUtils:table_map(soldiers, function(k,v)
+        LuaUtils:table_map(enemies, function(k,v)
             local name,star = unpack(string.split(v, "_"))
             return k, {name = name, star = tonumber(star)}
         end),
@@ -388,23 +390,28 @@ function GameUIPveAttack:Attack()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
                 response.msg.fightReport.playerDragonFightData.hpDecreased = 0
+                local enemy_enter = {}
+                for i,v in ipairs(response.msg.fightReport.sectionSoldierRoundDatas) do
+                    enemy_enter[v.soldierName] = true
+                end
+                
                 local star = 0
-                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin then
+                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin 
+                and table.nums(enemy_enter) == #enemies 
+                then
                     star = 2
                     if response.msg.fightReport.playerDragonFightData.isWin then
                         star = star + 1
                     end
+                    local soldierName = {}
                     local soldiername
                     for i,v in ipairs(response.msg.fightReport.playerSoldierRoundDatas) do
-                        if not soldiername then
-                            soldiername = v.soldierName
-                        elseif soldiername ~= v.soldierName then
-                            star = star - 1
-                            break
-                        end
+                        soldierName[v.soldierName] = true
+                    end
+                    if table.nums(soldierName) > 2 then
+                        star = star - 1
                     end
                 end
-
 
                 local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
                 param.new_exp = dragon:Exp()
@@ -467,16 +474,17 @@ function GameUIPveAttack:Attack()
         end):AddToCurrentScene(true)
 end
 function GameUIPveAttack:BuyAndUseSweepScroll(count)
-    local need_buy = count - ItemManager:GetItemByName("sweepScroll"):Count()
+    local User = self.user
+    local need_buy = count - User:GetItemCount("sweepScroll")
     assert(need_buy > 0)
-    local required_gems = ItemManager:GetItemByName("sweepScroll"):Price() * need_buy
+    local required_gems = UtilsForItem:GetItemInfoByName("sweepScroll").price * need_buy
     local dialog = UIKit:showMessageDialog()
     dialog:SetTitle(_("补充道具"))
     dialog:SetPopMessage(_("您当前没有足够的扫荡劵,是否花费金龙币购买补充并使用"))
     dialog:CreateOKButtonWithPrice(
         {
             listener = function()
-                if self.user:GetGemResource():GetValue() < required_gems then
+                if self.user:GetGemValue() < required_gems then
                     UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
                         {
                             listener = function ()
@@ -526,13 +534,13 @@ function GameUIPveAttack:Sweep(count)
         UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
         return
     end
-    if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed * count) then
+    if not self.user:HasAnyStamina(sections[self.pve_name].staminaUsed * count) then
         WidgetUseItems.new():Create({
-            item_type = WidgetUseItems.USE_TYPE.STAMINA
+            item_name = "stamina_1"
         }):AddToCurrentScene()
         return
     end
-    if ItemManager:GetItemByName("sweepScroll"):Count() >= count then
+    if self.user:GetItemCount("sweepScroll") >= count then
         self:UseSweepScroll(count)
     else
         self:BuyAndUseSweepScroll(count)
@@ -548,8 +556,7 @@ function GameUIPveAttack:CheckMaterials(func)
             break
         end
     end
-    local material_man = City:GetMaterialManager()
-    if is_special and material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER) then
+    if is_special and User:IsMaterialOutOfRange("soldierMaterials") then
         local dialog = UIKit:showMessageDialogWithParams({
             title = _("提示"),
             content = string.format(_("当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要扫荡？"), _("士兵")),
@@ -589,7 +596,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
         return k, {name = name, star = tonumber(star), count = count}
     end)
     function report:GetFightAttackName()
-        return user:Name()
+        return user.basicInfo.name
     end
     function report:GetFightDefenceName()
         return titlename

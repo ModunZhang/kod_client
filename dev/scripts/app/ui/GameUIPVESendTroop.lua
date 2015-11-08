@@ -11,7 +11,6 @@ local UIListView = import(".UIListView")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
 local WidgetInput = import("..widget.WidgetInput")
-local SoldierManager = import("..entity.SoldierManager")
 local DragonManager = import("..entity.DragonManager")
 
 
@@ -27,7 +26,6 @@ function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
     GameUIPVESendTroop.super.ctor(self,City,_("准备进攻"))
     self.march_callback = march_callback
     self.pve_soldiers = pve_soldiers
-    self.soldier_manager = City:GetSoldierManager()
     self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
     -- 默认选中最强的并且可以出战的龙,如果都不能出战，则默认最强龙
@@ -150,12 +148,12 @@ function GameUIPVESendTroop:OnMoveInStage()
                     self.march_callback(dragonType,soldiers)
                     -- 确认派兵后关闭界面
                     self:LeftButtonClicked()
-                end,City:GetMaterialManager().MATERIAL_TYPE.SOLDIER,_("士兵"),not has_special_soldier)
+                end, "soldierMaterials", _("士兵"), not has_special_soldier)
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
 
 
-    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    User:AddListenOnType(self, "soldiers")
     City:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 
     GameUIPVESendTroop.super.OnMoveInStage(self)
@@ -386,7 +384,6 @@ function GameUIPVESendTroop:SelectSoldiers()
         end
         return item
     end
-    local sm = self.soldier_manager
     local soldiers = {}
     local soldier_map = {
         "swordsman",
@@ -401,16 +398,17 @@ function GameUIPVESendTroop:SelectSoldiers()
         "skeletonArcher",
         "deathKnight",
         "meatWagon",
-        "priest",
-        "demonHunter",
-        "paladin",
-        "steamTank",
+        -- "priest",
+        -- "demonHunter",
+        -- "paladin",
+        -- "steamTank",
     }
-    local map_s = sm:GetSoldierMap()
+    local User = User
+    local map_s = User.soldiers
     for _,name in pairs(soldier_map) do
         local soldier_num = map_s[name]
-        if soldier_num>0 then
-            table.insert(soldiers, {name = name,level = sm:GetStarBySoldierType(name), max_num = soldier_num})
+        if soldier_num > 0 then
+            table.insert(soldiers, {name = name,level = User:SoldierStarByName(name), max_num = soldier_num})
         end
     end
     for k,v in pairs(soldiers) do
@@ -652,12 +650,15 @@ function GameUIPVESendTroop:CreateTroopsShow()
     TroopsShow:ShowOrRefreshTroops()
     return TroopsShow
 end
-function GameUIPVESendTroop:OnSoliderCountChanged( soldier_manager,changed_map )
-    for i,name in ipairs(changed_map) do
-        for _,item in pairs(self.soldiers_table) do
-            local item_type = item:GetSoldierInfo()
-            if name == item_type then
-                item:SetMaxSoldier(City:GetSoldierManager():GetCountBySoldierType(item_type))
+function GameUIPVESendTroop:OnUserDataChanged_soldiers(userData, deltaData)
+    local ok, value = deltaData("soldiers")
+    if ok then
+        for i,name in ipairs(value) do
+            for _,item in pairs(self.soldiers_table) do
+                local item_type = item:GetSoldierInfo()
+                if name == item_type then
+                    item:SetMaxSoldier(User.soldiers[item_type])
+                end
             end
         end
     end
@@ -666,7 +667,7 @@ function GameUIPVESendTroop:OnBasicChanged()
     self:RefreashDragon(self.dragon)
 end
 function GameUIPVESendTroop:onExit()
-    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    User:RemoveListenerOnType(self, "soldiers")
     City:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 
     GameUIPVESendTroop.super.onExit(self)
@@ -706,6 +707,7 @@ end
 
 
 return GameUIPVESendTroop
+
 
 
 

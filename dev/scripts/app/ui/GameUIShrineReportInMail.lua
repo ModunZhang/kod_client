@@ -77,7 +77,7 @@ function GameUIShrineReportInMail:onEnter()
     local terrain = report:GetAttackTarget().terrain
     local war_result_label = UIKit:ttfLabel(
         {
-            text = string.format(_("战斗地形:%s(派出%s获得额外力量)"),Localize.terrain[terrain],terrain=="grassLand" and _("绿龙") or terrain=="desert" and _("红龙") or terrain=="iceField" and _("蓝龙")),
+            text = string.format(_("战斗地形:%s"),Localize.terrain[terrain]),
             size = 18,
             color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-195)
@@ -798,7 +798,7 @@ function ShrinePlayFightReport:GetAttackDragonLevel()
 end
 
 function ShrinePlayFightReport:GetAttackTargetTerrain()
-    return Alliance_Manager:GetMyAlliance():Terrain()
+    return Alliance_Manager:GetMyAlliance().basicInfo.terrain
 end
 
 function ShrinePlayFightReport:IsAttackCamp()

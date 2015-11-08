@@ -60,7 +60,12 @@ end
 function GameUIDragonEyrieMain:OnBasicChanged(dragon)
     self:RefreshUI()
 end
-
+function GameUIDragonEyrieMain:OnUserDataChanged_buildings(userData, deltaData)
+    local ok,value = deltaData("buildings.location_4")
+    if ok then
+        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
+    end
+end
 -- function GameUIDragonEyrieMain:OnDragonEventChanged()
 --     local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
 --     if dragonEvent then
@@ -113,25 +118,18 @@ function GameUIDragonEyrieMain:OnMoveInStage()
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
-    City:AddListenOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
+    User:AddListenOnType(self, "buildings")
     GameUIDragonEyrieMain.super.OnMoveInStage(self)
 end
 
-function GameUIDragonEyrieMain:OnUpgradingBegin()
-end
+-- if building:GetType() == self:GetBuilding():GetType() then
+--     if self.dragon_hp_recovery_count_label then
+--         local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
+--         self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
+--     end
+--     self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
+-- end
 
-function GameUIDragonEyrieMain:OnUpgradingFinished(building)
-    if building:GetType() == self:GetBuilding():GetType() then
-        if self.dragon_hp_recovery_count_label then
-            local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
-            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
-        end
-        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
-    end
-end
-
-function GameUIDragonEyrieMain:OnUpgrading()
-end
 
 function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
@@ -142,7 +140,7 @@ function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
-    City:RemoveListenerOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
+    User:RemoveListenerOnType(self, "buildings")
     GameUIDragonEyrieMain.super.OnMoveOutStage(self)
 end
 
@@ -592,7 +590,7 @@ function GameUIDragonEyrieMain:CreateDragonScrollNode()
             :addTo(v)
         v.dragon_image = dragon_image
         dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
-        local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:GetTerrain())
+        local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:Type())
             :addTo(v)
             :pos(240,440)
             :hide():scale(0.9)
@@ -663,7 +661,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 end
 function GameUIDragonEyrieMain:OnDragonHpItemUseButtonClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
+        item_name = "dragonHp_1",
         dragon = self:GetCurrentDragon()
     })
     widgetUseItems:AddToCurrentScene()
@@ -671,7 +669,7 @@ end
 
 function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+        item_name = "dragonExp_1",
         dragon = self:GetCurrentDragon()
     })
     widgetUseItems:AddToCurrentScene()

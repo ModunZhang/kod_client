@@ -505,34 +505,49 @@ local DRAGON_ANIMATIONS_FILES = {
 }
 local DECORATOR_IMAGE = {
     grassLand = {
-        decorate_lake_1 = "lake_1_grassLand.png",
-        decorate_lake_2 =  "lake_2_grassLand.png",
-        decorate_mountain_1 =  "hill_1_grassLand.png",
-        decorate_mountain_2 =  "hill_2_grassLand.png",
+        decorate_lake_1 = "lake_1_grassLand_new.png",
+        decorate_lake_2 =  "lake_2_grassLand_new.png",
+        decorate_mountain_1 =  "hill_1_grassLand_new.png",
+        decorate_mountain_2 =  "hill_2_grassLand_new.png",
         decorate_tree_1 =  "tree_1_grassLand.png",
         decorate_tree_2 =  "tree_2_grassLand.png",
         decorate_tree_3 =  "tree_3_grassLand.png",
         decorate_tree_4 =  "tree_4_grassLand.png",
+        decorate_tree_5 =  "crushed_airship.png",
+        decorate_tree_6 =  "warriors_tomb_80x72.png",
+        decorate_tree_7 =  "tree_3_grassLand.png",
+        decorate_tree_8 =  "tree_4_grassLand.png",
+        decorate_tree_9 =  "tree_1_grassLand.png",
     },
     iceField = {
-        decorate_lake_1 = "lake_1_iceField.png",
-        decorate_lake_2 =  "lake_2_iceField.png",
-        decorate_mountain_1 =  "hill_1_iceField.png",
-        decorate_mountain_2 =  "hill_2_iceField.png",
+        decorate_lake_1 = "lake_1_iceField_new.png",
+        decorate_lake_2 =  "lake_2_iceField_new.png",
+        decorate_mountain_1 =  "hill_1_iceField_new.png",
+        decorate_mountain_2 =  "hill_2_iceField_new.png",
         decorate_tree_1 =  "tree_1_iceField.png",
         decorate_tree_2 =  "tree_2_iceField.png",
         decorate_tree_3 =  "tree_3_iceField.png",
         decorate_tree_4 =  "tree_4_iceField.png",
+        decorate_tree_5 =  "crushed_airship.png",
+        decorate_tree_6 =  "warriors_tomb_80x72.png",
+        decorate_tree_7 =  "tree_3_iceField.png",
+        decorate_tree_8 =  "tree_4_iceField.png",
+        decorate_tree_9 =  "tree_1_iceField.png",
     },
     desert = {
-        decorate_lake_1 = "lake_1_desert.png",
-        decorate_lake_2 =  "lake_2_desert.png",
-        decorate_mountain_1 =  "hill_1_desert.png",
-        decorate_mountain_2 =  "hill_2_desert.png",
+        decorate_lake_1 = "lake_1_desert_new.png",
+        decorate_lake_2 =  "lake_2_desert_new.png",
+        decorate_mountain_1 =  "hill_1_desert_new.png",
+        decorate_mountain_2 =  "hill_2_desert_new.png",
         decorate_tree_1 =  "tree_1_desert.png",
         decorate_tree_2 =  "tree_2_desert.png",
         decorate_tree_3 =  "tree_3_desert.png",
         decorate_tree_4 =  "tree_4_desert.png",
+        decorate_tree_5 =  "crushed_airship.png",
+        decorate_tree_6 =  "warriors_tomb_80x72.png",
+        decorate_tree_7 =  "tree_3_desert.png",
+        decorate_tree_8 =  "tree_4_desert.png",
+        decorate_tree_9 =  "tree_1_desert.png",
     },
 }
 local DRAGON_HEAD = {
@@ -739,15 +754,17 @@ local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
 local ALLIANCE_BUILDING = {
     palace = "alliance_palace.png",
-    shrine = "alliance_shrine.png",
+    shrine = "alliance_shrine_1.png",
     shop = "alliance_shop.png",
     orderHall = "alliance_orderHall.png",
-    moonGate = "alliance_moonGate.png",
+    watchTower = "alliance_watchTower.png",
+    bloodSpring = "alliance_bloodSpring.png",
 }
 local OTHER_ALLIANCE_BUILDING = setmetatable({
     palace = "other_palace.png",
     shop = "other_shop.png",
     orderHall = "other_orderHall.png",
+    bloodSpring = "alliance_bloodSpring.png",
 }, {__index = ALLIANCE_BUILDING})
 
 local DAILY_TASK_ICON = {
@@ -756,7 +773,6 @@ local DAILY_TASK_ICON = {
     brotherClub = "Icon_brotherClub_122x124.png",
     growUp = "Icon_growUp_108x115.png"
 }
-local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local PVE_ANIMATION_FILES = {
     "animations/lanse.ExportJson",

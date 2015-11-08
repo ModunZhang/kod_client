@@ -189,11 +189,14 @@ function PlatformAdapter:mac()
     -- dump(run_pids_map)
     sourcePidMap(run_pids_map)
 
+    -- print_ = print
+    -- print = function()end
+
 
     local getOpenUDID = device.getOpenUDID
     device.getOpenUDID = function()
         return getOpenUDID().."_"..run_pids_map[pid]
-        -- return "2"
+        -- return "1_0"
     end
 end
 

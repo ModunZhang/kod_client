@@ -103,7 +103,7 @@ function GameUIChatChannel:CreateTextFieldBody()
                     UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
                     return
                 elseif self._channelType == 'allianceFight' then
-                    local status = my_alliance:Status()
+                    local status = my_alliance.basicInfo.status
                     if status ~= 'prepare' and status ~= 'fight' then
                         UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
                         return
@@ -147,7 +147,7 @@ function GameUIChatChannel:CreateTextFieldBody()
                 UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
                 return
             elseif self._channelType == 'allianceFight' then
-                local status = my_alliance:Status()
+                local status = my_alliance.basicInfo.status
                 if status ~= 'prepare' and status ~= 'fight' then
                     UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
                     return
@@ -239,7 +239,7 @@ function GameUIChatChannel:ShowTipsIf()
             UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
         end
     elseif self._channelType == 'allianceFight' then
-        local status = my_alliance:Status()
+        local status = my_alliance.basicInfo.status
         if status ~= 'prepare' and status ~= 'fight' then
             UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
         end
@@ -257,8 +257,8 @@ function GameUIChatChannel:GetChatItemCell()
     local content = display.newNode()
     local other_content = display.newNode()
     local bottom = display.newScale9Sprite("chat_bubble_bottom_484x14.png"):addTo(other_content):align(display.RIGHT_BOTTOM,LISTVIEW_WIDTH, 0)
-    local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, 14)
-    local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH,34)
+    local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, 12)
+    local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH,32)
     local chat_icon = self:GetChatIcon():addTo(other_content):align(display.LEFT_TOP, 3, 72)
     local system_label = UIKit:ttfLabel({
         text = _("官方"),
@@ -320,8 +320,8 @@ function GameUIChatChannel:GetChatItemCell()
     -- mine
     local mine_content = display.newNode()
     local bottom = display.newScale9Sprite("chat_bubble_bottom_484x14.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 0)
-    local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 14)
-    local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0,34)
+    local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 12)
+    local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 32)
     local chat_icon = self:GetChatIcon():addTo(mine_content):align(display.RIGHT_TOP, LISTVIEW_WIDTH - 3, 72)
 
     local from_label = UIKit:ttfLabel({
@@ -390,7 +390,7 @@ function GameUIChatChannel:RefreshListView()
             -- UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
             self.dataSource_ = {}
         elseif self._channelType == 'allianceFight' then
-            local status = my_alliance:Status()
+            local status = my_alliance.basicInfo.status
             if status ~= 'prepare' and status ~= 'fight' then
                 self.dataSource_ = {}
                 -- UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
@@ -523,7 +523,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
             local height = content_label:getCascadeBoundingBox().height or 0
             height = math.max(height,20)
             middle:setContentSize(cc.size(CELL_FIX_WIDTH,height))
-            header:align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, bottom:getContentSize().height+middle:getContentSize().height)
+            header:align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, bottom:getContentSize().height+middle:getContentSize().height - 2)
             local fix_height = height - 20
             palyerIcon:align(display.LEFT_TOP,3, bottom:getContentSize().height+middle:getContentSize().height + header:getContentSize().height)
             local final_height = BASE_CELL_HEIGHT + fix_height
@@ -539,7 +539,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
         height = math.max(height,20)
         local fix_height = height - 20
         middle:setContentSize(cc.size(CELL_FIX_WIDTH,height))
-        header:align(display.LEFT_BOTTOM, 0, bottom:getContentSize().height+middle:getContentSize().height)
+        header:align(display.LEFT_BOTTOM, 0, bottom:getContentSize().height+middle:getContentSize().height - 2)
         palyerIcon:align(display.RIGHT_TOP,LISTVIEW_WIDTH - 3,bottom:getContentSize().height+middle:getContentSize().height + header:getContentSize().height)
         local final_height = BASE_CELL_HEIGHT + fix_height
         mainContent.other_content:size(LISTVIEW_WIDTH,final_height)
@@ -710,7 +710,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
                     end
                 else
                     if my_alliance:GetSelf():CanInvatePlayer() then
-                        if User:ServerId() ~= chat.serverId then
+                        if User.serverId ~= chat.serverId then
                             UIKit:showMessageDialog(_("提示"), _("不能邀请其他服务器的玩家"), function()end)
                         else
                             NetManager:getInviteToJoinAlliancePromise(chat.id):done(function()

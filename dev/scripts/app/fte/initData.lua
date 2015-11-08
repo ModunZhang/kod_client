@@ -458,12 +458,6 @@ return {
             location = 3,
             level = 1
         },
-        location_2 = {
-            type = "watchTower",
-            houses = { },
-            location = 2,
-            level = 1
-        },
         location_1 = {
             type = "keep",
             houses = { },

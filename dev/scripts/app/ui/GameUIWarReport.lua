@@ -74,7 +74,7 @@ function GameUIWarReport:onEnter()
     local terrain = report:GetAttackTarget().terrain
     local war_result_label = UIKit:ttfLabel(
         {
-            text = string.format(_("战斗地形:%s(派出%s获得额外力量)"),Localize.terrain[terrain],terrain=="grassLand" and _("绿龙") or terrain=="desert" and _("红龙") or terrain=="iceField" and _("蓝龙")),
+            text = string.format(_("战斗地形:%s"),Localize.terrain[terrain]),
             size = 18,
             color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-195)
@@ -100,7 +100,8 @@ function GameUIWarReport:onEnter()
 
     -- 回放按钮
     local r_data = report:GetData()
-    if r_data.fightWithHelpDefencePlayerReports or r_data.fightWithDefencePlayerReports then
+    local can_replay = r_data.fightWithHelpDefencePlayerReports or r_data.fightWithDefencePlayerReports
+    if can_replay then
         local replay_label = UIKit:ttfLabel({
             text = _("回放"),
             size = 20,
@@ -121,7 +122,7 @@ function GameUIWarReport:onEnter()
         local share_button = WidgetPushButton.new(
             {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
             {scale9 = false}
-        ):addTo(report_body):align(display.CENTER, report_body:getContentSize().width-210, rb_size.height-186)
+        ):addTo(report_body):align(display.CENTER,  report_body:getContentSize().width- (can_replay and 210 or 70),rb_size.height-186)
             :onButtonClicked(function(event)
                 UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
             end)
@@ -223,15 +224,42 @@ function GameUIWarReport:CreateBootyPart()
             added_booty_item_count = added_booty_item_count + 1
             booty_item_bg_color_flag = not booty_item_bg_color_flag
         end
+    else
+        booty_list_bg = WidgetUIBackGround.new({width = item_width,height = 100},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+            :align(display.CENTER,0,-25)
+        local booty_list_bg_size = booty_list_bg:getContentSize()
+        booty_group:addChild(booty_list_bg)
+        local booty_item_bg = display.newScale9Sprite("back_ground_548x40_1.png"):size(520,86)
+            :align(display.CENTER, booty_list_bg_size.width/2, booty_list_bg_size.height/2)
+            :addTo(booty_list_bg)
+
+        local reward_text = ""
+        local report_data = self.report:GetData()
+        if report_data.defencePlayerData and report_data.defencePlayerData.masterOfDefender then
+            if report_data.defencePlayerData.id == User:Id() then
+                reward_text = _("由于使用了城防大师，敌方无法掠夺资源")
+            else
+                reward_text = _("由于敌方使用了城防大师，无法掠夺资源")
+            end
+        else
+            reward_text = _("未获得战利品")
+        end
+        UIKit:ttfLabel({
+            text = reward_text ,
+            size = 20,
+            color = 0x615b44,
+            valign = cc.ui.TEXT_VALIGN_CENTER,
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            dimensions = cc.size(480,0)
+        }):align(display.CENTER,booty_list_bg_size.width/2, booty_list_bg_size.height/2):addTo(booty_list_bg)
     end
     local booty_title_bg = display.newSprite("alliance_evnets_title_548x50.png")
         :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2-25 or -25)
 
     booty_group:addChild(booty_title_bg)
 
-
     UIKit:ttfLabel({
-        text = booty_count > 0 and _("战利品") or _("无战利品") ,
+        text = _("战利品") ,
         size = 24,
         color = 0xffedae
     }):align(display.CENTER,booty_title_bg:getContentSize().width/2, 25):addTo(booty_title_bg)
@@ -295,9 +323,17 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     local report = self.report
     local war_s_label_item = self.details_view:newItem()
     war_s_label_item:setItemSize(540,40)
+    -- 部队信息
+    local left_player_troop = report:GetMyDefenceFightTroop()
+
+    local right_player_troop = report:GetEnemyDefenceFightTroop()
+    -- 龙信息
+    local left_player_dragon = report:GetMyDefenceFightDragon()
+
+    local right_player_dragon = report:GetEnemyDefenceFightDragon()
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = _("战斗统计") ,
+        text = left_player_troop and _("战斗统计") or (report:IsAttackCamp() and _("由于敌方未驻防，战斗未发生") or _("由于我方未驻防，战斗未发生")),
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -307,14 +343,6 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     local left_player = report:GetMyPlayerData()
     local right_player = report:GetEnemyPlayerData()
     self:CreateBelligerents(left_player,right_player)
-    -- 部队信息
-    local left_player_troop = report:GetMyDefenceFightTroop()
-
-    local right_player_troop = report:GetEnemyDefenceFightTroop()
-    -- 龙信息
-    local left_player_dragon = report:GetMyDefenceFightDragon()
-
-    local right_player_dragon = report:GetEnemyDefenceFightDragon()
     -- RoundDatas
     local left_round = report:GetMyRoundDatas()
 
@@ -713,6 +741,10 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
+
+
+
 
 
 

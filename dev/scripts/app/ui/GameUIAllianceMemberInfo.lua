@@ -8,6 +8,7 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
+local Alliance = import('..entity.Alliance')
 local memberMeta = import('..entity.memberMeta')
 local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
@@ -18,7 +19,7 @@ function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call,serverId)
     GameUIAllianceMemberInfo.super.ctor(self)
     self.isMyAlliance = isMyAlliance or false
     self.memberId_ = memberId
-    self.serverId_ = serverId or User:ServerId()
+    self.serverId_ = serverId or User.serverId
     self.func_call = func_call
 end
 
@@ -123,7 +124,7 @@ function GameUIAllianceMemberInfo:OnPlayerButtonClicked( tag )
     end
     local member = Alliance_Manager:GetMyAlliance():GetMemeberById(self.player_info.id)
     if tag == 1 then -- 踢出
-        if Alliance_Manager:GetMyAlliance():Status() == "fight" or Alliance_Manager:GetMyAlliance():Status() == "prepare" then
+        if Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" or Alliance_Manager:GetMyAlliance().basicInfo.status == "prepare" then
             UIKit:showMessageDialog(_("提示"), _("联盟正在战争准备期或战争期,不能将玩家踢出联盟"))
             return
         end
@@ -214,8 +215,8 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     else
         table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLogoutTime)})
     end
-    local __,__,indexName = string.find(User:ServerId() or "","-(%d+)")
-    table.insert(r,{_("服务器"),string.format("%s %d",Localize.server_name[User:ServerLevel()],indexName)})
+    local __,__,indexName = string.find(User.serverId or "","-(%d+)")
+    table.insert(r,{_("服务器"),string.format("%s %d",Localize.server_name[User.serverLevel],indexName)})
     table.insert(r,{_("战斗力"),string.formatnumberthousands(player.power)})
     table.insert(r,{_("击杀"),string.formatnumberthousands(player.kill)})
 
@@ -270,8 +271,8 @@ function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
         if self.isMyAlliance then
             local alliacne = Alliance_Manager:GetMyAlliance()
             local member = alliacne:GetMemeberById(self.player_info.id)
-            local allianceObj = alliacne:GetAllianceMap():FindMapObjectById(member:MapId())
-            location = string.format("(%d,%d)",allianceObj:GetLogicPosition())
+            local allianceObj = alliacne:FindMapObjectById(member:MapId())
+            location = string.format("(%d,%d)",Alliance:GetLogicPositionWithMapObj(allianceObj))
         end
         local level = User:GetPlayerLevelByExp(self.player_info.levelExp)
         local exp_config = config_playerLevel[level]

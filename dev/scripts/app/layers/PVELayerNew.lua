@@ -254,10 +254,9 @@ function PVELayerNew:GotoPve()
 
     self:RefreshPve()
     self:MoveAirship()
-    display.newNode():addTo(self):schedule(function()
+    scheduleAt(self, function()
         self:RefreshBattery()
-    end, 1)
-    self:RefreshBattery()
+    end)
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)
     local w,h = self.normal_map:GetSize()
@@ -344,8 +343,8 @@ end
 function PVELayerNew:RefreshBattery()
     if self.airship then
         local battery = self.airship.battery
-        local limit = self.user:GetStrengthResource():GetValueLimit()
-        local value = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local limit = self.user:GetResProduction("stamina").limit
+        local value = self.user:GetResValueByType("stamina")
         local ratio = value / limit
         ratio = ratio > 1 and 1 or ratio
         if ratio >= 1.0 then

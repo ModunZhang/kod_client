@@ -26,7 +26,7 @@ MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
 function MultiAllianceLayer:ctor(scene, arrange, ...)
     self.refresh_village_node = display.newNode():addTo(self)
-    self.my_allinace_id = Alliance_Manager:GetMyAlliance():Id()
+    self.my_allinace_id = Alliance_Manager:GetMyAlliance().id
     self.mine_player_id = Alliance_Manager:GetMyAlliance():GetSelf():Id()
 
 
@@ -222,10 +222,10 @@ function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
 end
 function MultiAllianceLayer:GetTerrains()
     if #self.alliances == 1 then
-        return {self.alliances[1]:Terrain()}
+        return {self.alliances[1].basicInfo.terrain}
     end
     local first, second = unpack(self.alliances)
-    return {first:Terrain(), second:Terrain()}
+    return {first.basicInfo.terrain, second.basicInfo.terrain}
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
@@ -289,21 +289,21 @@ end
 function MultiAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
     if isAdd then
         for _, v in ipairs(self.alliances) do
-            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnMarchEventRefreshed)
-            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnVillageEventsDataChanged)
+            -- v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+            -- v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+            -- v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+            -- v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+            -- v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnMarchEventRefreshed)
+            -- v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnVillageEventsDataChanged)
         end
     else
         for _, v in ipairs(self.alliances) do
-            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnMarchEventRefreshed)
-            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnVillageEventsDataChanged)
+            -- v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+            -- v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+            -- v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+            -- v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+            -- v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnMarchEventRefreshed)
+            -- v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnVillageEventsDataChanged)
         end
     end
 end
@@ -374,14 +374,14 @@ function MultiAllianceLayer:CreateVillageFlag(e)
     return flag
 end
 function MultiAllianceLayer:AddAllianceBelvedereEvent(isAdd)
-    local alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
-    if isAdd then
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-    else
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-    end
+    -- local alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
+    -- if isAdd then
+    --     alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
+    --     alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+    -- else
+    --     alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
+    --     alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+    -- end
 end
 function MultiAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_id)
     local alliance_vew = self.alliance_views[self:GetAllianceViewIndexById(alliance_id)]
@@ -390,7 +390,7 @@ function MultiAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_i
 end
 function MultiAllianceLayer:GetAllianceViewIndexById(id)
     for i,v in ipairs(self.alliances) do
-        if v:Id() == id then
+        if v.id == id then
             return i
         end
     end
@@ -444,36 +444,36 @@ function MultiAllianceLayer:StartCorpsTimer()
     self:scheduleUpdate()
 end
 function MultiAllianceLayer:CreateAllianceCorps(alliance)
-    if alliance:IsMyAlliance() then -- 如果是返回事件 无条件显示
-        table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
-    table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
-        self:CreateCorpsIf(event)
-    end)
-    table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
-        self:CreateCorpsIf(event)
-    end)
-    table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
-        self:CreateCorpsIf(event)
-    end)
-    else
-        --敌方联盟
-        local my_alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
-        local my_alliance_watch_tower_level = my_alliance_belvedere:GetWatchTowerLevel()
-        table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
-            self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
-        end)
-        table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
-            self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
-        end)
-        table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
-            self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
-        end)
-        table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
-            self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
-        end)
-    end
+    -- if alliance:IsMyAlliance() then -- 如果是返回事件 无条件显示
+    --     table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
+    --         self:CreateCorpsIf(event)
+    --     end)
+    -- table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
+    --     self:CreateCorpsIf(event)
+    -- end)
+    -- table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+    --     self:CreateCorpsIf(event)
+    -- end)
+    -- table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+    --     self:CreateCorpsIf(event)
+    -- end)
+    -- else
+    --     --敌方联盟
+    --     local my_alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
+    --     local my_alliance_watch_tower_level = my_alliance_belvedere:GetWatchTowerLevel()
+    --     table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
+    --         self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
+    --     end)
+    --     table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
+    --         self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
+    --     end)
+    --     table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+    --         self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
+    --     end)
+    --     table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+    --         self:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
+    --     end)
+    -- end
 end
 --过滤敌方对我的行军路线
 function MultiAllianceLayer:CreateEnemyTroopsIf(event,my_alliance_belvedere,my_alliance_watch_tower_level)
@@ -521,51 +521,51 @@ function MultiAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map,alli
 end
 
 function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie,alliance)
-    if alliance:IsMyAlliance() then
-        if changed_map.removed then
-            table.foreachi(changed_map.removed,function(_,marchEvent)
-                local time = math.ceil(marchEvent:ArriveTime() - app.timer:GetServerTime())
-                if time < 5 then -- 5秒内误差也认为是部队到达,不是撤退引起的删除行军事件
-                    local player_role = marchEvent:GetPlayerRole()
-                    if player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
-                        if is_strkie then
-                            app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
-                        else
-                            if not marchEvent:IsReturnEvent() then
-                                app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
-                            end
-                        end
-                    end
-                end
-                self:DeleteCorpsById(marchEvent:Id())
-            end)
-        elseif changed_map.edited then
-            table.foreachi(changed_map.edited,function(_,marchEvent)
-                self:CreateCorpsIf(marchEvent)
-            end)
-        elseif changed_map.added then
-            table.foreachi(changed_map.added,function(_,marchEvent)
-                self:CreateCorpsIf(marchEvent, true)
-            end)
-        end
-    else
-        local my_alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
-        local my_alliance_watch_tower_level = my_alliance_belvedere:GetWatchTowerLevel()
+    -- if alliance:IsMyAlliance() then
+    --     if changed_map.removed then
+    --         table.foreachi(changed_map.removed,function(_,marchEvent)
+    --             local time = math.ceil(marchEvent:ArriveTime() - app.timer:GetServerTime())
+    --             if time < 5 then -- 5秒内误差也认为是部队到达,不是撤退引起的删除行军事件
+    --                 local player_role = marchEvent:GetPlayerRole()
+    --                 if player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
+    --                     if is_strkie then
+    --                         app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
+    --                     else
+    --                         if not marchEvent:IsReturnEvent() then
+    --                             app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+    --                         end
+    --                     end
+    --                 end
+    --             end
+    --             self:DeleteCorpsById(marchEvent:Id())
+    --         end)
+    --     elseif changed_map.edited then
+    --         table.foreachi(changed_map.edited,function(_,marchEvent)
+    --             self:CreateCorpsIf(marchEvent)
+    --         end)
+    --     elseif changed_map.added then
+    --         table.foreachi(changed_map.added,function(_,marchEvent)
+    --             self:CreateCorpsIf(marchEvent, true)
+    --         end)
+    --     end
+    -- else
+    --     local my_alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
+    --     local my_alliance_watch_tower_level = my_alliance_belvedere:GetWatchTowerLevel()
 
-        if changed_map.removed then
-            table.foreachi(changed_map.removed,function(_,marchEvent)
-                self:DeleteCorpsById(marchEvent:Id())
-            end)
-        elseif changed_map.edited then
-            table.foreachi(changed_map.edited,function(_,marchEvent)
-                self:CreateEnemyTroopsIf(marchEvent,my_alliance_belvedere,my_alliance_watch_tower_level)
-            end)
-        elseif changed_map.added then
-            table.foreachi(changed_map.added,function(_,marchEvent)
-                self:CreateEnemyTroopsIf(marchEvent,my_alliance_belvedere,my_alliance_watch_tower_level)
-            end)
-        end
-    end
+    --     if changed_map.removed then
+    --         table.foreachi(changed_map.removed,function(_,marchEvent)
+    --             self:DeleteCorpsById(marchEvent:Id())
+    --         end)
+    --     elseif changed_map.edited then
+    --         table.foreachi(changed_map.edited,function(_,marchEvent)
+    --             self:CreateEnemyTroopsIf(marchEvent,my_alliance_belvedere,my_alliance_watch_tower_level)
+    --         end)
+    --     elseif changed_map.added then
+    --         table.foreachi(changed_map.added,function(_,marchEvent)
+    --             self:CreateEnemyTroopsIf(marchEvent,my_alliance_belvedere,my_alliance_watch_tower_level)
+    --         end)
+    --     end
+    -- end
 end
 
 --适配数据给界面 如果已有路线会更新
@@ -576,9 +576,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent, is_added_event)
     to.index = self:GetAllianceViewIndexById(to_alliance_id)
     local is_enemy = false
     if not marchEvent:IsReturnEvent() then
-        is_enemy = self:GetMyAlliance():Id() ~= from_alliance_id
+        is_enemy = self:GetMyAlliance().id ~= from_alliance_id
     else -- return
-        is_enemy = self:GetMyAlliance():Id() ~= to_alliance_id
+        is_enemy = self:GetMyAlliance().id ~= to_alliance_id
     end
     local ally = ENEMY
     if not is_enemy then
@@ -611,7 +611,7 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent, is_added_event)
     -- if is_added_event and ally == MINE and not marchEvent:IsReturnEvent() then
     --     self:TrackCorpsById(marchEvent:Id())
     -- end
-    local myid = self:GetMyAlliance():Id()
+    local myid = self:GetMyAlliance().id
     if marchEvent:IsReturnEvent() then
         if marchEvent:MarchType() == "monster" or
             (
@@ -951,17 +951,17 @@ end
 
 function MultiAllianceLayer:GetClickedObject(world_x, world_y)
     local logic_x, logic_y, alliance_view = self:GetAllianceCoordWithPoint(world_x, world_y)
-    return alliance_view:GetClickedObject(world_x, world_y), self:GetMyAlliance():Id() == alliance_view:GetAlliance():Id()
+    return alliance_view:GetClickedObject(world_x, world_y), self:GetMyAlliance().id == alliance_view:GetAlliance().id
 end
 local CLICK_EMPTY_TAG = 911
 function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
     local alliance_view
     for i,v in ipairs(self.alliance_views) do
-        if is_my_alliance and v:GetAlliance():Id() == self:GetMyAlliance():Id() then
+        if is_my_alliance and v:GetAlliance().id == self:GetMyAlliance().id then
             alliance_view = v
             break
         end
-        if not is_my_alliance and v:GetAlliance():Id() ~= self:GetMyAlliance():Id() then
+        if not is_my_alliance and v:GetAlliance().id ~= self:GetMyAlliance().id then
             alliance_view = v
             break
         end
@@ -969,7 +969,7 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
     self:RemoveClickNode()
     local click_node = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode(), 10000, CLICK_EMPTY_TAG)
     local logic_map = alliance_view:GetLogicMap()
-    local lx,ly = building:GetEntity():GetLogicPosition()
+    local lx,ly = Alliance:GetLogicPositionWithMapObj(building:GetEntity())
     local p = promise.new()
     click_node:pos(logic_map:ConvertToMapPosition(lx,ly)):opacity(0)
         :runAction(

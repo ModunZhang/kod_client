@@ -4,7 +4,7 @@
 --
 local window = import("..utils.window")
 local GameUIEquip = import(".GameUIEquip")
-local WidgetManufacture = import("..widget.WidgetManufactureNew")
+local WidgetManufactureNew = import("..widget.WidgetManufactureNew")
 local GameUIMaterials = UIKit:createUIClass("GameUIMaterials", "GameUIWithCommonHeader")
 local timer = app.timer
 function GameUIMaterials:ctor(toolShop, blackSmith)
@@ -53,7 +53,7 @@ function GameUIMaterials:TabButtons()
                 self.euip_view:HideAll()
 
                 if self.toolShop:IsUnlocked() then
-                    self.manufacture = WidgetManufacture.new(self.toolShop):addTo(self:GetView())
+                    self.manufacture = WidgetManufactureNew.new(self.toolShop):addTo(self:GetView())
                 end
             else
                 if self.manufacture then

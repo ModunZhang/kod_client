@@ -33,11 +33,15 @@ function GameUILoginBeta:ctor()
         {image = "animations/ui_animation_0.pvr.ccz",list = "animations/ui_animation_0.plist"},
         {image = "animations/ui_animation_1.pvr.ccz",list = "animations/ui_animation_1.plist"},
         {image = "animations/ui_animation_2.pvr.ccz",list = "animations/ui_animation_2.plist"},
-        {image = "ui_png_bg.pvr.ccz",list = "ui_png_bg.plist"},
-        {image = "ui_png_button.pvr.ccz",list = "ui_png_button.plist"},
+        {image = "ui_png_bg0.pvr.ccz",list = "ui_png_bg0.plist"},
+        {image = "ui_png_bg1.pvr.ccz",list = "ui_png_bg1.plist"},
+        {image = "ui_png_button0.pvr.ccz",list = "ui_png_button0.plist"},
+        {image = "ui_png_button1.pvr.ccz",list = "ui_png_button1.plist"},
         {image = "ui_png.pvr.ccz",list = "ui_png.plist"},
         {image = "ui_pvr_0.pvr.ccz",list = "ui_pvr_0.plist"},
         {image = "ui_pvr_1.pvr.ccz",list = "ui_pvr_1.plist"},
+
+
     -- {image = "emoji.png",list = "emoji.plist"},
 
 
@@ -172,8 +176,17 @@ function GameUILoginBeta:startGame()
     display.getRunningScene().startGame = true
     local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
     local seq = transition.sequence({sp,cc.CallFunc:create(function()
-        -- self:connectLogicServer()
-        self:loginAction()
+        if app:GetGameDefautlt():IsPassedSplash() then
+            self:loginAction()
+        else
+            self.verLabel:fadeOut(0.5)
+            self.user_agreement_label:fadeOut(0.5)
+            self.user_agreement_button:hide()
+            self:RunFte(function()
+                self.passed_splash = true
+                self:loginAction()
+            end)
+        end
     end)})
     self.star_game_sprite:runAction(seq)
 end
@@ -187,6 +200,7 @@ function GameUILoginBeta:createUserAgreement()
         color = UIKit:hex2c3b(0x2a575d),
     }):addTo(self.ui_layer,2)
         :align(display.LEFT_BOTTOM,display.left+2,display.bottom)
+    self.user_agreement_label = user_agreement_label
     local button = WidgetPushButton.new()
         :addTo(self.ui_layer,2):align(display.LEFT_BOTTOM, display.left+2,display.bottom)
         :onButtonClicked(function(event)
@@ -199,6 +213,7 @@ function GameUILoginBeta:createUserAgreement()
         end)
     button:setContentSize(user_agreement_label:getContentSize())
     button:setTouchSwallowEnabled(true)
+    self.user_agreement_button = button
 end
 function GameUILoginBeta:OpenUserAgreement()
     local dialog = UIKit:newWidgetUI("WidgetPopDialog",770,_("用户协议"),display.top-130):addTo(self.ui_layer,2)
@@ -284,24 +299,7 @@ end
 function GameUILoginBeta:OnMoveInStage()
     self:showVersion()
     self:GetServerInfo(function()
-        if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
-            if not app.client_tag then
-                NetManager:getUpdateFileList(function(success, msg)
-                    if not success then
-                        device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
-                            app:restart(false)
-                        end)
-                        return
-                    end
-                    local serverFileList = json.decode(msg)
-                    app.client_tag = serverFileList.tag
-                end)
-            end
-            self:loadLocalResources()
-        else
-            self:loadLocalJson()
-            self:loadServerJson()
-        end
+        self:LoadServerInfo()
     end)
 end
 function GameUILoginBeta:GetServerInfo(callback)
@@ -321,11 +319,33 @@ function GameUILoginBeta:GetServerInfo(callback)
         else
             self:performWithDelay(function()
                 self:showError(_("获取服务器信息失败!"),function()
-                    self:GetServerInfo()
+                    self:GetServerInfo(function()
+                        self:LoadServerInfo()
+                    end)
                 end)
             end, 3)
         end
     end)
+end
+function GameUILoginBeta:LoadServerInfo()
+    if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
+        if not app.client_tag then
+            NetManager:getUpdateFileList(function(success, msg)
+                if not success then
+                    device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
+                        app:restart(false)
+                    end)
+                    return
+                end
+                local serverFileList = json.decode(msg)
+                app.client_tag = serverFileList.tag
+            end)
+        end
+        self:loadLocalResources()
+    else
+        self:loadLocalJson()
+        self:loadServerJson()
+    end
 end
 
 function GameUILoginBeta:onCleanup()
@@ -456,6 +476,7 @@ function GameUILoginBeta:login()
         ext.market_sdk.onPlayerLevelUp(User:GetPlayerLevelByExp(userData.basicInfo.levelExp))
 
         self:performWithDelay(function()
+            self.enter_next_scene = true
             if DataManager:getUserData().basicInfo.terrain == "__NONE__" then
                 app:EnterFteScene()
             else
@@ -749,6 +770,7 @@ end
 
 
 return GameUILoginBeta
+
 
 
 

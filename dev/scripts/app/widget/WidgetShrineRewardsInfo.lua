@@ -86,11 +86,14 @@ function WidgetShrineRewardsInfo:CreateInfoItems(shrineStage)
     self.info_listview:reload()
 end
 function WidgetShrineRewardsInfo:GetListData(shrineStage)
-    local terrain = Alliance_Manager:GetMyAlliance():Terrain()
+    local terrain = Alliance_Manager:GetMyAlliance().basicInfo.terrain
     local data = {}
-    data[1] = {string.formatnumberthousands(shrineStage:GoldKill()),shrineStage:GoldRewards(terrain)}
-    data[2] = {string.formatnumberthousands(shrineStage:SilverKill()),shrineStage:SilverRewards(terrain)}
-    data[3] = {string.formatnumberthousands(shrineStage:BronzeKill()),shrineStage:BronzeRewards(terrain)}
+    data[1] = {string.formatnumberthousands(shrineStage.playerKill_3),
+               UtilsForShrine:FormatShrineRewards(shrineStage, 3, terrain)}
+    data[2] = {string.formatnumberthousands(shrineStage.playerKill_2),
+               UtilsForShrine:FormatShrineRewards(shrineStage, 2, terrain)}
+    data[3] = {string.formatnumberthousands(shrineStage.playerKill_1),
+               UtilsForShrine:FormatShrineRewards(shrineStage, 1, terrain)}
     return data
 end
 return WidgetShrineRewardsInfo

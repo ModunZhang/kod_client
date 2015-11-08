@@ -27,6 +27,13 @@ require("app.utils.GameUtils")
 __init_localize_file__()
 require("app.datas.GameDatas")
 require("app.utils.DataUtils")
+require("app.utils.UtilsForEvent")
+require("app.utils.UtilsForTask")
+require("app.utils.UtilsForItem")
+require("app.utils.UtilsForTech")
+require("app.utils.UtilsForSoldier")
+require("app.utils.UtilsForBuilding")
+require("app.utils.UtilsForShrine")
 require("app.utils.UIKit")
 require("app.utils.window")
 require("app.service.NetManager")
@@ -40,6 +47,8 @@ local Timer = import('.utils.Timer')
 local User_ = import('.entity.User')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+local AllianceManager_ = import(".entity.AllianceManager")
+Alliance_Manager = AllianceManager_.new()
 CLOUD_TAG = 1987
 local speed = 2
 -- local function transition_(scene, status)
@@ -132,6 +141,7 @@ end
 local is_debug_cloud = true
 
 local enter_next_scene = function(new_scene_name, ...)
+    print("enter_next_scene=",new_scene_name,...)
     if is_debug_cloud then
         enter_scene_transition(new_scene_name, ...)
     else
@@ -193,7 +203,7 @@ function MyApp:GetGameLanguage()
 end
 
 function MyApp:sendPlayerLanguageCodeIf()
-    if self:GetGameLanguage() ~= User:Language() then
+    if self:GetGameLanguage() ~= User.basicInfo.language then
         NetManager:getSetPlayerLanguagePromise(self:GetGameLanguage())
     end
 end
@@ -363,6 +373,15 @@ function MyApp:onEnterForeground()
             scene:GetHomePage():PromiseOfFteAlliance()
         end
     end
+    if scene.__cname == "MainScene" then
+        if (self:GetGameDefautlt():IsPassedSplash() 
+        or scene.ui.passed_splash)
+        and not scene.ui.enter_next_scene then
+            return scene.ui:loginAction()
+        else
+            return
+        end
+    end
     self:retryConnectServer(false)
 end
 function MyApp:onEnterPause()
@@ -394,17 +413,12 @@ end
 function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
     NetManager:getPlayerCityInfoPromise(id):done(function(response)
         local user_data = response.msg.playerViewData
-        local user = User_.new(user_data):OnBasicInfoChanged(user_data)
-                                         :OnResourcesChangedByTime(user_data)
-                                         :OnVipEventDataChange(user_data)
-        local city = City.new(user)
-            :InitWithJsonData(user_data)
+        local user = User_.new(user_data):OnUserDataChanged(user_data)
+        local city = City.new(user):InitWithJsonData(user_data)
             :OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
-            -- app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
             enter_next_scene("FriendCityScene", user, city, location)
         else
-            -- app:enterScene("OtherCityScene", {user, city, location}, "custom", -1, transition_)
             enter_next_scene("OtherCityScene", user, city, location)
         end
     end)
@@ -427,17 +441,17 @@ function MyApp:EnterMyAllianceScene(location)
         return
     end
 
-    local alliance_name = "AllianceScene"
-    local my_status = Alliance_Manager:GetMyAlliance():Status()
+    local alliance_name = "AllianceDetailScene"
+    local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
     if my_status == "prepare" or  my_status == "fight" then
-        alliance_name = "AllianceBattleScene"
+        alliance_name = "AllianceDetailScene"
     end
     -- app:enterScene(alliance_name, {location}, "custom", -1, transition_)
     enter_next_scene(alliance_name, location)
 end
 function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     if not Alliance_Manager:GetMyAlliance():IsDefault() then
-        local my_status = Alliance_Manager:GetMyAlliance():Status()
+        local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
         local alliance_name = "AllianceScene"
         if my_status == "prepare" or  my_status == "fight" then
             alliance_name = "AllianceBattleScene"
@@ -454,6 +468,9 @@ function MyApp:EnterPVEScene(level)
 end
 function MyApp:EnterPVEFteScene(level)
     enter_next_scene("PVESceneNewFte", User, level)
+end
+function MyApp:EnterWorldScene()
+    enter_next_scene("WorldScene")
 end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
@@ -485,7 +502,7 @@ function MyApp:EnterUserMode()
     assert(DataManager:hasUserData())
     InitGame(DataManager:getUserData())
     DataManager:setUserAllianceData(DataManager.allianceData)
-    DataManager:setEnemyAllianceData(DataManager.enemyAllianceData)
+    -- DataManager:setEnemyAllianceData(DataManager.enemyAllianceData)
 end
 
 function MyApp:getSupportMailFormat(category,logMsg)
@@ -524,7 +541,7 @@ function MyApp:sendApnIdIf()
         token = string.sub(token,2,string.len(token)-1)
         token = string.gsub(token," ","")
     end
-    if token ~= User:ApnId() and string.len(token) > 0 then
+    if token ~= User.apnId and string.len(token) > 0 then
         NetManager:getSetApnIdPromise(token)
     end
 end
@@ -555,7 +572,7 @@ function MyApp:transactionObserver(event)
                 local openRewardIf = function()
                     local GameUIActivityRewardNew_instance = UIKit:GetUIInstance("GameUIActivityRewardNew")
                     if User and not GameUIActivityRewardNew_instance then
-                        local countInfo = User:GetCountInfo()
+                        local countInfo = User.countInfo
                         if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then
                             UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true) -- 如果首充 弹出奖励界面
                         end

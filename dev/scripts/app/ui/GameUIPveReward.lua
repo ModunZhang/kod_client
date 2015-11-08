@@ -135,8 +135,7 @@ function GameUIPveReward:CheckMaterials(callback, rewards)
             materials_map[name] = true
         end
     end
-    local material_man = City:GetMaterialManager()
-    if material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER, materials_map) then
+    if User:IsMaterialOutOfRange("soldierMaterials", materials_map) then
         UIKit:showMessageDialogWithParams({
             title = _("提示"),
             content = _("当前材料库房中的士兵材料已满，你可能无法获得材料奖励。是否仍要获取？"),

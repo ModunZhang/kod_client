@@ -83,13 +83,13 @@ function GameUIAllianceTitle:BuildUI()
     self.widget_page = widget_page
     if Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceMemeberTitle() then
     	local label = widget_page.current_page_label
-    	display.newSprite("edit_alliance_title_icon_27x26.png")
-    		:align(display.RIGHT_CENTER, label:getPositionX()-label:getContentSize().width-10, 32):addTo(widget_page)
-    	WidgetPushTransparentButton.new(cc.rect(0,0,434,46))
-    		:addTo(widget_page):align(display.LEFT_BOTTOM, 60, 10)
-    		:onButtonClicked(function()
-    			self:CreateEditTitleUI()
-    		end)
+    	-- display.newSprite("edit_alliance_title_icon_27x26.png")
+    	-- 	:align(display.RIGHT_CENTER, label:getPositionX()-label:getContentSize().width-10, 32):addTo(widget_page)
+    	-- WidgetPushTransparentButton.new(cc.rect(0,0,434,46))
+    	-- 	:addTo(widget_page):align(display.LEFT_BOTTOM, 60, 10)
+    	-- 	:onButtonClicked(function()
+    	-- 		self:CreateEditTitleUI()
+    	-- 	end)
     end
     local listBg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(572,346),cc.rect(15,10,538,100))
 		:addTo(bg)
@@ -138,7 +138,7 @@ function GameUIAllianceTitle:CheckArchonLastLoginTimeGraterThen7Days()
 end
 
 function GameUIAllianceTitle:OnBuyAllianceArchonButtonClicked()
-    if config_intInit.buyArchonGem.value > User:GetGemResource():GetValue() then
+    if config_intInit.buyArchonGem.value > User:GetGemValue() then
         UIKit:showMessageDialog(nil, _("金龙币不足"), function()
         end)
     elseif Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() then

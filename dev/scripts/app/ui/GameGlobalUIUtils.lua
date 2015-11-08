@@ -65,12 +65,6 @@ end
 function GameGlobalUIUtils:showAllianceNotice(key,params)
     local notice_content = Localize.alliance_notice[key]
     if key == "attackVillage" then
-        dump(params,"showAllianceNotice attackVillage")
-        if Alliance_Manager:GetMyAlliance():Id() == params[2] then
-            notice_content = notice_content[1]
-        else
-            notice_content = notice_content[2]
-        end
         notice_content = string.format(notice_content,params[1],params[3],Localize.village_name[params[4]])
     elseif key == "attackMonster" then
         local monster = Localize.soldier_name[string.split(params[3],"_")[1]]

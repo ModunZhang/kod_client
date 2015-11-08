@@ -8,9 +8,7 @@ local GameUINpc = import("..ui.GameUINpc")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 local Sprite = import("..sprites.Sprite")
-local SoldierManager = import("..entity.SoldierManager")
-local User = import("..entity.User")
-local NotifyItem = import("..entity.NotifyItem")
+local NotifyItem = import("..utils.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 local GameUIActivityRewardNew = import("..ui.GameUIActivityRewardNew")
@@ -29,26 +27,11 @@ function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
     self.home_page = self:CreateHomePage()
 
-    self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
-    self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
-
-
-
     local alliance = Alliance_Manager:GetMyAlliance()
-    local alliance_map = alliance:GetAllianceMap()
-    alliance:AddListenOnType(self, alliance.LISTEN_TYPE.OPERATION)
-
-
     self.firstJoinAllianceRewardGeted = DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted
-
     if not UIKit:GetUIInstance('GameUIWarSummary') and alliance:LastAllianceFightReport() then
         UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
     end
-
-
-    self:RefreshStrenth()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
@@ -62,9 +45,14 @@ function MyCityScene:onEnter()
     --     align = cc.TEXT_ALIGNMENT_CENTER,
     -- }):addTo(self, 1000000)
     -- :align(display.RIGHT_TOP, display.width, display.height)
+
+    alliance:AddListenOnType(self, "operation")
+    self:GetCity():GetUser():AddListenOnType(self, "soldierStars")
+    self:GetCity():GetUser():AddListenOnType(self, "soldierEvents")
+    self:GetCity():GetUser():AddListenOnType(self, "houseEvents")
+    self:GetCity():GetUser():AddListenOnType(self, "buildingEvents")
 end
 function MyCityScene:onExit()
-    self:GetCity():GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     self.home_page = nil
     MyCityScene.super.onExit(self)
 end
@@ -205,13 +193,6 @@ function MyCityScene:RefreshLockBtnStatus()
         btn:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_png, true)
     end)
 end
-function MyCityScene:RefreshStrenth()
-    local limit = self.city:GetUser():GetStrengthResource():GetValueLimit()
-    local value = self.city:GetUser():GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local ratio = value / limit
-    ratio = ratio > 1 and 1 or ratio
-    self:GetSceneLayer():GetAirship():SetBattery(ratio)
-end
 function MyCityScene:IteratorLockButtons(func)
     for i,v in ipairs(self:GetTopLayer():getChildren()) do
         if func(v) then
@@ -228,7 +209,7 @@ end
 function MyCityScene:GetHomePage()
     return self.home_page
 end
-function MyCityScene:OnOperation(alliance, op)
+function MyCityScene:OnAllianceDataChanged_operation(alliance, op)
     if op == "join" and
         Alliance_Manager:HasBeenJoinedAlliance() and
         not self.firstJoinAllianceRewardGeted
@@ -270,7 +251,7 @@ function MyCityScene:FteEditName(func)
             func()
         end
     else
-        if ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
+        if User:GetItemCount("changePlayerName") == 0 then
             NetManager:getFinishFTE()
             if type(func) == "function" then
                 func()
@@ -324,42 +305,54 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     assert(lock_button, building_type)
     return lock_button
 end
-function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
-    self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
-end
-function MyCityScene:OnUserBasicChanged(user, changed)
-    MyCityScene.super.OnUserBasicChanged(self, user, changed)
-    if changed.terrain then
-        self:ChangeTerrain(changed.terrain.new)
+function MyCityScene:OnUserDataChanged_houseEvents(userData, deltaData)
+    if deltaData("houseEvents.add") then
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
     end
-    if changed.power then
-        self:GetHomePage():ShowPowerAni(cc.p(display.cx, display.cy), changed.power.old)
+    if deltaData("houseEvents.remove") then
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end
 end
-function MyCityScene:OnUpgradingBegin()
-    app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
-    self:GetSceneLayer():CheckCanUpgrade()
-end
-function MyCityScene:OnUpgrading()
-
-end
-function MyCityScene:OnUpgradingFinished(building)
-    if building:GetType() == "wall" then
-        self:GetSceneLayer():UpdateWallsWithCity(self:GetCity())
+function MyCityScene:OnUserDataChanged_buildingEvents(userData, deltaData)
+    if deltaData("buildingEvents.add") then
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
     end
-    self:GetSceneLayer():CheckCanUpgrade()
-    app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    local ok, value = deltaData("buildingEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.location == 21 then
+                self:GetSceneLayer():UpdateWallsWithCity(self:GetCity())    
+            end
+        end
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
 end
-
-function MyCityScene:OnBeginRecruit()
-    self:GetHomePage():OnTaskChanged()
+function MyCityScene:OnUserDataChanged_soldierEvents(userData, deltaData)
+    if deltaData("soldierEvents.add") then
+        self:GetHomePage():OnUserDataChanged_growUpTasks()
+    end
+    local ok, value = deltaData("soldierEvents.remove")
+    if ok then
+        local event = value[1]
+        self:GetHomePage():OnUserDataChanged_growUpTasks()
+        self:GetSceneLayer():MoveBarracksSoldiers(event.name)
+    end
 end
-function MyCityScene:OnRecruiting()
+function MyCityScene:OnUserDataChanged_soldierStars(userData, deltaData)
+    self:GetSceneLayer():UpdateSoldiersStar()
 end
-function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
-    self:GetHomePage():OnTaskChanged()
-    local star = self:GetCity():GetSoldierManager():GetStarBySoldierType(soldier_type)
-    self:GetSceneLayer():MoveBarracksSoldiers(soldier_type)
+function MyCityScene:OnUserDataChanged_basicInfo(userData, deltaData)
+    MyCityScene.super.OnUserDataChanged_basicInfo(self, userData, deltaData)
+    if deltaData("basicInfo.terrain") then
+        self:ChangeTerrain(userData.basicInfo.terrain)
+    end
+    if deltaData("basicInfo.power") then
+        self:GetHomePage():ShowPowerAni(cc.p(display.cx, display.cy), userData.basicInfo.power)
+    end
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()
@@ -395,7 +388,6 @@ end
 local ui_map = setmetatable({
     ruins          = {"GameUIBuild"               ,                           },
     keep           = {"GameUIKeep"                ,        "upgrade",         },
-    watchTower     = {"GameUIWatchTower"          ,                           },
     warehouse      = {"GameUIWarehouse"           ,        "upgrade",         },
     dragonEyrie    = {"GameUIDragonEyrieMain"     ,         "dragon",         },
     barracks       = {"GameUIBarracks"            ,        "recruit",         },
@@ -419,16 +411,18 @@ local ui_map = setmetatable({
     woodcutter     = {"GameUIResource"            ,},
     quarrier       = {"GameUIResource"            ,},
     miner          = {"GameUIResource"            ,},
-    wall           = {"GameUIWall"                ,       "upgrade",         },
+    wall           = {"GameUIWall"                ,       "upgrade",          },
     tower          = {"GameUITower"               ,},
+    watchTower     = {"GameUIWatchTower"               ,  "march"             },
     airship        = {},
     FairGround     = {},
     square         = {},
 }, {__index = function() assert(false) end})
 function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
     local city = self:GetCity()
+    local User = city:GetUser()
     if iskindof(building, "HelpedTroopsSprite") then
-        local helped = city:GetHelpedByTroops()[building:GetIndex()]
+        local helped = User.helpedByTroops[building:GetIndex()]
         local user = self.city:GetUser()
         NetManager:getHelpDefenceTroopDetailPromise(user:Id(),helped.id):done(function(response)
             LuaUtils:outputTable("response", response)
@@ -459,6 +453,8 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
         UIKit:newGameUI("GameUIGacha", self.city):AddToScene(self, true)
     elseif type_ == "square" then
         UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
+    elseif type_ == "watchTower" then
+        UIKit:newGameUI(uiarrays[1], city, uiarrays[2]):AddToScene(self, true)
     else
         if entity:IsUnlocked() then
             UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)

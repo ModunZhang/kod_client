@@ -8,15 +8,13 @@ local cocos_promise = import("..utils.cocos_promise")
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
-
-
 NetManager = {}
 -- 过滤器
 local function get_player_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-        LuaUtils:outputTable("get_player_response_msg edit",edit)
+        -- LuaUtils:outputTable("get_player_response_msg edit",edit)
         DataManager:setUserData(user_data, edit)
         return response
     end
@@ -208,14 +206,21 @@ local function get_response_delete_report_msg(response)
 end
 -- 只更新市政厅每日任务
 local function get_daily_quests_response_msg(response)
-    LuaUtils:outputTable("response", response)
+    -- LuaUtils:outputTable("response", response)
     if response.msg.playerData then
-        DataManager:getUserData().dailyQuests = response.msg.playerData[1][2]
-        User:OnDailyQuestsChanged(DataManager:getUserData())
+        local userData = DataManager:getUserData()
+        local deltaData = decodeInUserDataFromDeltaData(userData, response.msg.playerData)
+        DataManager:setUserData(userData, deltaData)
     end
     return response
 end
 local function get_alliance_response_msg(response)
+    if response.msg.mapIndexData then
+        Alliance_Manager:setMapIndexData(response.msg.mapIndexData)
+    end
+    if response.msg.mapData and response.msg.mapData ~= json.null then
+        Alliance_Manager.my_alliance_mapData = response.msg.mapData
+    end
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
         if user_alliance_data == json.null then
@@ -230,10 +235,10 @@ local function get_alliance_response_msg(response)
 end
 -- enemyAllianceData 全是返回的全数据
 local function get_enemy_alliance_response_msg(response)
-    if response.msg.enemyAllianceData then
-        DataManager:setEnemyAllianceData(response.msg.enemyAllianceData)
-        return response
-    end
+    -- if response.msg.enemyAllianceData then
+    --     DataManager:setEnemyAllianceData(response.msg.enemyAllianceData)
+    --     return response
+    -- end
     return response
 end
 
@@ -241,7 +246,7 @@ end
 local function get_alliance_joinrequestevents_response_msg(response)
     if response.msg.joinRequestEvents then
         DataManager:getUserAllianceData().joinRequestEvents = response.msg.joinRequestEvents
-        Alliance_Manager:GetMyAlliance():OnJoinRequestEventsChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance().joinRequestEvents = response.msg.joinRequestEvents
     end
     return response
 end
@@ -250,7 +255,7 @@ end
 local function get_alliance_alliancefightreports_response_msg(response)
     if response.msg.allianceFightReports then
         DataManager:getUserAllianceData().allianceFightReports = response.msg.allianceFightReports
-        Alliance_Manager:GetMyAlliance():OnAllianceFightReportsChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance().allianceFightReports = response.msg.allianceFightReports
     end
     return response
 end
@@ -258,7 +263,7 @@ end
 local function get_alliance_allianceshrinereports_response_msg(response)
     if response.msg.shrineReports then
         DataManager:getUserAllianceData().shrineReports = response.msg.shrineReports
-        Alliance_Manager:GetMyAlliance():GetAllianceShrine():OnShrineReportsDataChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance().shrineReports = response.msg.shrineReports
     end
     return response
 end
@@ -267,7 +272,6 @@ end
 local function get_alliance_itemlogs_response_msg(response)
     if response.msg.itemLogs then
         DataManager:getUserAllianceData().itemLogs = response.msg.itemLogs
-        Alliance_Manager:GetMyAlliance():GetItemsManager():OnItemLogsChanged(DataManager:getUserAllianceData())
     end
     return response
 end
@@ -393,7 +397,7 @@ local base_event_map = {
     end,
 }
 
-
+local terrainStyle = GameDatas.AllianceMap.terrainStyle
 local logic_event_map = {
     -- player
     onPlayerDataChanged = function(success, response)
@@ -455,11 +459,11 @@ local logic_event_map = {
                                 for i=1,len do
                                     local k = tonumber(keys[i]) or keys[i]
                                     if type(k) == "number" then
-                                        if not MailManager:GetSendMailIndexByServerIndex(k) then
+                                        if not MailManager:GetMailByServerIndex(k) then
                                             need_deal = false
                                             break
                                         end
-                                        local client_index = MailManager:GetSendMailIndexByServerIndex(k) - 1
+                                        local client_index = MailManager:GetMailByServerIndex(k) - 1
                                         newKey = newKey..client_index..(i~=len and "." or "")
                                     else
                                         newKey = newKey..keys[i]..(i~=len and "." or "")
@@ -510,13 +514,8 @@ local logic_event_map = {
                             end
                         end
                         if need_deal then
-                            LuaUtils:outputTable("self.sendMails", MailManager:GetSendMails())
-
                             local user_data = DataManager:getUserData()
-                            dump(tmp_table,"tmp_table")
-                            dump(user_data.sendMails,"user_data.sendMails")
                             local edit = decodeInUserDataFromDeltaData(user_data, tmp_table)
-                            LuaUtils:outputTable("send mails edit", edit)
                             DataManager:setUserData(user_data, edit)
                         else
                             -- 将邮件管理器中的所有存在的战报index - 1
@@ -527,7 +526,7 @@ local logic_event_map = {
             end
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
-            LuaUtils:outputTable("edit", edit)
+            -- LuaUtils:outputTable("edit", edit)
             -- 在客户端没有 mails 或者 reports key时，收到邮件或者战报需要增加未读字段数值
             if not user_data.reports then
                 for i,v in ipairs(response) do
@@ -559,47 +558,71 @@ local logic_event_map = {
     end,
     -- alliance
     onAllianceDataChanged = function(success, response)
+        if not success then return end
         if not NetManager.m_was_inited_game then return end
-        if success and DataManager:hasUserData() then
-            LuaUtils:outputTable("onAllianceDataChanged", response)
+        if DataManager:hasUserData() then
             local user_alliance_data = DataManager:getUserAllianceData()
-            local edit = decodeInUserDataFromDeltaData(user_alliance_data, response)
-            DataManager:setUserAllianceData(user_alliance_data, edit)
+            if response.targetAllianceId == user_alliance_data._id then
+                local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.data)
+                DataManager:setUserAllianceData(user_alliance_data, edit)
+                -- LuaUtils:outputTable("onAllianceDataChanged", edit)
+                return
+            end
+        end
+
+        local allianceData = Alliance_Manager:GetAllianceByCache(response.targetAllianceId)
+        if allianceData and next(response.data) then
+            local key, value = unpack(response.data[1])
+            if #key == 0 and value == json.null then
+                Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, nil)
+                Alliance_Manager:RemoveAlliance(allianceData)
+                Alliance_Manager:OnMapAllianceChanged(allianceData, json.null)
+            else
+                local basicInfo = allianceData.basicInfo
+                local key = string.format("%s_%d", basicInfo.terrain, basicInfo.terrainStyle)
+                Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, terrainStyle[key].index)
+                local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
+                Alliance_Manager:OnMapAllianceChanged(allianceData, edit)
+                -- LuaUtils:outputTable("OnMapAllianceChanged", edit)
+            end
+        end
+    end,
+    onMapDataChanged = function(success, response)
+        local mapData
+        local myAllianceData = DataManager:getUserAllianceData()
+        if myAllianceData and
+            myAllianceData.mapIndex == response.targetMapIndex then
+            mapData = Alliance_Manager:GetMyAllianceMapData()
+        else
+            mapData = Alliance_Manager:GetCurrentMapData()
+        end
+        if mapData then
+            local villageEvents_remove = {}
+            for i,v in ipairs(response.data) do
+                local keys, value = unpack(v)
+                if value == json.null then
+                    local villageevents, id = unpack(string.split(keys, "."))
+                    if villageevents == "villageEvents" then
+                        table.insert(villageEvents_remove, mapData.villageEvents[id])
+                    end
+                end
+            end
+            local edit = decodeInUserDataFromDeltaData(mapData, response.data)
+            getmetatable(edit).villageEvents_remove = villageEvents_remove
+            Alliance_Manager:OnMapDataChanged(response.targetMapIndex, mapData, edit)
+            -- LuaUtils:outputTable("onMapDataChanged", edit)
         end
     end,
     onJoinAllianceSuccess = function(success, response)
         if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
-            DataManager:setEnemyAllianceData(response.enemyAllianceData)
+            Alliance_Manager:setMapIndexData(response.mapIndexData)
+            Alliance_Manager.my_alliance_mapData = response.mapData
             DataManager:setUserAllianceData(response.allianceData)
+
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response.playerData)
             DataManager:setUserData(user_data, edit)
-        end
-    end,
-    onEnemyAllianceDataChanged = function(success, response)
-        if not NetManager.m_was_inited_game then return end
-        if success and DataManager:hasUserData() then
-            LuaUtils:outputTable("onEnemyAllianceDataChanged", response)
-            local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
-            local edit = decodeInUserDataFromDeltaData(user_enemy_alliance_data,response)
-            DataManager:setEnemyAllianceData(user_enemy_alliance_data,edit)
-        end
-    end,
-    onAllianceFight = function(success, response)
-        if not NetManager.m_was_inited_game then return end
-        if success and DataManager:hasUserData() then
-            LuaUtils:outputTable("onAllianceFight", response)
-            for i,data in ipairs(response.allianceData) do
-                if string.find(data[1],"allianceFightReports") then
-                    Alliance_Manager:GetMyAlliance():SetLastAllianceFightReport(data[2])
-                end
-            end
-            local user_enemy_alliance_data = response.enemyAllianceData
-            DataManager:setEnemyAllianceData(user_enemy_alliance_data)
-            local user_alliance_data = DataManager:getUserAllianceData()
-            local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
-            DataManager:setUserAllianceData(user_alliance_data, edit)
         end
     end,
     onNotice = function(success, response)
@@ -614,7 +637,7 @@ local logic_event_map = {
         if success then
             local running_scene = display.getRunningScene().__cname
             if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
-                GameGlobalUI:showAllianceNotice(response.key,response.params)
+                GameGlobalUI:showAllianceNotice(response.data.key,response.data.params)
             end
         end
     end,
@@ -724,6 +747,7 @@ function NetManager:getConnectLogicServerPromise()
     end)
 end
 -- 登录
+local IS_HARD_LOGIN = true
 function NetManager:getLoginPromise(deviceId)
     local device_id = device.getOpenUDID()
     local requestTime = ext.now()
@@ -731,31 +755,40 @@ function NetManager:getLoginPromise(deviceId)
     return get_none_blocking_request_promise("logic.entryHandler.login", {
         deviceId = deviceId or device_id,
         requestTime = requestTime,
+        needMapData = IS_HARD_LOGIN,
     }, nil, true):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll() -- 登录成功便清空本地通知
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
-            local user_enemy_alliance_data = response.msg.enemyAllianceData
+            local mapIndexData = response.msg.mapIndexData
+            if IS_HARD_LOGIN and mapIndexData then
+                Alliance_Manager:setMapIndexData(mapIndexData)
+                IS_HARD_LOGIN = false
+            end
+            if response.msg.mapData and response.msg.mapData ~= json.null then
+                Alliance_Manager.my_alliance_mapData = response.msg.mapData
+            end
+            -- LuaUtils:outputTable(mapData)
+            -- local user_enemy_alliance_data = response.msg.enemyAllianceData
 
             local diff_time = ext.now() - requestTime
             local request_server_time = requestTime + playerData.deltaTime
             local real_server_time = diff_time / 2 + request_server_time
             local delta_time = real_server_time - ext.now()
 
-            -- print_(requestTime, diff_time, playerData.deltaTime, delta_time, request_server_time, real_server_time)
             if self.m_was_inited_game then
                 self.m_netService:setDeltatime(delta_time)
                 DataManager:setUserData(playerData)
                 DataManager:setUserAllianceData(user_alliance_data)
-                DataManager:setEnemyAllianceData(user_enemy_alliance_data)
+                -- DataManager:setEnemyAllianceData(user_enemy_alliance_data)
             else
                 -- LuaUtils:outputTable("logic.entryHandler.login", response)
                 self.m_netService:setDeltatime(delta_time)
                 local InitGame = import("app.service.InitGame")
                 InitGame(playerData) -- inner DataManager:setUserData ...
                 DataManager:setUserAllianceData(user_alliance_data)
-                DataManager:setEnemyAllianceData(user_enemy_alliance_data)
+                -- DataManager:setEnemyAllianceData(user_enemy_alliance_data)
                 self.m_was_inited_game = true
             end
             self.is_login = true
@@ -818,7 +851,13 @@ function NetManager:getUpgradeHouseByLocationPromise(location, sub_location)
     return get_upgradeHouse_promise(location, sub_location, false)
 end
 function NetManager:getInstantUpgradeHouseByLocationPromise(location, sub_location)
-    return get_upgradeHouse_promise(location, sub_location, true)
+    return get_upgradeHouse_promise(location, sub_location, true):done(function()
+        local house = User:GetHouseByLocation(location, sub_location)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[house.type], house.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级功能建筑
 local function get_upgradeBuilding_promise(location, finish_now)
@@ -831,21 +870,39 @@ function NetManager:getUpgradeBuildingByLocationPromise(location)
     return get_upgradeBuilding_promise(location, false)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
-    return get_upgradeBuilding_promise(location, true)
+    return get_upgradeBuilding_promise(location, true):done(function()
+        local building = User:GetBuildingByLocation(location)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[building.type], building.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级防御塔
 function NetManager:getUpgradeTowerPromise()
     return NetManager:getUpgradeBuildingByLocationPromise(22)
 end
 function NetManager:getInstantUpgradeTowerPromise()
-    return NetManager:getInstantUpgradeBuildingByLocationPromise(22)
+    return NetManager:getInstantUpgradeBuildingByLocationPromise(22):done(function()
+        local building = User:GetBuildingByLocation(22)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[building.type], building.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级城门
 function NetManager:getUpgradeWallByLocationPromise()
     return NetManager:getUpgradeBuildingByLocationPromise(21)
 end
 function NetManager:getInstantUpgradeWallByLocationPromise()
-    return NetManager:getInstantUpgradeBuildingByLocationPromise(21)
+    return NetManager:getInstantUpgradeBuildingByLocationPromise(21):done(function()
+        local building = User:GetBuildingByLocation(21)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[building.type], building.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 --转换生产建筑类型
 function NetManager:getSwitchBuildingPromise(buildingLocation,newBuildingName)
@@ -886,6 +943,9 @@ local function get_makeDragonEquipment_promise(equipment_name, finish_now)
         equipmentName = equipment_name,
         finishNow = finish_now or false
     }, "打造装备失败!"):done(get_player_response_msg):done(function()
+        if finish_now then
+            GameGlobalUI:showTips(_("制造装备完成"), Localize.equip[equipment_name].."X1")
+        end
         app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
     end)
 end
@@ -1330,11 +1390,11 @@ function NetManager:getFetchChatPromise(channel)
     return get_none_blocking_request_promise("chat.chatHandler.getAll",{channel = channel}, "获取聊天信息失败!")
 end
 -- 获取所有请求加入联盟的申请
-function NetManager:getJoinRequestEventsPromise(allianceId)
-    return get_blocking_request_promise("logic.allianceHandler.getJoinRequestEvents", {
-        allianceId = allianceId
-    }, "获取所有请求加入联盟的申请失败!"):done(get_alliance_joinrequestevents_response_msg)
-end
+-- function NetManager:getJoinRequestEventsPromise(allianceId)
+--     return get_blocking_request_promise("logic.allianceHandler.getJoinRequestEvents", {
+--         allianceId = allianceId
+--     }, "获取所有请求加入联盟的申请失败!"):done(get_alliance_joinrequestevents_response_msg)
+-- end
 -- 获取联盟战历史记录
 function NetManager:getAllianceFightReportsPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
@@ -1430,9 +1490,11 @@ function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
     }, "圣地派兵失败!"):done(get_player_response_msg)
 end
 --查找合适的联盟进行战斗
-function NetManager:getFindAllianceToFightPromose()
-    return get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
-        {}, "查找合适的联盟进行战斗失败!"):done(get_player_response_msg):done(get_alliance_response_msg)
+function NetManager:getAttackAlliancePromose(targetAllianceId)
+    return get_blocking_request_promise("logic.allianceHandler.attackAlliance",
+        {
+            targetAllianceId = targetAllianceId
+        }, "查找合适的联盟进行战斗失败!"):done(get_player_response_msg):done(get_alliance_response_msg)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
@@ -1452,6 +1514,12 @@ function NetManager:getAllianceInfoPromise(allianceId,serverId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId , serverId = serverId},
         "请求联盟数据失败!",false,0)
 end
+--请求联盟基本数据
+function NetManager:getAllianceBasicInfoPromise(allianceId,serverId)
+    return get_none_blocking_request_promise("logic.allianceHandler.getAllianceBasicInfo",{allianceId = allianceId , serverId = serverId},
+        "请求联盟基本数据失败!",false,0)
+end
+
 --协防
 function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
     return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",
@@ -1491,15 +1559,20 @@ function NetManager:getSearchAllianceInfoByTagPromise(tag)
         "根据Tag搜索联盟战斗数据失败!")
 end
 --突袭玩家城市
-function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
+function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId,defenceAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
-        {dragonType=dragonType,defencePlayerId=defencePlayerId},
+        {dragonType=dragonType,defencePlayerId=defencePlayerId,defenceAllianceId = defenceAllianceId},
         "突袭玩家城市失败!"):done(get_player_response_msg)
 end
 --攻打玩家城市
-function NetManager:getAttackPlayerCityPromise(dragonType, soldiers,defencePlayerId)
+function NetManager:getAttackPlayerCityPromise(dragonType, soldiers, defenceAllianceId, defencePlayerId)
     return get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
-        {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"):done(get_player_response_msg)
+        {
+            defenceAllianceId = defenceAllianceId,
+            defencePlayerId = defencePlayerId,
+            dragonType = dragonType,
+            soldiers = soldiers,
+        },"攻打玩家城市失败!"):done(get_player_response_msg)
 end
 
 --设置驻防使用的龙
@@ -1520,9 +1593,9 @@ function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceI
         {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"):done(get_player_response_msg)
 end
 --从村落撤退
-function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
+function NetManager:getRetreatFromVillagePromise(villageEventId)
     return get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
-        {villageEventId = eventId},"村落撤退失败!"):done(get_player_response_msg)
+        {villageEventId = villageEventId},"村落撤退失败!"):done(get_player_response_msg)
 end
 --进攻野怪
 function NetManager:getAttackMonsterPromise(dragonType,soldiers,defenceAllianceId,defenceMonsterId)
@@ -1535,19 +1608,19 @@ function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defence
         {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"):done(get_player_response_msg)
 end
 --查看敌方进攻行军事件详细信息
-function NetManager:getAttackMarchEventDetailPromise(eventId,enemyAllianceId)
+function NetManager:getAttackMarchEventDetailPromise(eventId,targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
-        {eventId = eventId,enemyAllianceId = enemyAllianceId},"获取行军事件数据失败!"):done(get_player_response_msg)
+        {eventId = eventId,targetAllianceId = targetAllianceId},"获取行军事件数据失败!"):done(get_player_response_msg)
 end
 --查看敌方突袭行军事件详细信息
-function NetManager:getStrikeMarchEventDetailPromise(eventId,enemyAllianceId)
+function NetManager:getStrikeMarchEventDetailPromise(eventId,targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getStrikeMarchEventDetail",
-        {eventId = eventId,enemyAllianceId = enemyAllianceId},"获取突袭事件数据失败!"):done(get_player_response_msg)
+        {eventId = eventId,targetAllianceId = targetAllianceId},"获取突袭事件数据失败!"):done(get_player_response_msg)
 end
 --查看协助部队行军事件详细信息
-function NetManager:getHelpDefenceMarchEventDetailPromise(eventId,allianceId)
+function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
     return get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
-        {eventId = eventId,allianceId = allianceId},"获取协防事件数据失败!"):done(get_player_response_msg)
+        {eventId = eventId},"获取协防事件数据失败!"):done(get_player_response_msg)
 end
 --查看协防部队详细信息
 function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)
@@ -1602,6 +1675,12 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         techName = techName,
         finishNow = finishNow,
     }, "升级生产科技失败!"):done(get_player_response_msg):done(function()
+        if finishNow then
+            GameGlobalUI:showTips(
+                    _("生产科技升级完成"), 
+                    Localize.productiontechnology_name[techName]
+                    .."Lv"..User.productionTechs[techName].level)  
+        end
         app:GetAudioManager():PlayeEffectSoundWithKey("TECHNOLOGY")
     end)
 end
@@ -1612,6 +1691,10 @@ local function upgrade_military_tech_promise(techName,finishNow)
         finishNow = finishNow,
     }, "升级军事科技失败!"):done(get_player_response_msg):done(function()
         if finishNow then
+            GameGlobalUI:showTips(_("军事科技升级完成"),
+                    UtilsForTech:GetTechLocalize(techName)
+                    .."Lv"..
+                    User.militaryTechs[techName].level)
             app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         end
     end)
@@ -1629,7 +1712,18 @@ local function upgrade_soldier_star_promise(soldierName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
         soldierName = soldierName,
         finishNow = finishNow,
-    }, "士兵晋级失败!"):done(get_player_response_msg)
+    }, "士兵晋级失败!"):done(get_player_response_msg):done(function()
+        if finishNow then
+            GameGlobalUI:showTips(
+                _("士兵晋级完成"),
+                string.format(
+                    _("晋级%s至%d星完成"),
+                    Localize.soldier_name[soldierName],
+                    User.soldierStars[soldierName]
+                )
+            )
+        end
+    end)
 end
 function NetManager:getInstantUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,true)
@@ -1833,7 +1927,7 @@ function NetManager:getPlayerRankPromise(rankType, fromRank)
 end
 function NetManager:getAllianceRankPromise(rankType, fromRank)
     return get_blocking_request_promise("rank.rankHandler.getAllianceRankList",{
-        allianceId = Alliance_Manager:GetMyAlliance():Id(),
+        allianceId = Alliance_Manager:GetMyAlliance().id,
         rankType = rankType,
         fromRank = fromRank or 0,
     },"获取排行榜失败!")
@@ -1907,10 +2001,6 @@ function NetManager:getSetApnStatusPromise(type,status)
 end
 
 function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers)
-    local rewards = LuaUtils:table_map(string.split(GameDatas.PvE.sections[sectionName].rewards, ","), function(k,v)
-        local type,name = unpack(string.split(v, ":"))
-        return k, {type = type, name = name}
-    end)
     local pre_tab = {items = {}, soldierMaterials = {}}
     return get_blocking_request_promise("logic.playerHandler.attackPveSection",{
         sectionName = sectionName,
@@ -1918,52 +2008,45 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
         soldiers = soldiers,
     },"攻打npc失败!")
         :done(function(response)
-            for i,v in ipairs(rewards) do
-                if v.type == "items" then
-                    pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
-                elseif v.type == "soldierMaterials" then
-                    pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+            response.get_func = function() return {} end
+            for i,v in ipairs(response.msg.playerData) do
+                local key, value = unpack(v)
+                if key == "__rewards" and value ~= json.null then
+                    response.get_func = function() return value end
+                    break
                 end
             end
         end)
         :done(get_player_response_msg)
-        :done(function(response)
-            local cur_tab = {items = {}, soldierMaterials = {}}
-            for i,v in ipairs(rewards) do
-                if v.type == "items" then
-                    cur_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
-                elseif v.type == "soldierMaterials" then
-                    cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
-                end
-            end
-            local adds = {items = {}, soldierMaterials = {}}
-            for type,category in pairs(cur_tab) do
-                for key,count in pairs(category) do
-                    local add = count - (pre_tab[type][key] or 0)
-                    if add > 0 then
-                        adds[type][key] = add
-                    end
-                end
-            end
-            local reward_items = {}
-            if next(adds.items) then
-                for itemName,count in pairs(adds.items) do
-                    table.insert(reward_items, {type = "items", name = itemName, count = count})
-                end
-            end
-            if next(adds.soldierMaterials) then
-                for key,count in pairs(adds.soldierMaterials) do
-                    table.insert(reward_items, {type = "soldierMaterials", name = key, count = count})
-                end
-            end
-            response.get_func = function() return reward_items end
-        end)
 end
 function NetManager:getPveStageRewardPromise(stageName)
     return get_blocking_request_promise("logic.playerHandler.getPveStageReward",{
         stageName = stageName,
     },"领取奖励失败!"):done(get_player_response_msg)
 end
+function NetManager:getMapAllianceDatasPromise(mapIndexs)
+    return get_blocking_request_promise("logic.allianceHandler.getMapAllianceDatas",{
+        mapIndexs = mapIndexs,
+    },"获取世界地图信息失败!")
+end
+function NetManager:getMoveAlliancePromise(targetMapIndex)
+    return get_blocking_request_promise("logic.allianceHandler.moveAlliance",{
+        targetMapIndex = targetMapIndex,
+    },"移联盟失败!"):done(function(response)
+        -- LuaUtils:outputTable(response)
+    end)
+end
+function NetManager:getEnterMapIndexPromise(mapIndex)
+    return get_none_blocking_request_promise("logic.allianceHandler.enterMapIndex",{
+        mapIndex = mapIndex,
+    },"进入联盟失败!")
+end
+function NetManager:getLeaveMapIndexPromise(mapIndex)
+    return get_none_blocking_request_promise("logic.allianceHandler.leaveMapIndex",{
+        mapIndex = mapIndex,
+    },"离开联盟!")
+end
+
 
 
 ----------------------------------------------------------------------------------------------------------------
@@ -2019,6 +2102,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 

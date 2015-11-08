@@ -84,16 +84,16 @@ function GameUIVipNew:AdapterPlayerList()
     if not alliance:IsDefault() then
         member = alliance:GetMemeberById(User:Id())
     end
-    table.insert(infos,{_("采集粮食熟练度"),User:GetFoodCollectLevel()})
-    table.insert(infos,{_("采集铁矿熟练度"),User:GetIronCollectLevel()})
-    table.insert(infos,{_("采集石料熟练度"),User:GetStoneCollectLevel()})
-    table.insert(infos,{_("采集木材熟练度"),User:GetWoodCollectLevel()})
-    table.insert(infos,{_("防御胜利"),User:DefenceWin()})
-    table.insert(infos,{_("进攻胜利"),User:AttackWin()})
-    table.insert(infos,{_("胜率"),User:AttackTotal() ~= 0 and string.format("%.2f%%",(User:AttackWin()/User:AttackTotal())*100) or 0})
-    table.insert(infos,{_("击杀"),string.formatnumberthousands(User:Kill())})
+    table.insert(infos,{_("防御胜利"),User.basicInfo.defenceWin})
+    table.insert(infos,{_("进攻胜利"),User.basicInfo.attackWin})
+    table.insert(infos,{_("胜率"), User.basicInfo.attackTotal ~= 0 and
+        string.format("%.2f%%",(
+            User.basicInfo.attackWin/User.basicInfo.attackTotal)*100
+        ) or 0
+    })
+    table.insert(infos,{_("击杀"),string.formatnumberthousands(User.basicInfo.kill)})
     table.insert(infos,{_("忠诚值"),GameUtils:formatNumber(User:Loyalty())})
-    table.insert(infos,{_("联盟"),alliance and alliance:Name() or ""})
+    table.insert(infos,{_("联盟"),alliance and alliance.basicInfo.name or ""})
     table.insert(infos,{_("职位"),member and Localize.alliance_title[member:Title()] or ""})
     return infos
 end
@@ -114,7 +114,9 @@ function GameUIVipNew:WidgetPlayerNode_OnPlayerIconCliked()
 end
 --修改玩家名
 function GameUIVipNew:WidgetPlayerNode_OnPlayerNameCliked()
-    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_PLAYER_NAME}):AddToCurrentScene()
+    WidgetUseItems.new():Create({
+        item_name = "changePlayerName"
+    }):AddToCurrentScene()
 end
 --决定按钮是否可以点击
 function GameUIVipNew:WidgetPlayerNode_PlayerCanClickedButton(name,args)
@@ -133,15 +135,15 @@ end
 --数据回调
 function GameUIVipNew:WidgetPlayerNode_DataSource(name)
     if name == 'BasicInfoData' then
-        local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
+        local exp_config = GameDatas.PlayerInitData.playerLevel[User:GetLevel()]
         return {
-            name = User:Name(),
-            lv = User:Level(),
-            currentExp = User:LevelExp() - exp_config.expFrom,
+            name = User.basicInfo.name,
+            lv = User:GetLevel(),
+            currentExp = User.basicInfo.levelExp - exp_config.expFrom,
             maxExp = exp_config.expTo - exp_config.expFrom,
-            power = User:Power(),
-            playerId = User:Id(),
-            playerIcon = User:Icon(),
+            power = User.basicInfo.power,
+            playerId = User._id,
+            playerIcon = User.basicInfo.icon,
             vip = User:GetVipLevel()
         }
     elseif name == "MedalData"  then
@@ -181,7 +183,9 @@ function GameUIVipNew:OnMoveInStage()
             if not self.vip_layer then
                 self.vip_layer = display.newLayer():addTo(self:GetView())
                 self:InitVip()
-                User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+                self.vip_layer:scheduleAt(function()
+                    self:OnVipEventTimer()
+                end)
             end
             self.vip_layer:setVisible(true)
         else
@@ -190,12 +194,11 @@ function GameUIVipNew:OnMoveInStage()
             end
         end
     end):pos(window.cx, window.bottom + 34)
-    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, "basicInfo")
     GameUIVipNew.super.OnMoveInStage(self)
 end
 function GameUIVipNew:onExit()
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+    User:RemoveListenerOnType(self, "basicInfo")
     GameUIVipNew.super.onExit(self)
 end
 function GameUIVipNew:InitVip()
@@ -228,10 +231,13 @@ function GameUIVipNew:InitVipTop()
         :addTo(top_bg):align(display.CENTER, 90, bg_size.height-56)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):AddToCurrentScene()
+                WidgetUseItems.new():Create({
+                    item_name = "vipActive_1"
+                }):AddToCurrentScene()
             end
         end)
-    local status_text = User:IsVIPActived() and _("已激活").." "..GameUtils:formatTimeStyle1(User:GetVipEvent():GetTime()) or _("未激活VIP")
+    local isactive, leftTime = User:IsVIPActived()
+    local status_text = isactive and _("已激活").." "..GameUtils:formatTimeStyle1(leftTime) or _("未激活VIP")
     self.vip_status_label = UIKit:ttfLabel({
         text = status_text,
         size = 20,
@@ -258,7 +264,9 @@ function GameUIVipNew:InitVipTop()
         :addTo(process_bg)
         :align(display.CENTER_RIGHT,580,20)
         :onButtonClicked(function()
-            WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_POINT}):AddToCurrentScene()
+            WidgetUseItems.new():Create({
+                item_name = "vipPoint_1"
+            }):AddToCurrentScene()
         end)
 
     -- 当前vip等级
@@ -276,7 +284,7 @@ function GameUIVipNew:InitVipTop()
     self.vip_level_bg = current_level
 
     -- 连续登陆，明日登陆
-    local vipLoginDaysCount = User:GetCountInfo().vipLoginDaysCount
+    local vipLoginDaysCount = User.countInfo.vipLoginDaysCount
     local tomorrow_add = UIKit:ttfLabel({
         text = _("+ "..loginDays[ (vipLoginDaysCount + 1 ) > #loginDays and #loginDays or (vipLoginDaysCount + 1 )].expAdd),
         size = 22,
@@ -355,12 +363,12 @@ function GameUIVipNew:CreateVipEff()
 
     local clipeNode = display.newClippingRegionNode(cc.rect(window.left + 60 + 520 - bg_width + 20 - 12, window.top - 310  , bg_width - 20 - 12, 70)):addTo(vip_layer)
     local pv_right_level = UIPageView.new {
-            viewRect = cc.rect(window.left + 60 + 520 - bg_width + 20, window.bottom_top + 44  , bg_width - 20, bg_height + 56),
-            row = 1,
-            padding = {left = 0, right = 0, top = 10, bottom = 0},
-            nBounce = true,
-            continuous_touch = true
-        }:addTo(clipeNode,2)
+        viewRect = cc.rect(window.left + 60 + 520 - bg_width + 20, window.bottom_top + 44  , bg_width - 20, bg_height + 56),
+        row = 1,
+        padding = {left = 0, right = 0, top = 10, bottom = 0},
+        nBounce = true,
+        continuous_touch = true
+    }:addTo(clipeNode,2)
     pv_right_level:setTouchSwallowEnabled(false)
     local cover_layer = display.newLayer():addTo(vip_layer,3):pos(window.left + 60 + 520 - bg_width + 20 , window.top - 310)
     cover_layer:setContentSize(cc.size(bg_width - 20, 70))
@@ -480,7 +488,7 @@ function GameUIVipNew:CreateVipEff()
         end
         self.available_count = available_count
 
-        
+
         local page_index_2 = 0,right_index_2
         for i= begin_index,end_index do
             if i ~= self.current_vip_level then
@@ -625,25 +633,20 @@ function GameUIVipNew:CreateVipEffListByLevel(level)
     listview:reload()
     return listview
 end
-function GameUIVipNew:OnUserBasicChanged(from,changed_map)
-    if self.player_node then
-        if changed_map.name or changed_map.icon then
-            self.player_node:RefreshUI()
-        end
-
+function GameUIVipNew:OnUserDataChanged_basicInfo(userData, deltaData)
+    if self.player_node and
+        (deltaData("basicInfo.name") or deltaData("basicInfo.icon")) then
+        self.player_node:RefreshUI()
     end
-    if changed_map.vipExp and self.vip_layer then
-        -- local vip_level,percent,exp = User:GetVipLevel()
-        -- self.progressTimer_vip_exp:setPercentage(percent)
-        -- self.vip_exp_label:setString(string.formatnumberthousands(exp - User:GetSpecialVipLevelExp(vip_level)).."/"..string.formatnumberthousands(User:GetSpecialVipLevelExpTo(vip_level)))
-        -- self.vip_level_pic:setTexture("VIP_"..vip_level.."_46x32.png")
+
+    if self.vip_layer and deltaData("basicInfo.vipExp") then
         self.vip_layer:removeAllChildren()
         self:InitVip()
     end
 end
-function GameUIVipNew:OnVipEventTimer( vip_event_new )
-    local time = vip_event_new:GetTime()
-    if time >0 then
+function GameUIVipNew:OnVipEventTimer()
+    local isactive, time = User:IsVIPActived()
+    if time > 0 then
         self.vip_status_label:setString(_("已激活").." "..GameUtils:formatTimeStyle1(time))
         self.vip_level_bg:setTexture("vip_unlock_normal.png")
     else
@@ -652,6 +655,8 @@ function GameUIVipNew:OnVipEventTimer( vip_event_new )
     end
 end
 return GameUIVipNew
+
+
 
 
 
