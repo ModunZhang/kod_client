@@ -348,11 +348,11 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         local alliance = Alliance_Manager:GetMyAlliance()
         local time = intInit.allianceMoveColdMinutes.value * 60 + alliance.basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
         local canMove = alliance.basicInfo.allianceMoveTime == 0 or time <= 0
-        -- if not canMove then
-        --     UIKit:showMessageDialog(_("提示"), _("迁移联盟冷却中"))
-        --     self:LeftButtonClicked()
-        --     return
-        -- endove
+        if not canMove then
+            UIKit:showMessageDialog(_("提示"), _("迁移联盟冷却中"))
+            self:LeftButtonClicked()
+            return
+        end
         local mapIndex = self.mapIndex
         local canMove1 = palaceLevel >= needPalaceLevel
         if not canMove1 then
