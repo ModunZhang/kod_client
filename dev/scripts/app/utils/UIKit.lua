@@ -1689,6 +1689,22 @@ function UIKit:CreateVipExpBar()
 end
 
 
+function UIKit:CreateArrow(param, func)
+    local arrow = display.newSprite(param.circle or "arrow_circle_mine.png")
+    arrow.btn = cc.ui.UIPushButton.new({
+        normal = param.up or "arrow_up_mine.png",
+        pressed = param.down or "arrow_down_mine.png",
+    }):addTo(arrow):pos(96/2, 102/2 - 4)
+    :onButtonClicked(function()
+        if type(func) == "function" then
+            func()
+        end
+    end)
+    arrow.icon = display.newSprite(param.icon or "arrow_icon_mine.png")
+    :addTo(arrow):pos(96/2, 102/2 - 4)
+    return arrow
+end
+
 
 
 
@@ -1770,6 +1786,7 @@ function UIKit:CreateSand()
     end, 2 + math.random(3))
     return emitter
 end
+
 
 
 

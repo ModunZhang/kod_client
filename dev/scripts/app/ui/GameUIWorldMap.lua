@@ -87,12 +87,12 @@ local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     end
 end
 function GameUIWorldMap:InitArrow()
-
-    self.arrow_enemy = cc.ui.UIPushButton.new({
-        normal = "arrow_up_enemy.png",
-        pressed = "arrow_down_enemy.png"
-    }):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
-    :onButtonClicked(function()
+    self.arrow_enemy = UIKit:CreateArrow({
+        circle = "arrow_circle_enemy.png",
+        up = "arrow_up_enemy.png",
+        down = "arrow_down_enemy.png",
+        icon = "attack_58x56.png",
+        }, function()
         local mapIndex = Alliance_Manager:GetMyAlliance():GetEnemyAllianceMapIndex()
         if mapIndex then
             local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
@@ -101,23 +101,17 @@ function GameUIWorldMap:InitArrow()
         else
             self.arrow_enemy:hide()
         end
-    end)
-    self.arrow_enemy.icon = display.newSprite("attack_58x56.png")
-    :addTo(self.arrow_enemy):pos(0, - 53):scale(0.68)
+    end):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
+    self.arrow_enemy.icon:scale(0.68)
 
 
-    self.arrow = cc.ui.UIPushButton.new({
-        normal = "arrow_up_mine.png",
-        pressed = "arrow_down_mine.png"
-    }):addTo(self,2):align(display.TOP_CENTER):hide():scale(0.8)
-    :onButtonClicked(function()
-            local mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
-            local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
-            self:GotoPosition(x,y)
-            self:LoadMap()
-        end)
-    self.arrow.icon = display.newSprite("arrow_icon_mine.png")
-    :addTo(self.arrow):pos(0, - 53)
+    self.arrow = UIKit:CreateArrow({}, function()
+        local mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+        local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+        self:GotoPosition(x,y)
+        self:LoadMap()
+    end):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
+
     -- self.arrow_label = UIKit:ttfLabel({
     --     size = 20,
     --     color = 0xf5e8c4
@@ -133,6 +127,7 @@ function GameUIWorldMap:UpdateArrow()
         if p and degree then
             degree = degree + 180
             self.arrow:show():pos(p.x, p.y):rotation(degree)
+            self.arrow.btn:rotation(-degree)
             self.arrow.icon:rotation(-degree)
             -- local isflip = (degree > 0 and degree < 180)
             -- local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
@@ -153,6 +148,7 @@ function GameUIWorldMap:UpdateEnemyArrow()
         if p and degree then
             degree = degree + 180
             self.arrow_enemy:show():pos(p.x, p.y):rotation(degree)
+            self.arrow_enemy.btn:rotation(-degree)
             self.arrow_enemy.icon:rotation(-degree)
         end
     else

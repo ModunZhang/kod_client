@@ -209,12 +209,12 @@ function GameUIAllianceHome:InitArrow()
     -- self.enemy_arrows = {}
     -- self.enemy_arrow_index = 1
 
-
-    self.arrow_enemy = cc.ui.UIPushButton.new({
-        normal = "arrow_up_enemy.png",
-        pressed = "arrow_down_enemy.png"
-    }):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
-    :onButtonClicked(function()
+    self.arrow_enemy = UIKit:CreateArrow({
+        circle = "arrow_circle_enemy.png",
+        up = "arrow_up_enemy.png",
+        down = "arrow_down_enemy.png",
+        icon = "attack_58x56.png",
+        }, function()
         local mapIndex = Alliance_Manager:GetMyAlliance():GetEnemyAllianceMapIndex()
         if not mapIndex then return self.arrow_enemy:hide() end
         local scene = display.getRunningScene()
@@ -225,21 +225,12 @@ function GameUIAllianceHome:InitArrow()
                 scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
             end)
         end
-    end)
-    self.arrow_enemy.icon = display.newSprite("attack_58x56.png")
-    :addTo(self.arrow_enemy):pos(0, - 53):scale(0.68)
+    end):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
+    self.arrow_enemy.icon:scale(0.68)
 
-    -- my city
-    self.arrow = cc.ui.UIPushButton.new({
-        normal = "arrow_up_mine.png",
-        pressed = "arrow_down_mine.png"
-    }):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
-    :onButtonClicked(function()
+    self.arrow = UIKit:CreateArrow({}, function()
         self:ReturnMyCity()
-    end)
-
-    self.arrow.icon = display.newSprite("arrow_icon_mine.png")
-    :addTo(self.arrow):pos(0, - 53)
+    end):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
     -- self.arrow_label = cc.ui.UILabel.new({
     --     size = 20,
     --     font = UIKit:getFontFilePath(),
@@ -778,6 +769,7 @@ function GameUIAllianceHome:UpdateMyCityArrows(alliance)
         if p and degree then
             degree = degree + 180
             self.arrow:show():pos(p.x, p.y):rotation(degree)
+            self.arrow.btn:rotation(-degree)
             self.arrow.icon:rotation(-degree)
             -- local isflip = (degree > 0 and degree < 180)
             -- local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
@@ -803,6 +795,7 @@ function GameUIAllianceHome:UpdateEnemyArrow()
         if p and degree then
             degree = degree + 180
             self.arrow_enemy:show():pos(p.x, p.y):rotation(degree)
+            self.arrow_enemy.btn:rotation(-degree)
             self.arrow_enemy.icon:rotation(-degree)
             if pGetLength(pSub(world_point, p)) < 2000 then
                 self.arrow_enemy:hide()
