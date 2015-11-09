@@ -389,14 +389,24 @@ function GameUIPveAttack:Attack()
             NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
-                response.msg.fightReport.playerDragonFightData.hpDecreased = 0
+                local playerSoldierRoundDatas = response.msg.fightReport.playerSoldierRoundDatas
+                playerSoldierRoundDatas.hpDecreased = 0
                 local enemy_enter = {}
                 for i,v in ipairs(response.msg.fightReport.sectionSoldierRoundDatas) do
                     enemy_enter[v.soldierName] = true
                 end
                 
                 local star = 0
-                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin 
+                local attack_map = {}
+                for i,v in ipairs(playerSoldierRoundDatas) do
+                    attack_map[v.soldierName] = true
+                end
+                if playerSoldierRoundDatas[#playerSoldierRoundDatas].isWin then
+                    local soldierName = self.playerSoldierRoundDatas[#playerSoldierRoundDatas].soldierName
+                    attack_map[soldierName] = nil
+                end
+                
+                if #soldiers > table.nums(attack_map)
                 and table.nums(enemy_enter) == #enemies 
                 then
                     star = 2
@@ -405,7 +415,7 @@ function GameUIPveAttack:Attack()
                     end
                     local soldierName = {}
                     local soldiername
-                    for i,v in ipairs(response.msg.fightReport.playerSoldierRoundDatas) do
+                    for i,v in ipairs(playerSoldierRoundDatas) do
                         soldierName[v.soldierName] = true
                     end
                     if table.nums(soldierName) > 2 then
@@ -626,7 +636,35 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
         return defence_soldiers
     end
     function report:GetReportResult()
-        return self.playerSoldierRoundDatas[#self.playerSoldierRoundDatas].isWin
+        local attack_map = {}
+        for i,v in ipairs(self.playerSoldierRoundDatas) do
+            attack_map[v.soldierName] = true
+        end
+        if self.playerSoldierRoundDatas[#self.playerSoldierRoundDatas].isWin then
+            local soldierName = self.playerSoldierRoundDatas[#self.playerSoldierRoundDatas].soldierName
+            attack_map[soldierName] = nil
+        end
+
+        local defence_map = {}
+        for i,v in ipairs(self.sectionSoldierRoundDatas) do
+            defence_map[v.soldierName] = true
+        end
+        if self.sectionSoldierRoundDatas[#self.sectionSoldierRoundDatas].isWin then
+            local soldierName = self.sectionSoldierRoundDatas[#self.sectionSoldierRoundDatas].soldierName
+            defence_map[soldierName] = nil
+        end
+
+        if #self:GetOrderedAttackSoldiers() - table.nums(attack_map) > 0 then
+            return true
+        elseif #self:GetOrderedDefenceSoldiers() - table.nums(defence_map) > 0 then
+            return false
+        else
+            if self.playerSoldierRoundDatas[#self.playerSoldierRoundDatas].isWin then
+                return true
+            else
+                return false
+            end
+        end
     end
     function report:GetAttackDragonLevel()
         return dragon:Level()
