@@ -140,10 +140,10 @@ function WidgetAccelerateGroup:ResetAccButtons()
     end
 end
 function WidgetAccelerateGroup:onExit()
-    User:RemoveListenerOnType(body, "items")
+    User:RemoveListenerOnType(self, "items")
 end
 function WidgetAccelerateGroup:onEnter()
-    User:AddListenOnType(body, "items")
+    User:AddListenOnType(self, "items")
 end
 function WidgetAccelerateGroup:OnUserDataChanged_items()
     for i=1,8 do
