@@ -370,7 +370,7 @@ function AllianceDetailScene:onExit()
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     if Alliance_Manager:GetMyAlliance().mapIndex == index then
-        if self:GetHomePage() then
+        if self.GetHomePage and self:GetHomePage() then
             self:GetHomePage():HideLoading()
         end
         self.fetchtimer:stopAllActions()
@@ -385,7 +385,7 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
 end
 function AllianceDetailScene:StartTimer(index, func)
     if self.fetch_index == index then return end
-    if self:GetHomePage() then
+    if self.GetHomePage and self:GetHomePage() then
         self:GetHomePage():ShowLoading()
     end
     self.fetchtimer:stopAllActions()
@@ -395,7 +395,7 @@ function AllianceDetailScene:StartTimer(index, func)
             :done(function(response)
                 self.current_allinace_index = index
                 Alliance_Manager:OnEnterMapIndex(index, response.msg)
-                if self:GetHomePage() then
+                if self.GetHomePage and self:GetHomePage() then
                     self:GetHomePage():RefreshTop(true)
                     self:GetHomePage():HideLoading()
                 end

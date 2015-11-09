@@ -747,7 +747,7 @@ function Alliance:NotifyHelpEvents(deltaData)
             if type(k) == "number" then
                 if v.eventData and v.eventData.helpedMembers and v.eventData.helpedMembers.add then
                     local event = self.helpEvents[k]
-                    if event.playerData.id == User:Id() then
+                    if event and event.playerData.id == User._id then
                         self:NotifyMemberHelp(v.eventData.helpedMembers.add[1], event.eventData)
                     end
                 end
