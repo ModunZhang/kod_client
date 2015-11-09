@@ -101,14 +101,14 @@ function GameUILoginBeta:createTips()
     local LOGIN_TIPS = {
         _("提示：预留一定的空闲城民，兵营将他们训练成士兵"),
         _("登录提示帮助2"),
-        _("登录提示帮助3"),
+        -- _("登录提示帮助3"),
         _("登录提示帮助4"),
         _("登录提示帮助5"),
-        _("登录提示帮助6"),
+        -- _("登录提示帮助6"),
         _("登录提示帮助7"),
         _("登录提示帮助8"),
         _("登录提示帮助9"),
-        _("登录提示帮助10"),
+        -- _("登录提示帮助10"),
     }
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     local random = math.random(1,#LOGIN_TIPS)
