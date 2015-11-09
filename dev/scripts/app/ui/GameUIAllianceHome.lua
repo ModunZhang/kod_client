@@ -584,7 +584,7 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
             color = 0xffedae
         }):align(display.LEFT_CENTER, 30, 14):addTo(round_bg)
         UIKit:ttfLabel({
-            text = DataUtils:getMapRoundByMapIndex(current_map_index),
+            text = DataUtils:getMapRoundByMapIndex(current_map_index) + 1,
             size = 20,
             color = 0xa1dd00
         }):align(display.RIGHT_CENTER, 180, 14):addTo(round_bg)

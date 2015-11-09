@@ -175,9 +175,9 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
                 local iron_cur = User:GetResValueByType("iron")
                 local count, wood, stone, iron, time
                 if self.material_tab:GetSelectedButtonTag() == "buildingMaterials" then
-                    count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("building")
+                    count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("buildingMaterials")
                 else
-                    count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("technology")
+                    count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("technologyMaterials")
                 end
                 local need_gems = DataUtils:buyResource({
                     wood = wood,
@@ -410,11 +410,11 @@ end
 function WidgetManufactureNew:BuildMaterial()
     if self.material_tab:GetSelectedButtonTag() == "buildingMaterials" then
         NetManager:getMakeBuildingMaterialPromise():done(function()
-            self:RefreshRequirements("building")
+            self:RefreshRequirements("buildingMaterials")
         end)
     else
         NetManager:getMakeTechnologyMaterialPromise():done(function()
-            self:RefreshRequirements("technology")
+            self:RefreshRequirements("technologyMaterials")
         end)
     end
 end
