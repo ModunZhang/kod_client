@@ -707,11 +707,11 @@ function WidgetUseItems:OpenMoveTheCityDialog( item_name ,params)
             return true
         end,
         function ()
-            -- if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
-            --     UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
-            -- elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
-            --     UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
-            -- else
+            if #UtilsForEvent:GetAllMyMarchEvents() > 0 then
+                UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
+            elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
+                UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
+            else
                 NetManager:getUseItemPromise(item_name,{
                     [item_name]={
                         locationX = params.locationX,
@@ -721,14 +721,14 @@ function WidgetUseItems:OpenMoveTheCityDialog( item_name ,params)
                 }):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            -- end
+            end
         end,
         function ()
-            -- if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
-            --     UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
-            -- elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
-            --     UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
-            -- else
+            if #UtilsForEvent:GetAllMyMarchEvents() > 0  then
+                UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
+            elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
+                UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
+            else
                 NetManager:getBuyAndUseItemPromise(item_name,{
                     [item_name]={
                         locationX = params.locationX,
@@ -737,7 +737,7 @@ function WidgetUseItems:OpenMoveTheCityDialog( item_name ,params)
                 }):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            -- end
+            end
         end
     ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog

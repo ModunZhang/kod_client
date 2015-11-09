@@ -347,6 +347,12 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
         local alliance = Alliance_Manager:GetMyAlliance()
         local time = intInit.allianceMoveColdMinutes.value * 60 + alliance.basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
+        local canMove = alliance.basicInfo.status ~= "prepare" and alliance.basicInfo.status ~= "fight"
+        if not canMove then
+            UIKit:showMessageDialog(_("提示"), _("联盟正在战争准备期或战争期"))
+            self:LeftButtonClicked()
+            return
+        end
         local canMove = alliance.basicInfo.allianceMoveTime == 0 or time <= 0
         if not canMove then
             UIKit:showMessageDialog(_("提示"), _("迁移联盟冷却中"))

@@ -84,6 +84,7 @@ function GameUITradeGuild:OnMoveInStage()
     User:AddListenOnType(self, "buildingMaterials")
     User:AddListenOnType(self, "technologyMaterials")
     User:AddListenOnType(self, "buildingEvents")
+    User:AddListenOnType(self, "buildings")
 end
 
 function GameUITradeGuild:onExit()
@@ -92,6 +93,7 @@ function GameUITradeGuild:onExit()
     User:RemoveListenerOnType(self, "buildingMaterials")
     User:RemoveListenerOnType(self, "technologyMaterials")
     User:RemoveListenerOnType(self, "buildingEvents")
+    User:RemoveListenerOnType(self, "buildings")
     GameUITradeGuild.super.onExit(self)
 end
 
@@ -599,7 +601,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
                 end
             end)
     else
-        if index<=self:GetUnlockedSellListNum() then
+        if index <= self:GetUnlockedSellListNum() then
             title_label:setString(_("空闲"))
             UIKit:ttfLabel(
                 {
@@ -1059,6 +1061,17 @@ function GameUITradeGuild:OpenSellDialog()
     body.drop_list:align(display.TOP_CENTER,window.cx,window.top-170):addTo(root)
 end
 function GameUITradeGuild:OnUserDataChanged_buildingEvents(userData, deltaData)
+    if self.cart_num and self.cart_recovery then
+        local tradeGuild = City:GetFirstBuildingByType("tradeGuild")
+        self.cart_num:SetValue(User:GetResValueByType("cart").. "/"..User:GetResProduction("cart").limit)
+        self.cart_recovery:SetValue(tradeGuild:GetCartRecovery())
+    end
+    local queue_num = self.building:GetMaxSellQueue()
+    if queue_num>self.max_sell_queue then
+        self:LoadMyGoodsList()
+    end
+end
+function GameUITradeGuild:OnUserDataChanged_buildings(userData, deltaData)
     if self.cart_num and self.cart_recovery then
         local tradeGuild = City:GetFirstBuildingByType("tradeGuild")
         self.cart_num:SetValue(User:GetResValueByType("cart").. "/"..User:GetResProduction("cart").limit)
