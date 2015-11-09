@@ -27,8 +27,8 @@ function WorldLayer:onEnter()
     self:CreateEdge()
     self.map = self:CreateMap()
     self.leveLayer = display.newNode():addTo(self.map,1)
-    self.allianceLayer = display.newNode():addTo(self.map,2)
-    self.lineLayer = display.newNode():addTo(self.map,3):hide()
+    self.lineLayer = display.newNode():addTo(self.map,2)
+    self.allianceLayer = display.newNode():addTo(self.map,3)
     self.moveLayer = display.newNode():addTo(self.map,4)
     self.lineSprites = {}
     self.levelSprites = {}
@@ -351,6 +351,7 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     local sprite = display.newSprite(string.format("world_alliance_%s.png", alliance.terrain))
     :addTo(node, 0, 1):scale(0.8)
     if index ~= Alliance_Manager:GetMyAlliance().mapIndex then
+        math.randomseed(index)
         sprite:pos(30 - math.random(30), 30 - math.random(30))
     end
     local size = sprite:getContentSize()
@@ -420,13 +421,37 @@ end
 function WorldLayer:CraeteLineWith(from, to)
     local line_key = string.format("%d_%d", from, to)
     if self.lineSprites[line_key] then return end
+    math.randomseed(from)
+    local fromx, fromy = 30 - math.random(30), 30 - math.random(30)
     local p1 = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(from))
+    p1.x = p1.x + fromx
+    p1.y = p1.y + fromy
+    math.randomseed(to)
+    local tox, toy = 30 - math.random(30), 30 - math.random(30)
     local p2 = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(to))
-    self.lineSprites[line_key] = display.newLine({{p1.x, p1.y}, {p2.x, p2.y}},
-    {
-        borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-        borderWidth = 1,
-    }):addTo(self.lineLayer)
+    p2.x = p2.x + tox
+    p2.y = p2.y + toy
+    local length = cc.pGetLength(cc.pSub(p1,p2))
+    local unit_count = math.ceil(length / 17)
+    local degree = math.deg(cc.pGetAngle(cc.pSub(p1, p2), cc.p(0, 1)))
+    local sprite = display.newSprite("fight_line_6x17.png", nil, nil, 
+        {class=cc.FilteredSpriteWithOne})
+    :addTo(self.lineLayer)
+    :pos((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5)
+    :rotation(degree)
+
+    sprite:setScaleY(unit_count)
+    sprite:setFilter(filter.newFilter("CUSTOM",
+        json.encode({
+            frag = "shaders/multi_tex.fs",
+            shaderName = "lineShader_"..unit_count,
+            unit_count = unit_count,
+            unit_len = 1 / unit_count,
+            percent = 0,
+            elapse = 0,
+        })
+    ))
+    self.lineSprites[line_key] = sprite
 end
 function WorldLayer:DeletaLineWith(mapIndex)
     for k,v in pairs(self.lineSprites) do
