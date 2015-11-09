@@ -28,7 +28,7 @@ function WorldLayer:onEnter()
     self.map = self:CreateMap()
     self.leveLayer = display.newNode():addTo(self.map,1)
     self.allianceLayer = display.newNode():addTo(self.map,2)
-    self.lineLayer = display.newNode():addTo(self.map,3)
+    self.lineLayer = display.newNode():addTo(self.map,3):hide()
     self.moveLayer = display.newNode():addTo(self.map,4)
     self.lineSprites = {}
     self.levelSprites = {}
