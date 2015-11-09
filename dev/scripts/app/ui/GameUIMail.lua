@@ -1616,7 +1616,9 @@ function GameUIMail:CreateReportContent()
                     parent:SelectAllMailsOrReports(false)
                     if not report:IsRead() then
                         parent:ReadMailOrReports({report:Id()}, function ()
-                            parent.manager:DecreaseUnReadReportsNum(1)
+                            if parent.manager then
+                                parent.manager:DecreaseUnReadReportsNum(1)
+                            end
                         end)
                     end
                     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"

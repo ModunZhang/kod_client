@@ -29,7 +29,9 @@ function WidgetWorldAllianceInfo:ctor(object,mapIndex,need_goto_btn)
             id = Alliance_Manager:GetMyAlliance()._id
         end
         NetManager:getAllianceBasicInfoPromise(id, User.serverId):done(function(response)
-            if response.success and response.msg.allianceData then
+            if response.success 
+           and response.msg.allianceData 
+           and self.SetAllianceData then
                 self:SetAllianceData(response.msg.allianceData)
                 self:LoadInfo(response.msg.allianceData)
             end
