@@ -402,7 +402,7 @@ function GameUIPveAttack:Attack()
                     attack_map[v.soldierName] = true
                 end
                 if playerSoldierRoundDatas[#playerSoldierRoundDatas].isWin then
-                    local soldierName = self.playerSoldierRoundDatas[#playerSoldierRoundDatas].soldierName
+                    local soldierName = playerSoldierRoundDatas[#playerSoldierRoundDatas].soldierName
                     attack_map[soldierName] = nil
                 end
                 

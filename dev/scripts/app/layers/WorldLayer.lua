@@ -381,7 +381,7 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
 
         self:CraeteLineWith(from, to)
     else
-        self:DeletaLineWith(index)
+        self:DeleteLineWith(index)
     end
 
     if self:IsProtect(alliance) then
@@ -453,11 +453,11 @@ function WorldLayer:CraeteLineWith(from, to)
     ))
     self.lineSprites[line_key] = sprite
 end
-function WorldLayer:DeletaLineWith(mapIndex)
+function WorldLayer:DeleteLineWith(mapIndex)
     for k,v in pairs(self.lineSprites) do
         local fromstr, tostr = unpack(string.split(k, "_"))
-        if tonumber(fromstr) == mapIndex or 
-            tonumber(tostr) == mapIndex
+        if tonumber(fromstr) == tonumber(mapIndex) or 
+            tonumber(tostr) == tonumber(mapIndex)
             then
             self.lineSprites[k]:removeFromParent()
             self.lineSprites[k] = nil
@@ -479,7 +479,7 @@ function WorldLayer:UpdateAllianceSprite(index, alliance)
         if sprite:getChildByTag(ANI_TAG) then
             sprite:removeChildByTag(ANI_TAG)
         end
-        self:DeletaLineWith(index)
+        self:DeleteLineWith(index)
     else
         if not sprite:getChildByTag(ANI_TAG) then
             ccs.Armature:create("duizhan")

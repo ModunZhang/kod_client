@@ -315,7 +315,9 @@ function GameUILoginBeta:GetServerInfo(callback)
             local ip, port = unpack(string.split(content.data.updateServer, ":"))
             NetManager.m_updateServer.host = ip
             NetManager.m_updateServer.port = tonumber(port)
-            callback()
+            if callback then
+                callback()
+            end
         else
             self:performWithDelay(function()
                 self:showError(_("获取服务器信息失败!"),function()
