@@ -257,14 +257,23 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
             dragon_head:setDragonImg("unknown_dragon_icon_112x112.png")
         end
 
+        
         local defencer = beStriked_event.defencePlayerData or beStriked_event.defenceVillageData or beStriked_event.defenceMonsterData
+        if beStriked_event.defencePlayerData then
+            defencer = beStriked_event.defencePlayerData.name
+        elseif beStriked_event.defenceVillageData then
+            defencer = Localize.village_name[beStriked_event.defenceVillageData.name]
+        elseif beStriked_event.defenceMonsterData then
+            local soldier_type = string.split(beStriked_event.defenceMonsterData.name,"_")[1]
+            defencer = Localize.soldier_name[soldier_type]
+        end
         if beStriked_event.marchType == "helpDefence" then
             title_bg:setTexture("title_green_558x34.png")
-            local title = string.format( _("%s被协防"),defencer.name)
+            local title = string.format( _("%s被协防"),defencer)
             title_label:setString(title)
         else
             title_bg:setTexture("title_red_556x34.png")
-            local title = string.format(string.find(beStriked_event.eventType,"strike") and _("%s遭到突袭") or _("%s遭到进攻"),defencer.name)
+            local title = string.format(string.find(beStriked_event.eventType,"strike") and _("%s遭到突袭") or _("%s遭到进攻"),defencer)
             title_label:setString(title)
         end
         local fromAlliance = beStriked_event.fromAlliance

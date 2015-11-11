@@ -64,7 +64,7 @@ function AllianceManager:GetAboutMyMarchEvents()
         return {},{}
     end
    local to_my_events = self:GetToMineMarchEvents()
-   local out_march_events = self:GetMyAlliance():GetMyMarchEvents()
+   local out_march_events = UtilsForEvent:GetAllMyMarchEvents()
    return to_my_events,out_march_events
 end
 function AllianceManager:HasToMyAllianceEvents()

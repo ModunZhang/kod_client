@@ -244,7 +244,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
     local alliance_id = self:GetFocusAlliance()._id
     local checkMeIsProtectedWarinng = self:CheckMeIsProtectedWarinng()
     local focus_alliance = self:GetFocusAlliance()
-    if villageEvent.fromAlliance.id == self:GetMyAlliance()._id then --我方占领
+    if villageEvent and villageEvent.fromAlliance.id == self:GetMyAlliance()._id then --我方占领
         if villageEvent.playerData.id == User:Id() then --自己占领
             local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
                 NetManager:getRetreatFromVillagePromise(villageEvent.id)
