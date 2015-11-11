@@ -90,13 +90,13 @@ function UpgradeBuilding:InstantUpgradeTo(level)
     self.level = level
     self.upgrade_to_next_level_time = 0
 
-    self:CancelLocalPush()
+    -- self:CancelLocalPush()
     self.upgrade_building_observer:NotifyObservers(function(listener)
         listener:OnBuildingUpgradeFinished(self, is_upgrading)
     end)
 end
 function UpgradeBuilding:UpgradeByCurrentTime(current_time)
-    self:GeneralLocalPush()
+    -- self:GeneralLocalPush()
     self.upgrade_building_observer:NotifyObservers(function(listener)
         listener:OnBuildingUpgradingBegin(self, current_time)
     end)
@@ -133,15 +133,15 @@ function UpgradeBuilding:GetLevel()
     return self.level
 end
 
-function UpgradeBuilding:GeneralLocalPush()
-    local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
-    local title = format(_("修建%s到LV%d完成"),Localize.getLocaliedKeyByType(self.building_type),(self.level+1))
-    app:GetPushManager():UpdateBuildPush(self.upgrade_to_next_level_time,title,pushIdentity)
-end
-function UpgradeBuilding:CancelLocalPush()
-    local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
-    app:GetPushManager():CancelBuildPush(pushIdentity)
-end
+-- function UpgradeBuilding:GeneralLocalPush()
+--     local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
+--     local title = format(_("修建%s到LV%d完成"),Localize.getLocaliedKeyByType(self.building_type),(self.level+1))
+--     app:GetPushManager():UpdateBuildPush(self.upgrade_to_next_level_time,title,pushIdentity)
+-- end
+-- function UpgradeBuilding:CancelLocalPush()
+--     local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
+--     app:GetPushManager():CancelBuildPush(pushIdentity)
+-- end
 function UpgradeBuilding:IsNeedToUpdate()
     return self.upgrade_to_next_level_time ~= 0
 end
@@ -192,7 +192,7 @@ function UpgradeBuilding:OnHandle(level, finish_time)
             self:UpgradeByCurrentTime(finish_time - total - DataUtils:getBuildingBuff(total))
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
             self.upgrade_to_next_level_time = finish_time
-            self:GeneralLocalPush()
+            -- self:GeneralLocalPush()
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time == 0 then
             self:InstantUpgradeTo(level)
         end
@@ -202,7 +202,7 @@ function UpgradeBuilding:OnHandle(level, finish_time)
         else
             self.level = level
             self.upgrade_to_next_level_time = finish_time
-            self:GeneralLocalPush()
+            -- self:GeneralLocalPush()
         end
     end
 end

@@ -240,11 +240,11 @@ end
 function GameUIAllianceVillageEnter:GetEnterButtons()
     local buttons = {}
     local village_id = self:GetVillageInfo().id
-    local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
+    local villageEvent = Alliance_Manager:GetVillageEventsByMapId(self:GetMyAlliance(), village_id)
     local alliance_id = self:GetFocusAlliance()._id
     local checkMeIsProtectedWarinng = self:CheckMeIsProtectedWarinng()
     local focus_alliance = self:GetFocusAlliance()
-    if villageEvent then --我方占领
+    if villageEvent.fromAlliance.id == self:GetMyAlliance()._id then --我方占领
         if villageEvent.playerData.id == User:Id() then --自己占领
             local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
                 NetManager:getRetreatFromVillagePromise(villageEvent.id)
@@ -281,7 +281,6 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             buttons = {attack_button}
         end
     else --我方未占领
-        villageEvent = self:GetFocusAlliance():FindVillageEventByVillageId(village_id)
         if villageEvent then -- 敌方占领
             local attack_button = self:BuildOneButton("capture_38x56.png", _("占领")):onButtonClicked(function()
                 local toLocation = self:GetLogicPosition()
@@ -304,17 +303,17 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     final_func()
                 end
             end)
-        local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
-            local toLocation = self:GetLogicPosition()
-            if checkMeIsProtectedWarinng then
-                UIKit:showMessageDialog(_("提示"),_("突袭村落将失去保护状态，确定继续派兵?"),function ()
+            local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
+                local toLocation = self:GetLogicPosition()
+                if checkMeIsProtectedWarinng then
+                    UIKit:showMessageDialog(_("提示"),_("突袭村落将失去保护状态，确定继续派兵?"),function ()
+                        UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{alliance = focus_alliance,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
+                    end)
+                else
                     UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{alliance = focus_alliance,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
-                end)
-            else
-                UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{alliance = focus_alliance,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
-            end
-        end)
-        buttons = {attack_button,strike_button}
+                end
+            end)
+            buttons = {attack_button,strike_button}
         else -- 无人占领
             local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
                 local toLocation = self:GetLogicPosition()
@@ -338,7 +337,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     final_func()
                 end
             end)
-        buttons = {attack_button}
+            buttons = {attack_button}
         end
     end
     return buttons
