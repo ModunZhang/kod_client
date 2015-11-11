@@ -510,6 +510,7 @@ function GameUIItems:UseItemFunc( item_name )
                 })
             end
         else
+            local clone_items = clone(User.items)
             NetManager:getUseItemPromise(item_name,{}):done(function (response)
                 local message = ""
                 local awards = {}
@@ -528,7 +529,7 @@ function GameUIItems:UseItemFunc( item_name )
                     for i,v in ipairs(response.msg.playerData) do
                         if tolua.type(v[2]) == "table" then
                             local m_name = v[2].name
-                            local m_count = v[2].count - User:GetItemCount(m_name)
+                            local m_count = v[2].count - UtilsForItem:GetItemCount(clone_items, m_name)
                             message = message .. Localize_item.item_name[m_name].."x"..m_count.." "
                             table.insert(awards, {name = m_name, count = m_count})
                         end

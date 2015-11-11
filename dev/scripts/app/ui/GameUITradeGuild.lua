@@ -1100,7 +1100,7 @@ function GameUITradeGuild:OnUserDataChanged_buildingMaterials(userData, deltaDat
         end
     end
 end
-function GameUITradeGuild:OnUserDataChanged_technologyMaterials(material_manager, material_type, changed)
+function GameUITradeGuild:OnUserDataChanged_technologyMaterials(userData, deltaData)
     local ok, value = deltaData("technologyMaterials")
     if ok then
          if self.martial_material_options then
