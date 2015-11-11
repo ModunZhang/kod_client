@@ -851,7 +851,6 @@ function GameUIReplayNew:ctor(report, callback, skipcallback)
     self.round = 1
 end
 function GameUIReplayNew:OnMoveInStage()
-    app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceBattleScene",true)
     self.ui_map = self:BuildUI()
     self.ui_map.battle_background1:setTexture(string.format("back_ground_%s.png", self.report:GetAttackTargetTerrain()))
     self.ui_map.attackName:setString(self.report:GetFightAttackName())
@@ -899,7 +898,6 @@ function GameUIReplayNew:onExit()
     if type(self.callback) == "function" then
         self.callback(self)
     end
-    app:GetAudioManager():PlayGameMusicAutoCheckScene()
 end
 function GameUIReplayNew:GetOrderedAttackSoldiers()
     return self.report:GetOrderedAttackSoldiers()
