@@ -23,8 +23,12 @@ function GameUIAllianceMosterEnter:ctor(mapObj,alliance)
     local moster = self:GetBuildingInfo()
     self.moster_config = monsterConfig[moster.level]
     self.moster = moster
+
+    local corps = string.split(monsterConfig[moster.level].soldiers, ";")
+    local soldiers = string.split(corps[moster.index + 1], ",")
+
     local moster_config = self.moster_config
-    local icon = string.split(moster.name,"_")
+    local icon = string.split(soldiers[1],"_")
     local soldier_type = icon[1]
     GameUIAllianceMosterEnter.super.ctor(self,286,Localize.soldier_name[soldier_type],window.top - 200,"title_red_600x56.png")
     display.newNode():addTo(self):schedule(function()
@@ -56,7 +60,11 @@ function GameUIAllianceMosterEnter:onEnter()
     local moster = self.moster
     local moster_config = self.moster_config
     local rewards = string.split(moster_config.rewards,",")
-    local icon = string.split(moster.name,"_")
+
+    local corps = string.split(monsterConfig[moster.level].soldiers, ";")
+    local soldiers = string.split(corps[moster.index + 1], ",")
+
+    local icon = string.split(soldiers[1],"_")
     local soldier_type = icon[1]
     local soldier_star = tonumber(icon[2])
     local level = moster_config.level

@@ -1,6 +1,6 @@
 UtilsForEvent = {}
 local Localize = import(".Localize")
-
+local monsters = GameDatas.AllianceInitData.monsters
 function UtilsForEvent:GetEventInfo(event)
     local start = event.startTime/1000
     local finish = (event.finishTime or event.arriveTime) / 1000
@@ -76,9 +76,11 @@ function UtilsForEvent:GetMarchEventPrefix(event, eventType)
         end
         return string.format(_("正在进攻 %s(%s)"), target_str, target_pos)
     elseif event.marchType == "monster" then
-        local soldier_name = unpack(string.split(event.defenceMonsterData.name, "_"))
+        local corps = string.split(monsters[event.defenceMonsterData.level].soldiers, ";")
+        local soldiers = string.split(corps[event.defenceMonsterData.index + 1], ",")
+        local soldierName = string.split(soldiers[1],"_")[1]
         local target_str = string.format("%sLv%s",
-            Localize.soldier_name[soldier_name],
+            Localize.soldier_name[soldierName],
             event.defenceMonsterData.level)
         return string.format(_("正在进攻 %s(%s)"), target_str, target_pos)
     elseif event.marchType == "helpDefence" then
@@ -136,7 +138,6 @@ end
 function UtilsForEvent:IsMyMarchEvent(event)
     return event.attackPlayerData.id == User._id
 end
-
 function UtilsForEvent:GetDestination(event)
     local eventType = event.eventType
     if eventType == "helpToTroops" then
@@ -152,9 +153,10 @@ function UtilsForEvent:GetDestination(event)
         elseif event.marchType == 'shrine' then
             return _("圣地")
         elseif event.marchType == 'monster' then
-            local name = event.defenceMonsterData.name
-            local infos = string.split(name,"_")
-            return string.format("%s Lv%s",Localize.soldier_name[infos[1]],infos[2])
+            local corps = string.split(monsters[event.defenceMonsterData.level].soldiers, ";")
+            local soldiers = string.split(corps[event.defenceMonsterData.index + 1], ",")
+            local infos = string.split(soldiers[1],"_")
+            return string.format("%s Lv%s",Localize.soldier_name[infos[1]], event.defenceMonsterData.level)
         end
     elseif eventType == "strikeMarchReturnEvents" or eventType == "attackMarchReturnEvents" then
         return event.attackPlayerData.name

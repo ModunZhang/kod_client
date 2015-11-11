@@ -1065,6 +1065,14 @@ local MAILS = {
     __foodVillage = _("粮食村落"),
     __coinVillage = _("硬币村落"),
     __stoneVillage= _("矿石村落"),
+    __swordsman = _("剑士"),
+    __sentinel = _("哨兵"),
+    __ranger = _("弓箭手"),
+    __crossbowman = _("弩弓手"),
+    __lancer = _("枪骑兵"),
+    __horseArcher = _("弓骑兵"),
+    __catapult = _("投石车"),
+    __ballista = _("弩车"),
 }
 
 local  getBuildingLocalizedKeyByBuildingType = function(name)

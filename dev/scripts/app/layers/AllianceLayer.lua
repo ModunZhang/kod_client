@@ -12,6 +12,7 @@ local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLef
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "OBJECT", "EMPTY", "INFO", "LINE", "CORPS")
+local monsters = GameDatas.AllianceInitData.monsters
 local AllianceMap = GameDatas.AllianceMap
 local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
@@ -684,7 +685,9 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
         sprite = createBuildingSprite(config.png):scale(config.scale)
     elseif mapObj.name == "monster" then
         local info = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
-        sprite = UIKit:CreateMonster(info.name)
+        local corps = string.split(monsters[info.level].soldiers, ";")
+        local soldiers = string.split(corps[info.index + 1], ",")
+        sprite = UIKit:CreateMonster(soldiers[1])
     else
         return 
         -- print_(mapObj.name)
@@ -791,9 +794,11 @@ function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
     elseif mapObj.name == "monster" then
         local banners = UILib.enemy_city_banner
         local monster = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
+        local corps = string.split(monsters[monster.level].soldiers, ";")
+        local soldiers = string.split(corps[monster.index + 1], ",")
         info.banner:setTexture("none_banner.png")
         info.level:setString(monster.level)
-        info.name:setString(Localize.soldier_name[string.split(monster.name, '_')[1]])
+        info.name:setString(Localize.soldier_name[string.split(soldiers[1], '_')[1]])
     elseif mapObj.name == "woodVillage"
         or mapObj.name == "stoneVillage"
         or mapObj.name == "ironVillage"

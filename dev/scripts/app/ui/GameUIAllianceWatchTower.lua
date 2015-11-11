@@ -12,7 +12,7 @@ local Localize = import("..utils.Localize")
 local GameUIAllianceWatchTowerTroopDetail = import("..ui.GameUIAllianceWatchTowerTroopDetail")
 
 local GameUIAllianceWatchTower = UIKit:createUIClass('GameUIAllianceWatchTower', "GameUIAllianceBuilding")
-
+local monsters = GameDatas.AllianceInitData.monsters
 function GameUIAllianceWatchTower:ctor(city,default_tab,building)
     GameUIAllianceWatchTower.super.ctor(self, city, _("巨石阵"),default_tab,building)
     self.default_tab = default_tab
@@ -264,8 +264,10 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
         elseif beStriked_event.defenceVillageData then
             defencer = Localize.village_name[beStriked_event.defenceVillageData.name]
         elseif beStriked_event.defenceMonsterData then
-            local soldier_type = string.split(beStriked_event.defenceMonsterData.name,"_")[1]
-            defencer = Localize.soldier_name[soldier_type]
+            local corps = string.split(monsters[beStriked_event.defenceMonsterData.level].soldiers, ";")
+            local soldiers = string.split(corps[beStriked_event.defenceMonsterData.index + 1], ",")
+            local soldierName = string.split(soldiers[1], "_")[1]
+            defencer = Localize.soldier_name[soldierName] .. "Lv" .. beStriked_event.defenceMonsterData.level
         end
         if beStriked_event.marchType == "helpDefence" then
             title_bg:setTexture("title_green_558x34.png")
@@ -454,8 +456,10 @@ function GameUIAllianceWatchTower:CreateAttackContent()
         elseif att_event.defenceVillageData then
             defencer = Localize.village_name[att_event.defenceVillageData.name]
         elseif att_event.defenceMonsterData then
-            local soldier_type = string.split(att_event.defenceMonsterData.name,"_")[1]
-            defencer = Localize.soldier_name[soldier_type]
+            local corps = string.split(monsters[att_event.defenceMonsterData.level].soldiers, ";")
+            local soldiers = string.split(corps[att_event.defenceMonsterData.index + 1], ",")
+            local soldierName = string.split(soldiers[1], "_")[1]
+            defencer = Localize.soldier_name[soldierName] .. "Lv" .. att_event.defenceMonsterData.level
         end
         local fromAlliance = att_event.fromAlliance
         local title = string.format(string.find(att_event.eventType,"strike") and _("突袭%s") or _("进攻%s"),defencer)
