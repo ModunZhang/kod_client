@@ -248,9 +248,9 @@ create_building_config(
 -- village
 create_building_config(
     {"coinVillage"}
-    ,create_config(MIN_LEVEL, level(3), "dwelling_1.png", offset(0, 50), scale(1))
-    ,create_config(level(4), level(6), "dwelling_2.png", offset(0, 60), scale(0.85))
-    ,create_config(level(7), MAX_LEVEL, "dwelling_3.png", offset(0, 60), scale(0.85))
+    ,create_config(MIN_LEVEL, level(6), "dwelling_1.png", offset(0, 50), scale(1))
+    ,create_config(level(7), level(12), "dwelling_2.png", offset(0, 60), scale(0.85))
+    ,create_config(level(13), MAX_LEVEL, "dwelling_3.png", offset(0, 60), scale(0.85))
 )
 create_building_config(
     {"foodVillage"}

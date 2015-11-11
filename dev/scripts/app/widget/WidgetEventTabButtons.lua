@@ -37,8 +37,8 @@ function WidgetEventTabButtons:OnUserDataChanged_buildings(userData, deltaData)
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 function WidgetEventTabButtons:OnUserDataChanged_houseEvents(userData, deltaData)
-    if deltaData("houseEvents.add") 
-    or deltaData("houseEvents.edit") then
+    if deltaData("houseEvents.add")
+        or deltaData("houseEvents.edit") then
         self:EventChangeOn("build", true)
         self:RefreshBuildQueueByType("build")
     elseif deltaData("houseEvents.remove") then
@@ -48,8 +48,8 @@ function WidgetEventTabButtons:OnUserDataChanged_houseEvents(userData, deltaData
     end
 end
 function WidgetEventTabButtons:OnUserDataChanged_buildingEvents(userData, deltaData)
-    if deltaData("buildingEvents.add") 
-    or deltaData("buildingEvents.edit") then
+    if deltaData("buildingEvents.add")
+        or deltaData("buildingEvents.edit") then
         self:EventChangeOn("build", true)
         self:RefreshBuildQueueByType("build")
     elseif deltaData("buildingEvents.remove") then
@@ -59,8 +59,8 @@ function WidgetEventTabButtons:OnUserDataChanged_buildingEvents(userData, deltaD
     end
 end
 function WidgetEventTabButtons:OnUserDataChanged_dragonEquipmentEvents(userData, deltaData)
-    if deltaData("dragonEquipmentEvents.add") 
-    or deltaData("dragonEquipmentEvents.edit") then
+    if deltaData("dragonEquipmentEvents.add")
+        or deltaData("dragonEquipmentEvents.edit") then
         self:EventChangeOn("material", true)
     elseif deltaData("dragonEquipmentEvents.remove") then
         self:EventChangeOn("material")
@@ -83,7 +83,7 @@ function WidgetEventTabButtons:OnUserDataChanged_materialEvents(userData, deltaD
 end
 function WidgetEventTabButtons:OnUserDataChanged_soldierEvents(userData, deltaData)
     if deltaData("soldierEvents.add")
-    or deltaData("soldierEvents.edit") then
+        or deltaData("soldierEvents.edit") then
         self:EventChangeOn("soldier", true)
     elseif deltaData("soldierEvents.remove") then
         self:EventChangeOn("soldier")
@@ -92,8 +92,8 @@ function WidgetEventTabButtons:OnUserDataChanged_soldierEvents(userData, deltaDa
     self:RefreshBuildQueueByType("soldier")
 end
 function WidgetEventTabButtons:OnUserDataChanged_militaryTechEvents(userData, deltaData)
-    if deltaData("militaryTechEvents.add") 
-    or deltaData("militaryTechEvents.edit") then
+    if deltaData("militaryTechEvents.add")
+        or deltaData("militaryTechEvents.edit") then
         self:EventChangeOn("technology", true)
     elseif deltaData("militaryTechEvents.remove") then
         self:EventChangeOn("technology")
@@ -103,7 +103,7 @@ function WidgetEventTabButtons:OnUserDataChanged_militaryTechEvents(userData, de
 end
 function WidgetEventTabButtons:OnUserDataChanged_soldierStarEvents(userData, deltaData)
     if deltaData("soldierStarEvents.add")
-    or deltaData("soldierStarEvents.edit") then
+        or deltaData("soldierStarEvents.edit") then
         self:EventChangeOn("technology", true)
     elseif deltaData("soldierStarEvents.remove") then
         self:EventChangeOn("technology")
@@ -112,8 +112,8 @@ function WidgetEventTabButtons:OnUserDataChanged_soldierStarEvents(userData, del
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnUserDataChanged_productionTechEvents(userData, deltaData)
-    if deltaData("productionTechEvents.add") 
-    or deltaData("productionTechEvents.edit") then
+    if deltaData("productionTechEvents.add")
+        or deltaData("productionTechEvents.edit") then
         self:EventChangeOn("technology", true)
     elseif deltaData("productionTechEvents.remove") then
         self:EventChangeOn("technology")
@@ -157,78 +157,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
 
     scheduleAt(self, function()
         if self:IsShowing() then return end
-        local event = User:GetShortestTechEvent()
-        if event then
-            local time, percent = UtilsForEvent:GetEventInfo(event)
-            self:GetTabByKey("technology"):SetOrResetProgress(time, percent)
-        else
-            self:GetTabByKey("technology"):SetOrResetProgress(nil)
-        end
-
-        local event = User:GetSoldierEventsBySeq()[1]
-        if event then
-            local time, percent = UtilsForEvent:GetEventInfo(event)
-            self:GetTabByKey("soldier"):SetOrResetProgress(time, percent)
-        else
-            self:GetTabByKey("soldier"):SetOrResetProgress(nil)
-        end
-
-        local event = User:GetMakingMaterialsEventsBySeq()[1]
-        if event then
-            local time, percent = UtilsForEvent:GetEventInfo(event)
-            self:GetTabByKey("material"):SetOrResetProgress(time, percent)
-        else
-            self:GetTabByKey("material"):SetOrResetProgress(nil)
-        end
-
-        local event = User:GetBuildingEventsBySeq()[1]
-        if event then
-            local time, percent = UtilsForEvent:GetEventInfo(event)
-            self:GetTabByKey("build"):SetOrResetProgress(time, percent)
-        else
-            self:GetTabByKey("build"):SetOrResetProgress(nil)
-        end
-
-        if self:IsShow() then
-            if self:GetCurrentTab() == "technology" then
-                self:IteratorAllItem(function(_, v)
-                    if v.event then
-                        v:SetProgressInfo(self:TechDescribe(v.event))
-                        self:SetProgressItemBtnLabel(
-                            DataUtils:getFreeSpeedUpLimitTime()
-                            >UtilsForEvent:GetEventInfo(v.event),
-                            v
-                        )
-                    end
-                end)
-            elseif self:GetCurrentTab() == "soldier" then
-                self:IteratorAllItem(function(i, v)
-                    if i ~= 1 and v.event then
-                        v:SetProgressInfo(self:SoldierDescribe(v.event))
-                    end
-                end)
-            elseif self:GetCurrentTab() == "material" then
-                self:IteratorAllItem(function(i, v)
-                    if i ~= 1 and v.event then
-                        if v.event.type then
-                            v:SetProgressInfo(self:MaterialDescribe(v.event))
-                        else
-                            v:SetProgressInfo(self:EquipmentDescribe(v.event))
-                        end
-                    end
-                end)
-            elseif self:GetCurrentTab() == "build" then
-                self:IteratorAllItem(function(i, v)
-                    if i ~= 1 and v.event then
-                        v:SetProgressInfo(self:BuildingDescribe(v.event))
-                        self:SetProgressItemBtnLabel(
-                            DataUtils:getFreeSpeedUpLimitTime()
-                            >UtilsForEvent:GetEventInfo(v.event),
-                            v)
-                    end
-                end)
-            end
-        end
+        self:RefreshAllEvents()
     end)
 
     User:AddListenOnType(self, "soldierEvents")
@@ -253,6 +182,80 @@ function WidgetEventTabButtons:onExit()
     User:RemoveListenerOnType(self, "buildingEvents")
     User:RemoveListenerOnType(self, "buildings")
 end
+function WidgetEventTabButtons:RefreshAllEvents()
+    local event = User:GetShortestTechEvent()
+    if event then
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        self:GetTabByKey("technology"):SetOrResetProgress(time, percent)
+    else
+        self:GetTabByKey("technology"):SetOrResetProgress(nil)
+    end
+
+    local event = User:GetSoldierEventsBySeq()[1]
+    if event then
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        self:GetTabByKey("soldier"):SetOrResetProgress(time, percent)
+    else
+        self:GetTabByKey("soldier"):SetOrResetProgress(nil)
+    end
+
+    local event = User:GetMakingMaterialsEventsBySeq()[1]
+    if event then
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        self:GetTabByKey("material"):SetOrResetProgress(time, percent)
+    else
+        self:GetTabByKey("material"):SetOrResetProgress(nil)
+    end
+
+    local event = User:GetBuildingEventsBySeq()[1]
+    if event then
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        self:GetTabByKey("build"):SetOrResetProgress(time, percent)
+    else
+        self:GetTabByKey("build"):SetOrResetProgress(nil)
+    end
+
+    if self:IsShow() then
+        if self:GetCurrentTab() == "technology" then
+            self:IteratorAllItem(function(_, v)
+                if v.event then
+                    v:SetProgressInfo(self:TechDescribe(v.event))
+                    self:SetProgressItemBtnLabel(
+                        DataUtils:getFreeSpeedUpLimitTime()
+                        >UtilsForEvent:GetEventInfo(v.event),
+                        v
+                    )
+                end
+            end)
+        elseif self:GetCurrentTab() == "soldier" then
+            self:IteratorAllItem(function(i, v)
+                if i ~= 1 and v.event then
+                    v:SetProgressInfo(self:SoldierDescribe(v.event))
+                end
+            end)
+        elseif self:GetCurrentTab() == "material" then
+            self:IteratorAllItem(function(i, v)
+                if i ~= 1 and v.event then
+                    if v.event.type then
+                        v:SetProgressInfo(self:MaterialDescribe(v.event))
+                    else
+                        v:SetProgressInfo(self:EquipmentDescribe(v.event))
+                    end
+                end
+            end)
+        elseif self:GetCurrentTab() == "build" then
+            self:IteratorAllItem(function(i, v)
+                if i ~= 1 and v.event then
+                    v:SetProgressInfo(self:BuildingDescribe(v.event))
+                    self:SetProgressItemBtnLabel(
+                        DataUtils:getFreeSpeedUpLimitTime()
+                        >UtilsForEvent:GetEventInfo(v.event),
+                        v)
+                end
+            end)
+        end
+    end
+end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     local city = self.city
     local User = self.city:GetUser()
@@ -263,12 +266,10 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
         if key == "build" then
             local count = #city:GetUpgradingBuildings()
             local total = User.basicInfo.buildQueue
-            if item:IsChanged(count, total) then item:SetOrResetProgress() end
-            item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
+            item:SetActiveNumber(count, total):Enable(able)
         elseif key == "soldier" then
             local count = #User.soldierEvents
             local total = #User:GetUnlockBuildingsBy("barracks")
-            if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
         elseif key == "material" then
             local count = 0
@@ -277,24 +278,19 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             local total = 0
             total = total + #User:GetUnlockBuildingsBy("toolShop")
             total = total + #User:GetUnlockBuildingsBy("blackSmith")
-            if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
         elseif key == "technology" then
             local total = 0
-            local buildings = {
+            for i,v in ipairs({
                 "academy",
                 "trainingGround",
                 "hunterHall",
                 "stable",
                 "workshop",
-            }
-            for i,v in ipairs(buildings) do
-                if city:GetFirstBuildingByType(v):IsUnlocked() then
-                    total = total + 1
-                end
+            }) do
+                total = total + #User:GetUnlockBuildingsBy(v)
             end
             local count = User:GetTotalMilitaryTechEventsNumber() + #User.productionTechEvents
-            if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
         end
     end
@@ -494,8 +490,8 @@ function WidgetEventTabButtons:IsTabEnable(tab)
         return true
     elseif tab == "soldier" and User:IsBuildingUnlockedBy("barracks") then
         return true
-    elseif tab == "material" 
-        and (User:IsBuildingUnlockedBy("toolShop") 
+    elseif tab == "material"
+        and (User:IsBuildingUnlockedBy("toolShop")
         or User:IsBuildingUnlockedBy("blackSmith")) then
         return true
     elseif tab == "technology" then
@@ -625,6 +621,7 @@ function WidgetEventTabButtons:PromiseOfShow()
     if self:IsTabEnable(self:GetCurrentTab()) then
         self:Reload()
         return cocos_promise.promiseOfMoveTo(self.node, 0, 0, 0.15, "sineIn"):next(function()
+            self:RefreshAllEvents()
             self.arrow:flipY(false)
             if self.pop_callbacks and #self.pop_callbacks > 0 then
                 table.remove(self.pop_callbacks, 1)()
@@ -824,8 +821,8 @@ local material_buildings = {
 function WidgetEventTabButtons:LoadMaterialEvents()
     local User = self.city:GetUser()
     self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-        UIKit:newGameUI('GameUIMaterials', 
-            self.city:GetFirstBuildingByType("toolShop"), 
+        UIKit:newGameUI('GameUIMaterials',
+            self.city:GetFirstBuildingByType("toolShop"),
             self.city:GetFirstBuildingByType("blackSmith")
         ):AddToCurrentScene(true)
     end):SetLabel(_("查看材料")))
@@ -980,10 +977,10 @@ function WidgetEventTabButtons:BuildingDescribe(event)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
     local time, percent = UtilsForEvent:GetEventInfo(event)
-    return string.format( _("招募%s x%d"), 
-        Localize.soldier_name[event.name], event.count), 
-        percent, 
-        GameUtils:formatTimeStyle1(time)
+    return string.format( _("招募%s x%d"),
+        Localize.soldier_name[event.name], event.count),
+    percent,
+    GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
     local time, percent = UtilsForEvent:GetEventInfo(event)
@@ -1048,4 +1045,5 @@ end
 
 
 return WidgetEventTabButtons
+
 

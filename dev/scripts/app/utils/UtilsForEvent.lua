@@ -5,7 +5,11 @@ function UtilsForEvent:GetEventInfo(event)
     local start = event.startTime/1000
     local finish = (event.finishTime or event.arriveTime) / 1000
     local time = app.timer:GetServerTime()
-    return math.ceil(finish - time), (time - start) * 100.0 / (finish - start)
+    local left = finish - time
+    if left < 0 then
+        left = 0
+    end
+    return math.ceil(left), (time - start) * 100.0 / (finish - start)
 end
 function UtilsForEvent:GetMilitaryTechEventLocalize(tech_name, level)
     local category, tech_type = unpack(string.split(tech_name, "_"))
