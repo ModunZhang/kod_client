@@ -73,6 +73,19 @@ function AllianceLayer:onEnter()
     --     )
     --     count = count + 1
     -- end
+    scheduleAt(self, function()
+        if self:getScale() < (self:GetScaleRange()) * 1.5 then
+            if self.is_show == nil or self.is_show == true then
+                self.info_node:fadeOut(0.5)
+                self.is_show = false
+            end
+        else
+            if self.is_show == nil or self.is_show == false then
+                self.info_node:fadeIn(0.5)
+                self.is_show = true
+            end
+        end
+    end)
 end
 function AllianceLayer:onCleanup()
     local count = 0
