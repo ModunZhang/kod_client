@@ -459,6 +459,14 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
                 :next(function()
                     self:OpenUI(alliance, mapObj)
                 end)
+            elseif type_ == "monster" then
+                app:lockInput(true)
+                self.util_node:performWithDelay(function()app:lockInput(false)end,0.5)
+                self:GetSceneLayer()
+                :PromiseOfFlashEmptyGround(mapObj.index, mapObj.x, mapObj.y)
+                :next(function()
+                    self:OpenUI(alliance, mapObj)
+                end)
             elseif type_ == "nouse" then
                 return
             else
