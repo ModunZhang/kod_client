@@ -53,7 +53,12 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     self.building_info_btn:setScale(124/self.building_info_btn:getCascadeBoundingBox().size.width)
 
     -- i image
-    display.newSprite("info_26x26.png"):align(display.CENTER, display.cx-250, display.top-225)
+    WidgetPushButton.new({normal = "info_26x26.png"})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI("GameUICityBuildingInfo", self.building):AddToCurrentScene(true)
+            end
+        end):align(display.CENTER, display.cx-250, display.top-225)
         :addTo(self)
 
     self:InitBuildingIntroduces()
