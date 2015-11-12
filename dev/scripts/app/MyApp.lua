@@ -365,15 +365,15 @@ function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     dump("onEnterForeground------>")
     local scene = display.getRunningScene()
-    if scene.__cname == "LogoScene" then
+    if scene and scene.__cname == "LogoScene" then
         return
     end
-    if scene.__cname == "MyCityScene" then
+    if scene and scene.__cname == "MyCityScene" then
         if not Alliance_Manager:HasBeenJoinedAlliance() then
             scene:GetHomePage():PromiseOfFteAlliance()
         end
     end
-    if scene.__cname == "MainScene" then
+    if scene and scene.__cname == "MainScene" then
         if (self:GetGameDefautlt():IsPassedSplash() 
         or scene.ui.passed_splash)
         and not scene.ui.enter_next_scene then
