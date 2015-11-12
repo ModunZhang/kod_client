@@ -1694,7 +1694,7 @@ function UIKit:CreateArrow(param, func)
     arrow.btn = cc.ui.UIPushButton.new({
         normal = param.up or "arrow_up_mine.png",
         pressed = param.down or "arrow_down_mine.png",
-    }):addTo(arrow):pos(96/2, 102/2 - 4)
+    }):addTo(arrow):pos(96/2, 102/2 - 3)
     :onButtonClicked(function()
         if type(func) == "function" then
             func()
