@@ -1120,6 +1120,10 @@ function User:GetProductionTech(index)
         end
     end
 end
+function User:GetProductionTechEff(index)
+   local tech_name,v = self:GetProductionTech(index)
+   return productionTechs[tech_name].effectPerLevel * v.level
+end
 function User:HasProductionTechEvent()
     return next(self.productionTechEvents)
 end
