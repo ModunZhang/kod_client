@@ -5,7 +5,6 @@
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
@@ -183,21 +182,10 @@ function GameUIAllianceMosterEnter:onEnter()
         color = 0xffedae,
     }):align(display.CENTER, -s.width/2 , -s.height+25):addTo(btn)
     self.attack_btn = btn
-    -- 如果是敌方的野怪，准备期不能攻打
-    if not self.isMyAlliance and alliance.basicInfo.status == "prepare" then
-        btn:setButtonEnabled(false)
-        local progress_1 = WidgetAllianceEnterButtonProgress.new()
-            :pos(-68, -54)
-            :addTo(btn)
-    end
 end
 function GameUIAllianceMosterEnter:ShowReward()
     local time = self.alliance.basicInfo.monsterRefreshTime/1000 - app.timer:GetServerTime()
     self.time_label:setString(time >= 0 and string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(time)) or _("未知"))
-
-    if not self.isMyAlliance and self.alliance.basicInfo.status == "fight" then
-        self.attack_btn:setButtonEnabled(true)
-    end
 end
 
 function GameUIAllianceMosterEnter:GetBuildingInfo()
