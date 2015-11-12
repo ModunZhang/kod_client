@@ -278,6 +278,10 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
                 UIKit:showMessageDialog(_("提示"),_("目标联盟未处于和平期，不能宣战"))
                 return
             end
+            if Alliance_Manager:GetMyAlliance().basicInfo.status ~= "peace" and Alliance_Manager:GetMyAlliance().basicInfo.status ~= "protect" then
+                UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
+                return
+            end
             UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
                 {
                     listener = function ()
