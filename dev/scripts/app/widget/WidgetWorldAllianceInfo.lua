@@ -264,31 +264,36 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         dimensions = cc.size(530,0),
         align = cc.TEXT_ALIGNMENT_CENTER,
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
-
-    self:BuildOneButton("attack_58x56.png",_("宣战")):onButtonClicked(function()
-        if alliance_data.status =="fight" or alliance_data.status=="prepare" then
-            UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
-            return
-        end
-        if alliance_data.status ~= "peace" then
-            UIKit:showMessageDialog(_("提示"),_("目标联盟未处于和平期，不能宣战"))
-            return
-        end
-        UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
-            {
-                listener = function ()
-                    NetManager:getAttackAlliancePromose(alliance_data.id)
-                    self:LeftButtonClicked()
-                end
-            }
-        )
-    end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
-    self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
-        self:Located(self.mapIndex)
-    end):addTo(layer):align(display.RIGHT_TOP, l_size.width - 125,10)
-    self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
-        UIKit:newGameUI("GameUIAllianceInfo", alliance_data.id):AddToCurrentScene(true)
+    if alliance_data.id == Alliance_Manager:GetMyAlliance()._id then
+        self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
+            self:Located(self.mapIndex)
+        end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
+    else
+        self:BuildOneButton("attack_58x56.png",_("宣战")):onButtonClicked(function()
+            if alliance_data.status =="fight" or alliance_data.status=="prepare" then
+                UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
+                return
+            end
+            if alliance_data.status ~= "peace" then
+                UIKit:showMessageDialog(_("提示"),_("目标联盟未处于和平期，不能宣战"))
+                return
+            end
+            UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
+                {
+                    listener = function ()
+                        NetManager:getAttackAlliancePromose(alliance_data.id)
+                        self:LeftButtonClicked()
+                    end
+                }
+            )
+        end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
+        self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
+            self:Located(self.mapIndex)
+        end):addTo(layer):align(display.RIGHT_TOP, l_size.width - 125,10)
+        self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
+            UIKit:newGameUI("GameUIAllianceInfo", alliance_data.id):AddToCurrentScene(true)
         end):addTo(layer):align(display.RIGHT_TOP, l_size.width - 2 * 125,10)
+    end
     return layer
 end
 
@@ -418,6 +423,8 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     end
 end
 return WidgetWorldAllianceInfo
+
+
 
 
 
