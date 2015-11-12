@@ -543,8 +543,11 @@ function UIKit:createLineItem(params)
         }):align(display.RIGHT_BOTTOM, line_size.width, 4)
         :addTo(line)
 
-    function line:SetValue(value,title)
+    function line:SetValue(value,title,colorOfValue)
         value_label:setString(value)
+        if colorOfValue then
+            value_label:setColor(UIKit:hex2c4b(colorOfValue))
+        end
         if title then
             title_lable:setString(title)
         end
@@ -1694,7 +1697,7 @@ function UIKit:CreateArrow(param, func)
     arrow.btn = cc.ui.UIPushButton.new({
         normal = param.up or "arrow_up_mine.png",
         pressed = param.down or "arrow_down_mine.png",
-    }):addTo(arrow):pos(96/2, 102/2 - 4)
+    }):addTo(arrow):pos(96/2, 102/2 - 3)
     :onButtonClicked(function()
         if type(func) == "function" then
             func()
