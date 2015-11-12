@@ -64,7 +64,7 @@ function GameUIAllianceHome:onEnter()
     local ratio = self.bottom:getScale()
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
-    local march = WidgetMarchEvents.new(ratio):addTo(self):pos(x, y)
+    self.march = WidgetMarchEvents.new(ratio):addTo(self):pos(x, y)
     self:AddMapChangeButton()
     scheduleAt(self, function()
         self:RefreshTop()
@@ -191,10 +191,6 @@ function GameUIAllianceHome:Schedule()
 end
 
 function GameUIAllianceHome:InitArrow()
-    local rect1 = self.bottom:getCascadeBoundingBox()
-    local rect2 = self.top_bg:getCascadeBoundingBox()
-    self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
-
     -- my alliance building
     -- self.alliance_building_arrows = {}
     -- for i = 1, 5 do
@@ -236,6 +232,11 @@ function GameUIAllianceHome:InitArrow()
     --     font = UIKit:getFontFilePath(),
     --     color = UIKit:hex2c3b(0xf5e8c4)
     -- }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -40)
+end
+function GameUIAllianceHome:GetScreenRect()
+    local rect1 = self.march:getCascadeBoundingBox()
+    local rect2 = self.top_bg:getCascadeBoundingBox()
+    return cc.rect(0, rect1.y + rect1.height, display.width, rect2.y - (rect1.y + rect1.height))
 end
 function GameUIAllianceHome:ReturnMyCity()
     local alliance = self.alliance
@@ -757,7 +758,7 @@ function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     self.page_top:SetCoordinate(coordinate_str)
 end
 function GameUIAllianceHome:UpdateMyCityArrows(alliance)
-    local screen_rect = self.screen_rect
+    local screen_rect = self:GetScreenRect()
     local member = alliance:GetSelf()
     local mapObj = alliance:FindMapObjectById(member.mapId)
     local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
@@ -785,7 +786,7 @@ function GameUIAllianceHome:UpdateEnemyArrow()
     if not mapIndex then 
         return self.arrow_enemy:hide() 
     end
-    local screen_rect = self.screen_rect
+    local screen_rect = self:GetScreenRect()
     local x,y = DataUtils:GetAbsolutePosition(mapIndex, 16, 16)
     local sceneLayer = display.getRunningScene():GetSceneLayer()
     local map_point = sceneLayer:ConvertLogicPositionToMapPosition(x,y)
