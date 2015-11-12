@@ -1927,7 +1927,6 @@ function NetManager:getPlayerRankPromise(rankType, fromRank)
 end
 function NetManager:getAllianceRankPromise(rankType, fromRank)
     return get_blocking_request_promise("rank.rankHandler.getAllianceRankList",{
-        allianceId = Alliance_Manager:GetMyAlliance().id,
         rankType = rankType,
         fromRank = fromRank or 0,
     },"获取排行榜失败!")
