@@ -1257,7 +1257,7 @@ function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
     end
 end
 function GameUIAllianceBattle:CreateHistoryContent()
-    local w,h = 568,338
+    local w,h = 568,338 + 5 * 46
     local content = WidgetUIBackGround.new({height=h,width=w},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     -- 战斗发生时间
     UIKit:ttfLabel({
@@ -1311,7 +1311,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
         :addTo(fight_bg)
 
     -- 击杀数，击溃城市
-    local info_bg = WidgetUIBackGround.new({width = 540,height = 160},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+    local info_bg = WidgetUIBackGround.new({width = 540,height = 160 + 5 * 46},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
         :align(display.BOTTOM_CENTER,w/2,80):addTo(content)
     local function createItem(info,meetFlag)
         local content
@@ -1406,14 +1406,18 @@ function GameUIAllianceBattle:CreateHistoryContent()
                 :addTo(fight_bg)
             self.enemy_flag = enemy_flag
         end
-
         local info_message = {
             {string.formatnumberthousands(ourAlliance.kill),_("击杀积分"),string.formatnumberthousands(enemyAlliance.kill)},
             {string.formatnumberthousands(ourAlliance.routCount),_("击溃城市"),string.formatnumberthousands(enemyAlliance.routCount)},
             {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
+            {ourAlliance.attackSuccessCount,_("进攻获胜"),enemyAlliance.attackSuccessCount},
+            {ourAlliance.strikeCount,_("突袭次数"),enemyAlliance.strikeCount},
+            {ourAlliance.strikeSuccessCount,_("突袭成功"),enemyAlliance.strikeSuccessCount},
+            {killMax.allianceId == alliance._id and killMax.playerName ~= json.null and killMax.playerName or _("无"),_("头号杀手"),killMax.allianceId ~= alliance._id and killMax.playerName ~= json.null and killMax.playerName or _("无")},
+            {string.formatnumberthousands(ourAlliance.honour),_("荣耀值奖励"),string.formatnumberthousands(enemyAlliance.honour)},
         }
         local b_flag = true
-        local origin_y = 160 - 33
+        local origin_y = 160 + 5 * 46 - 33
         local gap_y = 46
         for i,v in ipairs(info_message) do
             createItem(v,b_flag):align(display.CENTER, 270, origin_y - (i-1)*gap_y):addTo(info_bg)

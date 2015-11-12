@@ -29,9 +29,9 @@ function WidgetWorldAllianceInfo:ctor(object,mapIndex,need_goto_btn)
             id = Alliance_Manager:GetMyAlliance()._id
         end
         NetManager:getAllianceBasicInfoPromise(id, User.serverId):done(function(response)
-            if response.success 
-           and response.msg.allianceData 
-           and self.SetAllianceData then
+            if response.success
+                and response.msg.allianceData
+                and self.SetAllianceData then
                 self:SetAllianceData(response.msg.allianceData)
                 self:LoadInfo(response.msg.allianceData)
             end
@@ -55,7 +55,7 @@ function WidgetWorldAllianceInfo:onExit()
 end
 function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
     self.mask_layer:stopAllActions()
-    self.mask_layer:show():performWithDelay(function() 
+    self.mask_layer:show():performWithDelay(function()
         self.mask_layer:hide()
     end, 2)
 
@@ -265,9 +265,30 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         align = cc.TEXT_ALIGNMENT_CENTER,
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
 
+    self:BuildOneButton("attack_58x56.png",_("宣战")):onButtonClicked(function()
+        if alliance_data.status =="fight" or alliance_data.status=="prepare" then
+            UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
+            return
+        end
+        if alliance_data.status ~= "peace" then
+            UIKit:showMessageDialog(_("提示"),_("目标联盟未处于和平期，不能宣战"))
+            return
+        end
+        UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
+            {
+                listener = function ()
+                    NetManager:getAttackAlliancePromose(alliance_data.id)
+                    self:LeftButtonClicked()
+                end
+            }
+        )
+    end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
     self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
         self:Located(self.mapIndex)
-    end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
+    end):addTo(layer):align(display.RIGHT_TOP, l_size.width - 125,10)
+    self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
+        UIKit:newGameUI("GameUIAllianceInfo", alliance_data.id):AddToCurrentScene(true)
+        end):addTo(layer):align(display.RIGHT_TOP, l_size.width - 2 * 125,10)
     return layer
 end
 
@@ -397,6 +418,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     end
 end
 return WidgetWorldAllianceInfo
+
 
 
 
