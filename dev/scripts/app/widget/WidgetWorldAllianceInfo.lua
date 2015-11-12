@@ -344,7 +344,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     scheduleAt(self,function ()
         local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
         local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-        move_time:SetValue(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
+        move_time:SetValue(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time),nil,canMove and 0x007c23 or 0x7e0000)
     end)
     local info_buff = WidgetInfo.new({
         info = DataUtils:GetAllianceMapBuffByRound(round),

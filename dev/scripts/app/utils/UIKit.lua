@@ -543,8 +543,11 @@ function UIKit:createLineItem(params)
         }):align(display.RIGHT_BOTTOM, line_size.width, 4)
         :addTo(line)
 
-    function line:SetValue(value,title)
+    function line:SetValue(value,title,colorOfValue)
         value_label:setString(value)
+        if colorOfValue then
+            value_label:setColor(UIKit:hex2c4b(colorOfValue))
+        end
         if title then
             title_lable:setString(title)
         end
