@@ -1500,22 +1500,22 @@ function GameUIMail:ShowRewardMailDetails(mail)
         }))
             :addTo(body):align(display.CENTER, size.width - 92, 42)
         get_btn:onButtonClicked(function(event)
-                if event.name == "CLICKED_EVENT" then
-                    GameGlobalUI:DisableTips()
-                    NetManager:getMailRewardsPromise(mail.id):done(function ()
-                        GameGlobalUI:EnableTips()
-                        GameGlobalUI:showTips(_("提示"),_("领取成功"))
-                        UIKit:ttfLabel({
-                            text = _("已领取"),
-                            size = 22,
-                            color = 0x403c2f,
-                        }):addTo(body):align(display.CENTER, size.width - 92, 42)
-                        get_btn:hide()
-                    end):always(function ()
-                        GameGlobalUI:EnableTips()
-                    end)
-                end
-            end)
+            if event.name == "CLICKED_EVENT" then
+                GameGlobalUI:DisableTips()
+                NetManager:getMailRewardsPromise(mail.id):done(function ()
+                    GameGlobalUI:EnableTips()
+                    GameGlobalUI:showTips(_("提示"),_("领取成功"))
+                    UIKit:ttfLabel({
+                        text = _("已领取"),
+                        size = 22,
+                        color = 0x403c2f,
+                    }):addTo(body):align(display.CENTER, size.width - 92, 42)
+                    get_btn:hide()
+                end):always(function ()
+                    GameGlobalUI:EnableTips()
+                end)
+            end
+        end)
     end
     -- 收藏按钮
     local saved_button = cc.ui.UICheckBoxButton.new({
@@ -1632,6 +1632,13 @@ function GameUIMail:CreateReportContent()
                         UIKit:newGameUI("GameUIMonsterReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "attackShrine" then
                         UIKit:newGameUI("GameUIShrineReportInMail", report,true):AddToCurrentScene(true)
+                    end
+                    if report:Type() ~= "collectResource" then
+                        if report:GetReportResult() then
+                            app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_VICTORY")
+                        else
+                            app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DEFEATED")
+                        end
                     end
                 end
             end):addTo(self):pos(item_width/2, item_height/2)
@@ -1955,7 +1962,13 @@ function GameUIMail:CreateSavedReportContent()
                     elseif report:Type() == "attackShrine" then
                         UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
                     end
-
+                    if report:Type() ~= "collectResource" then
+                        if report:GetReportResult() then
+                            app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_VICTORY")
+                        else
+                            app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DEFEATED")
+                        end
+                    end
                 end
             end):addTo(self):pos(item_width/2, item_height/2)
 
@@ -2520,6 +2533,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
