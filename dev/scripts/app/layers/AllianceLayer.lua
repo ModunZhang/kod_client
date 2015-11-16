@@ -526,7 +526,7 @@ end
 local buildingName = GameDatas.AllianceMap.buildingName
 function AllianceLayer:FindMapObject(index, x, y)
     local alliance_object = self.alliance_objects[index]
-    if alliance_object.nomanland then return end
+    if alliance_object and alliance_object.nomanland then return end
     if alliance_object then
         for k,v in pairs(alliance_object.mapObjects) do
             if v.x == x and v.y == y then

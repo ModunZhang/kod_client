@@ -316,6 +316,9 @@ function AllianceDetailScene:onEnter()
         else
             self:GotoAllianceByIndex(self.location.mapIndex)
         end
+        if self.location.callback then
+            self.location.callback(self)
+        end
     else
         local mapObj = alliance:FindMapObjectById(alliance:GetSelf().mapId)
         local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
