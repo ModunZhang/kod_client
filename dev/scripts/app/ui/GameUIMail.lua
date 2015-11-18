@@ -1729,8 +1729,13 @@ function GameUIMail:CreateReportContent()
                 }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-10, 25)
                 :addTo(report_content_bg)
         elseif isFromMe == "attackShrine" then
-            display.newScale9Sprite("alliance_watchTower.png"):addTo(report_content_bg)
-                :align(display.CENTER_TOP,160, 80):scale(0.6)
+            -- display.newScale9Sprite("alliance_watchTower.png"):addTo(report_content_bg)
+            --     :align(display.CENTER_TOP,160, 80):scale(0.6)
+            display.newSprite("alliance_shrine_1.png"):addTo(report_content_bg)
+                :align(display.CENTER_TOP,160, 90):scale(0.6)
+            display.newSprite("alliance_shrine_2.png"):addTo(report_content_bg)
+                :align(display.CENTER_TOP,160, 90):scale(0.6)
+
             -- 圣地关卡名字
             local attackTarget = report:GetAttackTarget()
             UIKit:ttfLabel(
@@ -2533,6 +2538,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 

@@ -199,13 +199,13 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
 
 
     local languageTitleLabel = UIKit:ttfLabel({
-        text = _("语言"),
+        text = _("国家"),
         size = 20,
         color = 0x615b44
     }):addTo(info_bg):align(display.LEFT_BOTTOM,memberTitleLabel:getPositionX(),10)
 
     local languageValLabel = UIKit:ttfLabel({
-        text = Localize.alliance_language[alliance_data.language], -- language
+        text = Localize.alliance_language[alliance_data.country], -- language
         size = 20,
         color = 0x403c2f
     }):addTo(info_bg):align(display.LEFT_BOTTOM,languageTitleLabel:getPositionX() + languageTitleLabel:getContentSize().width + 10,10)

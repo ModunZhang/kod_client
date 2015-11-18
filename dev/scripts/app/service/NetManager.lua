@@ -1260,11 +1260,11 @@ function NetManager:getUnlockPlayerSecondMarchQueuePromise()
         , "解锁玩家第二条行军队列失败!"):done(get_player_response_msg)
 end
 -- 创建联盟
-function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
+function NetManager:getCreateAlliancePromise(name, tag, country, terrain, flag)
     return get_blocking_request_promise("logic.allianceHandler.createAlliance", {
         name = name,
         tag = tag,
-        language = language,
+        country = country,
         terrain = terrain,
         flag = flag
     }, "创建联盟失败!"):done(get_player_response_msg):done(get_alliance_response_msg)
@@ -1435,11 +1435,11 @@ function NetManager:getCancelJoinAlliancePromise(allianceId)
     }, "取消申请联盟失败!"):done(get_player_response_msg)
 end
 --修改联盟基本信息
-function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
+function NetManager:getEditAllianceBasicInfoPromise(name, tag, country, flag)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceBasicInfo", {
         name = name,
         tag = tag,
-        language = language,
+        country = country,
         flag = flag
     }, "修改联盟基本信息失败!"):done(get_player_response_msg)
 end

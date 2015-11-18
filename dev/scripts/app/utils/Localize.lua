@@ -782,7 +782,7 @@ local ALLIANCE_EVENTS = {
     tag = _("最近更改联盟的标签"),
     flag = _("修改联盟旗帜"),
     terrain = _("修改联盟地形为%s"),
-    language = _("修改联盟语言更改为%s"),
+    country = _("国家更改为%s"),
     gve = _("激活了圣地的神秘事件"),
     promotionUp = _("的联盟职位被%s晋级为%s"),
     shrine = _("开启了联盟圣地%s关卡"),
@@ -1215,18 +1215,22 @@ local PLAYER_ICON_UNLOCK = {
 }
 
 local ALLIANCE_LANGUAGE = {
-    all = _("所有语言"),
-    en  = _("英语"),
-    fr  = _("法语"),
-    cn  = _("简体中文"),
-    tw  = _("繁体中文"),
-    de  = _("德语"),
-    ko  = _("韩语"),
-    ja  = _("日语"),
-    ru  = _("俄语"),
-    es  = _("西班牙语"),
-    pt  = _("葡萄牙语"),
-    it  = _("意大利语"),
+    ALL = _("所有"),
+    USA = _("美国"),
+    GBR = _("英国"),
+    CAN = _("加拿大"),
+    FRA = _("法国"),
+    ITA = _("意大利"),
+    DEU = _("德国"),
+    RUS = _("俄罗斯"),
+    PRT = _("葡萄牙"),
+    CHN = _("中国"),
+    TWN = _("台湾"),
+    AUS = _("澳大利亚"),
+    ESP = _("西班牙"),
+    JPN = _("日本"),
+    KOR = _("韩国"),
+    FIN = _("芬兰"),
 }
 
 local ALLIANCE_DECORATE_NAME = {

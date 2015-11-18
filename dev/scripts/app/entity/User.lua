@@ -11,6 +11,7 @@ User.LISTEN_TYPE = Enum(
     "resources",
     "growUpTasks",
     "deals",
+    "allianceData",
 
     "helpedByTroops",
     "helpToTroops",
@@ -1525,6 +1526,7 @@ local before_map = {
     end,
     countInfo = function()end,
     deals = function()end,
+    allianceData = function()end,
     iapGifts = function()end,
     growUpTasks = function()end,
     allianceDonate = function()end,
