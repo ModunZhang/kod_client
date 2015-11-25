@@ -383,7 +383,7 @@ function GameUtils:GetAppleLanguageCode()
     if apple_lang_map[code] then
         return apple_lang_map[code]
     else
-        return 'tw'
+        return 'en'
     end
 end
 function GameUtils:GetPoFileLanguageCode(language_code)
@@ -392,7 +392,7 @@ function GameUtils:GetPoFileLanguageCode(language_code)
         local t = lang_map[language_code]
         return t.po, t.code
     else
-        return "zh_TW",'tw'
+        return "en",'en'
     end
 end
 
