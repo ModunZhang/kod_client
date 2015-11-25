@@ -209,7 +209,9 @@ function GameUINpc:CreateLabel()
         size = 22,
         color = 0xffedae,
     }):addTo(self.ui_map.dialog_bg):align(display.LEFT_TOP, size.width / 2 - 20, size.height - 40)
-    label:setLineBreakWithoutSpace(true)
+    if GameUtils:GetAppleLanguageCode() ~= "en" then
+        label:setLineBreakWithoutSpace(true)
+    end
     label:setMaxLineWidth(300)
     return label
 end
